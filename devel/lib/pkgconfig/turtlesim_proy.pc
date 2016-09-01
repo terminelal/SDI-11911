@@ -1,0 +1,8 @@
+prefix=/home/sebas/catkin_ws/devel
+
+Name: turtlesim_proy
+Description: Description of turtlesim_proy
+Version: 0.0.0
+Cflags: 
+Libs: -L/home/sebas/catkin_ws/devel/lib 
+Requires: roscpp rospy std_msgs geometry_msgs message_runtime
