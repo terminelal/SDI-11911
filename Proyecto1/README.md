@@ -52,7 +52,7 @@ cd ..
 catkin_make
 . ~/pose_turtle/devel/setup.bash
 ```
-3. En el explorador, buscar el proyecto creado y en la carpeta tur_pt copiar el archivo .cpp
+3. En el explorador, buscar el proyecto creado y en la carpeta tur_pt copiar el archivo .cpp a un lado de los archivos package y CMakeLists
 4. Abrir dos terminales nuevas
 5. Correr los siguientes comandos de las terminales nuevas
 ```
