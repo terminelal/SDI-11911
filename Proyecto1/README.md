@@ -1,68 +1,40 @@
-#Using Git
+#Instalar ROS en la máquina virtual
 Git usually comes built-in with the main OS's. 
 If it is not install or a newer version is needed, it can be downloaded from https://git-scm.com/downloads
 
 This guide was tested in Linux.
 
-## Cloning the repository
-1. Open Terminal
-2. cd to where the repository will be downloaded
-3. git clone https://github.com/EagleKnights/SDI-11911.git --single-branch
-4. cd into the downloaded repository
-
-## Branches
-Git uses branches to keep different versions of the code in the same repository.
-The main branch is call "master" and in this repository only administrator will be able to make changes to it. After making git clone, the main branch will be "master".
-To make a new branch, be sure to be inside the repo and type: 
+## Crear Workspace
+1. Abrir Terminal
+2. Dentro de la terminal ingresar el código siguente:
 ```
-git branch NEW_BRANCH
-```
-This only creates tha branch, to switch into the new branch:
-```
-git checkoout NAME_OF_THE_BRANCH
+$ source /opt/ros/indigo/setup.bash
+$ mkdir -p ~/pose_use/src    ... crea la carpeta con el nombre src dentro de pose_use ...
+$ cd ~/pose_use/src
+~/pose_use/src$ catkin_init_workspace
+$ cd ~/pose_use/   
+$ catkin_make      ... se construyen y actualizan los archivos dentro del espacio de trabajo ...
+$ source devel/setup.bash
 ```
 
-In this new branch is where changes can be made and push to github.
+## Crear el paquete dentro del workspace
+Dentro de la terminal que ya abriste ingresa el siguiente codigo:
 
-## Add - Commit - Push
-The basic workflow to save changes into git is:
+```
+$ cd ~/pose_use/src    ...regresas a la carpeta src...
+$ catkin_create_pkg turtle_program  geometry_msgs turtlesim roscp ...se crea el paquete con las dependencias que utilizarás...
+$ cd ~/pose_use
+$ catkin_make
+. ~/catkin_ws/devel/setup.bash
+
+```
+
+
+## Crear el archivo .cpp que en este caso lo llamamos 
 ```
 git add FILES_TO_ADD
 git commit -m "Usefull comments about this commit"
 ```
-After executing git commit, the changes are store
 
-NOTE: if the option -m is not use, git will open VIM to enter the comment. A VIM cheat-sheet can be found in http://vim.rtorr.com/ .
-
-After executing commit, the changes are store locally. To store the changes to the repo at github, use:
-```
-git push origin BRANCH_TO_PUSH
-```
-
-## Pull
-If there are new changes to the main github repo (called origin), use the following command (be sure to save your last changes):
-```
-git pull
-```
-
-## Other Stuff
-* To print commit history
-```
-git log
-```
-
-* Graphically show the branches
-```
-git log --oneline --decorate --graph --all
-```
-
-* Manual of git
-```
-man git
-```
-
-* Official git web page: https://git-scm.com/
-
-* Pro Git Book Available at: https://git-scm.com/book/en/v2
 
 
