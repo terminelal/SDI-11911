@@ -1,68 +1,14 @@
-#Using Git
-Git usually comes built-in with the main OS's. 
-If it is not install or a newer version is needed, it can be downloaded from https://git-scm.com/downloads
+README DEL PROYECTO 1
 
-This guide was tested in Linux.
-
-## Cloning the repository
-1. Open Terminal
-2. cd to where the repository will be downloaded
-3. git clone https://github.com/EagleKnights/SDI-11911.git --single-branch
-4. cd into the downloaded repository
-
-## Branches
-Git uses branches to keep different versions of the code in the same repository.
-The main branch is call "master" and in this repository only administrator will be able to make changes to it. After making git clone, the main branch will be "master".
-To make a new branch, be sure to be inside the repo and type: 
-```
-git branch NEW_BRANCH
-```
-This only creates tha branch, to switch into the new branch:
-```
-git checkoout NAME_OF_THE_BRANCH
-```
-
-In this new branch is where changes can be made and push to github.
-
-## Add - Commit - Push
-The basic workflow to save changes into git is:
-```
-git add FILES_TO_ADD
-git commit -m "Usefull comments about this commit"
-```
-After executing git commit, the changes are store
-
-NOTE: if the option -m is not use, git will open VIM to enter the comment. A VIM cheat-sheet can be found in http://vim.rtorr.com/ .
-
-After executing commit, the changes are store locally. To store the changes to the repo at github, use:
-```
-git push origin BRANCH_TO_PUSH
-```
-
-## Pull
-If there are new changes to the main github repo (called origin), use the following command (be sure to save your last changes):
-```
-git pull
-```
-
-## Other Stuff
-* To print commit history
-```
-git log
-```
-
-* Graphically show the branches
-```
-git log --oneline --decorate --graph --all
-```
-
-* Manual of git
-```
-man git
-```
-
-* Official git web page: https://git-scm.com/
-
-* Pro Git Book Available at: https://git-scm.com/book/en/v2
+Autor: Hector Hugo Huipet Hernandez
 
 
+1. Los tres archivos del repositorio de github deben estar dentro de una carpeta de nombre proyecto1
+2. Dicha carpeta debe ser colocada dentro de la carpeta src de un workspace de ROS
+3. Posteriormente debe ser compilado el paquete como indica el tutorial de "a gentle introduction to ROS", desde la raiz ejecutar catkin_make y source devel/setup.bash 
+4. Es necesario tener roscore y una instancia de turtlesim_node en ejecución
+5. Para ejecutar el paquete se introduce en la terminal donde se ha hecho todo el procedimiento del punto 3 la siguiente linea: rosrun proyecto1 poseUsr
+6. El programa se activa solicitando la pose final dada por (X, Y, ángulo) y el tiempo de ejecución deseado. Todas estas solicitudes se realizan de manera secuencial introduciendo valores decimales validos y presionando enter tras cada captura.
+7. Es recomendable introducir tiempos de ejecución mayores a 6 segundos, la aplicación tiene una sección de advertencia que explica que el funcionamiento puede no ser adecuado con tiempos muy pequeños, sin embargo si se desea continuar se permite.
+8. La aplicación realiza el movimiento de traslacion y la orientación del angulo y al terminar, apaga el nodo.
+9. Puede volverse a ejecutar la aplicación sin necesidad de restaurar el simulador y volver al punto (6).
