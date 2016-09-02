@@ -1,0 +1,25 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1348\cocoasubrtf170
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+\margl1440\margr1440\vieww10800\viewh8400\viewkind0
+\deftab720
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720
+
+\f0\fs22 \cf0 \expnd0\expndtw0\kerning0
+#!/bin/bash\
+# -*- ENCODING: UTF-8 -*-\
+echo \'93Al ejecutar este script se crean todos los archivos necesarios para ejecutar el proyecto 1."\
+mkdir principal\
+cd principal\
+mkdir src\
+cd src\
+echo \'93Ahora hay que crear el workspace para el proyecto 1."\
+catkin_init_workspace\
+cd\
+cd principal\
+catkin_make\
+cd src\
+catkin_create_pkg archivos\
+\
+exit\
+}
