@@ -1,0 +1,2 @@
+proyecto1
+-DCATKIN_DEVEL_PREFIX=/home/ros/AperezBar/devel -DCMAKE_INSTALL_PREFIX=/home/ros/AperezBar/install -G Unix Makefiles

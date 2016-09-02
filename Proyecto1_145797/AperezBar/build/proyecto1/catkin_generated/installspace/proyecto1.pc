@@ -1,0 +1,8 @@
+prefix=/home/ros/AperezBar/install
+
+Name: proyecto1
+Description: Description of proyecto1
+Version: 0.0.0
+Cflags: 
+Libs: -L/home/ros/AperezBar/install/lib 
+Requires: 
