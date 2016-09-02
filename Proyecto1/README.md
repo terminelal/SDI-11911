@@ -1,4 +1,5 @@
-#Este programa está desarrollado en ROS donde con ayuda de turtlesim podemos hacer que una tortuga recorra una trayectoria en un determinado tiempo
+#Este programa está desarrollado en ROS, en el que la tortuga del simulador hace una trayectoria en un determinado tiempo.
+
 A continuación se describen los pasos a seguir:
 
 ##Instalar ROS en la máquina virtual
