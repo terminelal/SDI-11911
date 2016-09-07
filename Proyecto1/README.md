@@ -1,68 +1,12 @@
-#Using Git
-Git usually comes built-in with the main OS's. 
-If it is not install or a newer version is needed, it can be downloaded from https://git-scm.com/downloads
+La forma de ejecutar el programa es la siguiente:
 
-This guide was tested in Linux.
+1) descargar la carpeta wsros, mediante git clone
+2) entrar a la carpeta y ejecutar: catkin_make (es necesario tener instalado ROS Indigo)
+3) ejecutar el comando: source devel/setup.bash
+4) ejecutar: roscore
+5) En una terminal independiente a la anterior ejecutar: rosrun turtlesim turtlesim_node
+6) En una terminal independiente a la anterior ejecutar: rosrun agitr agitr_moveto _x_fin:=10 _y_fin:=10 _theta_fin:=0 _tiempo:=4
 
-## Cloning the repository
-1. Open Terminal
-2. cd to where the repository will be downloaded
-3. git clone https://github.com/EagleKnights/SDI-11911.git --single-branch
-4. cd into the downloaded repository
-
-## Branches
-Git uses branches to keep different versions of the code in the same repository.
-The main branch is call "master" and in this repository only administrator will be able to make changes to it. After making git clone, the main branch will be "master".
-To make a new branch, be sure to be inside the repo and type: 
-```
-git branch NEW_BRANCH
-```
-This only creates tha branch, to switch into the new branch:
-```
-git checkout NAME_OF_THE_BRANCH
-```
-
-In this new branch is where changes can be made and push to github.
-
-## Add - Commit - Push
-The basic workflow to save changes into git is:
-```
-git add FILES_TO_ADD
-git commit -m "Usefull comments about this commit"
-```
-After executing git commit, the changes are store
-
-NOTE: if the option -m is not use, git will open VIM to enter the comment. A VIM cheat-sheet can be found in http://vim.rtorr.com/ .
-
-After executing commit, the changes are store locally. To store the changes to the repo at github, use:
-```
-git push origin BRANCH_TO_PUSH
-```
-
-## Pull
-If there are new changes to the main github repo (called origin), use the following command (be sure to save your last changes):
-```
-git pull
-```
-
-## Other Stuff
-* To print commit history
-```
-git log
-```
-
-* Graphically show the branches
-```
-git log --oneline --decorate --graph --all
-```
-
-* Manual of git
-```
-man git
-```
-
-* Official git web page: https://git-scm.com/
-
-* Pro Git Book Available at: https://git-scm.com/book/en/v2
-
-
+_x_fin y _y_fin son las coordenadas a las que se moverá la tortuga
+_theta_fin es el ángulo en radianes que adoptará la tortuga en su pose final
+_tiempo es el tiempo que se toma como base para calcular la velocidad de traslado
