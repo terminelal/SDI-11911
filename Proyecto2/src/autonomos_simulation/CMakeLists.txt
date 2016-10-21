@@ -12,13 +12,14 @@ find_package(catkin REQUIRED COMPONENTS
 	pcl_conversions
 	pcl_msgs
 	geometry_msgs
-	cmake_modules REQUIRED
 	tf2_ros
 	tf
 	pcl_ros
-	# Eigen REQUIRED
 	tf2
 	gazebo_msgs)
+find_package(cmake_modules REQUIRED)
+find_package(Eigen REQUIRED)
+
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -142,9 +143,18 @@ add_executable(perception_node perception_node.cpp)
 add_executable(vision_node vision_node.cpp)
 # add_executable(robot_trajectory_node robot_trajectory_node.cpp)
 
+add_executable(auto_velocity_node auto_velocity_node.cpp)
+add_executable(auto_trajectory_node auto_trajectory_node.cpp)
+
+# target_link_libraries(robot_velocity_node ${catkin_LIBRARIES})
+# target_link_libraries(robot_trajectory_node ${catkin_LIBRARIES})
+
 target_link_libraries(tf2_broadcaster_node ${catkin_LIBRARIES})
 target_link_libraries(perception_node ${catkin_LIBRARIES} ${PCL_LIBRARIES})
 target_link_libraries(vision_node ${catkin_LIBRARIES} ${PCL_LIBRARIES})
+
+target_link_libraries(auto_velocity_node ${catkin_LIBRARIES})
+target_link_libraries(auto_trajectory_node ${catkin_LIBRARIES})
 # target_link_libraries(robot_trajectory_node ${catkin_LIBRARIES})
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
