@@ -49,7 +49,7 @@
         </geometry>
           <material>
           <ambient>0 0 0 0</ambient>
-          <diffuse>1 1 1 0</diffuse>
+          <diffuse>1 0 0 0</diffuse>
           <specular>0 0 0 0</specular>
           <emissive>0 0 0 0</emissive>
         </material>
@@ -70,7 +70,7 @@
         </geometry>
           <material>
           <ambient>0 0 0 0</ambient>
-          <diffuse>1 1 1 0</diffuse>
+          <diffuse>0 1 0 0</diffuse>
           <specular>0 0 0 0</specular>
           <emissive>0 0 0 0</emissive>
         </material>
@@ -91,7 +91,7 @@
         </geometry>
           <material>
           <ambient>0 0 0 0</ambient>
-          <diffuse>1 1 1 0</diffuse>
+          <diffuse>0 0 1 0</diffuse>
           <specular>0 0 0 0</specular>
           <emissive>0 0 0 0</emissive>
         </material>

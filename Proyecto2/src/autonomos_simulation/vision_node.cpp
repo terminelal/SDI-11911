@@ -129,9 +129,13 @@ void transform_pointCloud(const tf::TransformListener& tfListener){
 		// limit the points in pc_car according to what a camera can see
 		BOOST_FOREACH (const pcl::PointXYZ& pt, pc_car -> points){
 			//      points above 		points not too far 		   points to the right of the left limit   points to the left of the right limit 
-			if(		0.2225 < pt.y 	&& 			pt.y < 1 		&& 			pt.y/m2 <= pt.x 			&& 		pt.x <= pt.y/m1					) 
+			if(0.2225 < pt.y && pt.y < 1 
+				&& pt.y/m2 <= pt.x && pt.x <= pt.y/m1)
 			{
-				pc_seen -> points[i] = pt;
+				// puntos con respecto al robot
+				pc_seen -> pt;
+				// puntos con respecto al mundo			
+				// pc_seen -> points[i] = pc_original -> points[i];
 			} else {
 
 				pc_seen -> points[i] = bad_point;
