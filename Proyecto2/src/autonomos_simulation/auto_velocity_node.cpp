@@ -27,29 +27,18 @@ double rate_hz = 1;
 
 // Transform robot velocities (x,y,w) to motor velocities (m1,m2,m3,m4)
 double* getMotorValue(int x_velocity, int y_velocity, int w_velocity){
-	double deg1 = 3 * M_PI / 10;
-	double deg2 = 3 * M_PI / 10;
-	double deg3 = 7 * M_PI / 30;
-	double deg4 = 7 * M_PI / 30;
-	double s1 = sin(deg1), c1 = cos(deg1);
-	double s2 = sin(deg2), c2 = cos(deg2);
-	double s3 = sin(deg3), c3 = cos(deg3);
-	double s4 = sin(deg4), c4 = cos(deg4);
-	double R = 8.5;
-	double r = 3.4;
-
-	double velXMod = x_velocity * 3.5 / ( 2 * M_PI * r );
-    double velYMod = y_velocity * 3.5 / ( 2 * M_PI * r );
-    double velWMod = w_velocity * 3.5 / ( 2 * M_PI * r );
-
-    velWMod = R * velWMod;
-    double velMots[4];
-
-    velMots[0] = (double)( s1 * velXMod + c1 * velYMod + velWMod);
-    velMots[1] = (double)(-s2 * velXMod + c2 * velYMod + velWMod);
-    velMots[2] = (double)(-s3 * velXMod - c3 * velYMod + velWMod);
-    velMots[3] = (double)( s4 * velXMod - c4 * velYMod + velWMod);
-
+    
+    double R = 1;
+    double r = 3.4;
+    
+    double velWMod = R * w_velocity;
+    
+    double velMots[3];
+    
+    velMots[0] = (double)( x_velocity );
+    velMots[1] = (double)( x_velocity );
+    velMots[2] = (double)( velWMod );
+    
     return velMots;
 }
 
@@ -61,9 +50,9 @@ void get_vel_vec(const geometry_msgs::Twist& msg) {
 
 
 int main(int argc, char **argv){
-	ros::init(argc,argv,"robot_velocity_node");
+	ros::init(argc,argv,"auto_velocity_node");
 	ros::NodeHandle nh;
-	ROS_INFO_STREAM("robot_velocity_node initialized");
+	ROS_INFO_STREAM("auto_velocity_node initialized");
 	ROS_INFO_STREAM(ros::this_node::getName());
 	
 	// Suscribe to Gazebo service ApplyJointEffor
@@ -83,7 +72,7 @@ int main(int argc, char **argv){
 	ros::Time start_time ;
 	ros::Duration duration ;
 
-	double effort[4];
+	double effort[3];
 	
 	while (ros::ok())
 	{
@@ -92,48 +81,38 @@ int main(int argc, char **argv){
 	effort [0] = velMots[0];
 	effort [1] = velMots[1];
 	effort [2] = velMots[2];
-	effort [3] = velMots[3];
   
-		if(client.exists()){
+	if(client.exists()){
 			
-			start_time.sec = 0;
-			start_time.nsec = 0;
-			duration.sec = 1/rate_hz;
-			duration.nsec = 0;
+		start_time.sec = 0;
+		start_time.nsec = 0;
+		duration.sec = 1/rate_hz;
+		duration.nsec = 0;
 
-			// Wheel-Joint 1
-			eff_msg[0].request.joint_name = "back_right_wheel_joint";
-			eff_msg[0].request.duration = duration;
-			eff_msg[0].request.effort = effort[0];
-			eff_msg[0].request.start_time = start_time;
+		// Wheel-Joint 1
+		eff_msg[0].request.joint_name = "back_right_wheel_joint";
+		eff_msg[0].request.duration = duration;
+		eff_msg[0].request.effort = effort[0];
+		eff_msg[0].request.start_time = start_time;
 
-			// Wheel-Joint 2
-			eff_msg[1].request.joint_name = "back_left_wheel_joint";
-			eff_msg[1].request.duration = duration;
-			eff_msg[1].request.effort = effort[1];
-			eff_msg[1].request.start_time = start_time;
+		// Wheel-Joint 2
+		eff_msg[1].request.joint_name = "back_left_wheel_joint";
+		eff_msg[1].request.duration = duration;
+		eff_msg[1].request.effort = effort[1];
+		eff_msg[1].request.start_time = start_time;
 
-			// Wheel-Joint 3
-			eff_msg[2].request.joint_name = "steer_joint";
-			eff_msg[2].request.duration = duration;
-			eff_msg[2].request.effort = effort[2];
-			eff_msg[2].request.start_time = start_time;
+		// Wheel-Joint 3
+		eff_msg[2].request.joint_name = "steer_joint";
+		eff_msg[2].request.duration = duration;
+		eff_msg[2].request.effort = effort[2];
+		eff_msg[2].request.start_time = start_time;
 
-			// Wheel-Joint 4
-			eff_msg[3].request.joint_name = "chassis_JOINT_4";
-			eff_msg[3].request.duration = duration;
-			eff_msg[3].request.effort = effort[03];
-			eff_msg[3].request.start_time = start_time;
+		client.call(eff_msg[0]);
+		client.call(eff_msg[1]);																																																																								
+		client.call(eff_msg[2]);
 
-			client.call(eff_msg[0]);
-			client.call(eff_msg[1]);																																																																								
-			client.call(eff_msg[2]);
-			client.call(eff_msg[3]);
-			ROS_INFO_STREAM("Joints ==> 1: " << ((eff_msg[0].response.success == 1) ? "TRUE" : "FALSE") <<
-			" 2: " << ((eff_msg[1].response.success == 1) ? "TRUE" : "FALSE") <<
-			" 3: " << ((eff_msg[2].response.success == 1) ? "TRUE" : "FALSE") <<
-			" 4: " << ((eff_msg[3].response.success == 1) ? "TRUE" : "FALSE"));
-		}																																																																																																
+		ROS_INFO_STREAM("Joints ==> 1: " << ((eff_msg[0].response.success == 1) ? "TRUE" : "FALSE") << " 2: " << ((eff_msg[1].response.success == 1) ? "TRUE" : "FALSE") << " 3: " << ((eff_msg[2].response.success == 1) ? "TRUE" : "FALSE") );
+	}																																																																																																
 		
 		ros::spinOnce();
 		rate.sleep();

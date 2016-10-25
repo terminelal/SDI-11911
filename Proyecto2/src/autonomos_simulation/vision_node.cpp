@@ -133,7 +133,7 @@ void transform_pointCloud(const tf::TransformListener& tfListener){
 				&& pt.y/m2 <= pt.x && pt.x <= pt.y/m1)
 			{
 				// puntos con respecto al robot
-				pc_seen -> pt;
+				pc_seen -> points[i] = pt;
 				// puntos con respecto al mundo			
 				// pc_seen -> points[i] = pc_original -> points[i];
 			} else {

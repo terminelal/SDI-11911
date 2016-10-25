@@ -23,11 +23,11 @@ void callback(const PointCloud::ConstPtr& msg)
   printf ("Cloud: width = %d, height = %d\n", msg->width, msg->height);
   int line  = 0;
   int point = 0;
-  int j=0;
+  int l=0;
   bool linea_iniciada = false;
   
-  int min;
-  double [2][2] puntos_medios;
+  int min, max;
+  double puntos_medios[2][2];
   
   // iterate and print all the points in the pointcloud
   BOOST_FOREACH (const pcl::PointXYZ& pt, msg->points)
@@ -38,34 +38,40 @@ void callback(const PointCloud::ConstPtr& msg)
 	    // isNaN
 	}
 	else {
-	    if(line != 1 && !linea_inicializada)
+	    if(line != 1 && !linea_iniciada)
 	    {
-		min = j;
-		linea_inicializada = true;
+		min = point;
+		max = point;
+		linea_iniciada = true;
 	    }
 	    printf ("Line: %d\tPoint: %d", line, point);
 	    printf ("\t(%f, %f, %f)\n", pt.x, pt.y, pt.z);
+	    if(point>max)
+		max=point;
 	}
 	point++;
 	if(point % msg -> width == 0)
 	{
 	    // calcular punto medio linea anterior
-	    puntos_medios[line][0] = (msg->points[min].x + msg->points[j].x)/2;
-	    puntos_medios[line][1] = (msg->points[min].y + msg->points[j].y)/2;
-		
+
+	    double x = (msg->points[min].x + msg->points[max].x)/2;
+	    double y = (msg->points[min].y + msg->points[max].y)/2;
+            puntos_medios[l][0] = x;
+            puntos_medios[l][1] = y;
+
+	    l++;
 	    line++;
 	    point = 0;
 	    linea_iniciada = false;
 	}
-	j++;
+	
   }
 
-	for(int i=0;i<2;i++)
-	{
+
 		double x = (puntos_medios[0][0] + puntos_medios[1][0])/2;
 		double y = (puntos_medios[0][1] + puntos_medios[1][1])/2;
 		printf("\n Punto a desplazarse: (%f,%f)", x,y);
-	}
+	
 /*
   destiny_position.linear.x;
   destiny_position.linear.y;

@@ -30,10 +30,9 @@ double rate_hz = 30;
 //Assuming the topic that generate the robot position uses geometry_msgs::Twist
 //and the information is in *.linear. This might need to be modifed
 void getRobotPose(const gazebo_msgs::LinkStates& msg) {
-
-	// msg.name[1]
-	robot_position.linear.x = msg.pose[1].position.x;
-	robot_position.linear.y = msg.pose[1].position.y;
+    // msg.name[1]
+    robot_position.linear.x = msg.pose[1].position.x;
+    robot_position.linear.y = msg.pose[1].position.y;
     robot_position.angular.z = 0;//msg.pose[1].angular.z; 
 }
 
@@ -41,8 +40,8 @@ void getRobotPose(const gazebo_msgs::LinkStates& msg) {
 //Assuming the topic that generate the robot position uses geometry_msgs::Twist
 //and the information is in *.linear. This might need to be modifed
 void getTargetPose(const geometry_msgs::Twist& msg) {
-	target_position.linear.x = msg.linear.x;
-	target_position.linear.y = msg.linear.y;
+    target_position.linear.x = msg.linear.x;
+    target_position.linear.y = msg.linear.y;
     target_position.angular.z = msg.angular.z; 
 }
 
@@ -64,26 +63,24 @@ bool isGoalFar(geometry_msgs::Twist p_start, geometry_msgs::Twist p_goal) {
 geometry_msgs::Twist generateConstantVelocity(double constant_speed, geometry_msgs::Twist p_start, geometry_msgs::Twist p_goal){
 
     // Compute direction to goal
-	Vector3d p_start_vector(p_start.linear.x,p_start.linear.y,p_start.angular.z);
-	Vector3d p_goal_vector(p_goal.linear.x, p_goal.linear.y, p_goal.angular.z);
-	// Vector3d goal_direction_vector = p_goal_vector-p_start_vector;
-	Vector3d goal_direction_vector = p_start_vector - p_goal_vector;
+    Vector3d p_start_vector(p_start.linear.x,p_start.linear.y,p_start.angular.z);
+    Vector3d p_goal_vector(p_goal.linear.x, p_goal.linear.y, p_goal.angular.z);
+    // Vector3d goal_direction_vector = p_goal_vector-p_start_vector;
+    Vector3d goal_direction_vector = p_start_vector - p_goal_vector;
 
     // Compute speed in the direction to goal
-	Vector3d velocity_vector = constant_speed * (goal_direction_vector/ goal_direction_vector.norm());
+    Vector3d velocity_vector = constant_speed * (goal_direction_vector/ goal_direction_vector.norm());
 
-	geometry_msgs::Twist velocity;
+    geometry_msgs::Twist velocity;
+    velocity.linear.x = velocity_vector.x();
+    velocity.linear.y = velocity_vector.y();
+    velocity.angular.z = velocity_vector.z();
 
-	velocity.linear.x = velocity_vector.x();
-	velocity.linear.y = velocity_vector.y();
-	velocity.angular.z = velocity_vector.z();
-
-	return velocity;
+    return velocity;
 }
 
 // Function to keep velocity under the allowed robot limits
 geometry_msgs::Twist boundVelocity(geometry_msgs::Twist velocity) {
-
 	double max_linear_speed = 30;
 	double min_linear_speed = 0;
 	double max_angular_speed = M_PI*4;
@@ -115,7 +112,6 @@ geometry_msgs::Twist boundVelocity(geometry_msgs::Twist velocity) {
 		velocity.angular.z = min_angular_speed;
 	else if (velocity.angular.z < 0 && velocity.linear.z > - min_angular_speed )
 		velocity.angular.z = -min_angular_speed;
-
 }
 
 
@@ -155,9 +151,7 @@ int main(int argc, char **argv){
 			<<" X="<<target_position.linear.x
 			<<",Y="<<target_position.linear.y
 			<<",W="<<target_position.angular.z);
-
 		if (isGoalFar(robot_position, target_position)) {	
-
 			desired_velocity = generateConstantVelocity(cruise_speed, robot_position, target_position);
 			desired_velocity = boundVelocity(desired_velocity);
 		} else { 
@@ -171,7 +165,6 @@ int main(int argc, char **argv){
 			<<"X:"<<desired_velocity.linear.x
 			<<",Y:"<<desired_velocity.linear.y
 			<<",W:"<<desired_velocity.angular.z);
-
 		//publish the new velocity
 		pub_vel_turtle.publish(desired_velocity);
 		
