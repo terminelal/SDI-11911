@@ -26,18 +26,18 @@ geometry_msgs::Twist velocity_msg;
 double rate_hz = 1;
 
 // Transform robot velocities (x,y,w) to motor velocities (m1,m2,m3,m4)
-double* getMotorValue(int x_velocity, int y_velocity, int w_velocity){
+double* getMotorValue(double x_velocity, double y_velocity, double w_velocity){
     
     double R = 1;
     double r = 3.4;
     
-    double velWMod = R * w_velocity;
+    double velWMod = (w_velocity / 180)/2;
     
     double velMots[3];
     
     velMots[0] = (double)( x_velocity );
     velMots[1] = (double)( x_velocity );
-    velMots[2] = (double)( velWMod );
+    velMots[2] = velWMod;
     
     return velMots;
 }
@@ -57,7 +57,7 @@ int main(int argc, char **argv){
 	
 	// Suscribe to Gazebo service ApplyJointEffor
 	ros::ServiceClient client = nh.serviceClient<gazebo_msgs::ApplyJointEffort>("/gazebo/apply_joint_effort");
-	gazebo_msgs::ApplyJointEffort eff_msg[4];
+	gazebo_msgs::ApplyJointEffort eff_msg[3];
 	
 
 	ros::Subscriber sub_vel = nh.subscribe("/target_vel_topic", 1000, &get_vel_vec);
@@ -76,43 +76,45 @@ int main(int argc, char **argv){
 	
 	while (ros::ok())
 	{
-	double* velMots = getMotorValue(velocity_msg.linear.x,velocity_msg.linear.y,velocity_msg.angular.z);
+		double* velMots = getMotorValue(velocity_msg.linear.x,velocity_msg.linear.y,velocity_msg.angular.z);
 	
-	effort [0] = velMots[0];
-	effort [1] = velMots[1];
-	effort [2] = velMots[2];
-  
-	if(client.exists()){
+		effort [0] = velMots[0];
+		effort [1] = velMots[1];
+		effort [2] = velMots[2];
+	  
+		if(client.exists()){
 			
-		start_time.sec = 0;
-		start_time.nsec = 0;
-		duration.sec = 1/rate_hz;
-		duration.nsec = 0;
+			start_time.sec = 0;
+			start_time.nsec = 0;
+			duration.sec = 1/rate_hz;
+			duration.nsec = 0;
 
-		// Wheel-Joint 1
-		eff_msg[0].request.joint_name = "back_right_wheel_joint";
-		eff_msg[0].request.duration = duration;
-		eff_msg[0].request.effort = effort[0];
-		eff_msg[0].request.start_time = start_time;
+			printf("\n effort: %f %f %f", effort[0],effort[1],effort[2]);
 
-		// Wheel-Joint 2
-		eff_msg[1].request.joint_name = "back_left_wheel_joint";
-		eff_msg[1].request.duration = duration;
-		eff_msg[1].request.effort = effort[1];
-		eff_msg[1].request.start_time = start_time;
+			// Wheel-Joint 1
+			eff_msg[0].request.joint_name = "back_right_wheel_joint";
+			eff_msg[0].request.duration = duration;
+			eff_msg[0].request.effort = effort[0];
+			eff_msg[0].request.start_time = start_time;
 
-		// Wheel-Joint 3
-		eff_msg[2].request.joint_name = "steer_joint";
-		eff_msg[2].request.duration = duration;
-		eff_msg[2].request.effort = effort[2];
-		eff_msg[2].request.start_time = start_time;
+			// Wheel-Joint 2
+			eff_msg[1].request.joint_name = "back_left_wheel_joint";
+			eff_msg[1].request.duration = duration;
+			eff_msg[1].request.effort = effort[1];
+			eff_msg[1].request.start_time = start_time;
 
-		client.call(eff_msg[0]);
-		client.call(eff_msg[1]);																																																																								
-		client.call(eff_msg[2]);
+			// Wheel-Joint 3
+			eff_msg[2].request.joint_name = "steer_joint";
+			eff_msg[2].request.duration = duration;
+			eff_msg[2].request.effort = effort[2];
+			eff_msg[2].request.start_time = start_time;
 
-		ROS_INFO_STREAM("Joints ==> 1: " << ((eff_msg[0].response.success == 1) ? "TRUE" : "FALSE") << " 2: " << ((eff_msg[1].response.success == 1) ? "TRUE" : "FALSE") << " 3: " << ((eff_msg[2].response.success == 1) ? "TRUE" : "FALSE") );
-	}																																																																																																
+			client.call(eff_msg[0]);
+			client.call(eff_msg[1]);
+			client.call(eff_msg[2]);
+
+			ROS_INFO_STREAM("\nJoints ==> 1: " << ((eff_msg[0].response.success == 1) ? "TRUE" : "FALSE") << " 2: " << ((eff_msg[1].response.success == 1) ? "TRUE" : "FALSE") << " 3: " << ((eff_msg[2].response.success == 1) ? "TRUE" : "FALSE") );
+		}																																																																																																
 		
 		ros::spinOnce();
 		rate.sleep();

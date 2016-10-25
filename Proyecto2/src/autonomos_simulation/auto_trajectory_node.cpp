@@ -45,20 +45,6 @@ void getTargetPose(const geometry_msgs::Twist& msg) {
     target_position.angular.z = msg.angular.z; 
 }
 
-//Function to determine if the goal is still far.
-//Variables epsilon_x and epsilon_y used to determined if the goal has been reach
-bool isGoalFar(geometry_msgs::Twist p_start, geometry_msgs::Twist p_goal) {
-	double epsilon_x, epsilon_y;
-	epsilon_x = .2; 
-	epsilon_y = .2;
-	double distance_x = abs(p_goal.linear.x - p_start.linear.x);
-	double distance_y = abs(p_goal.linear.y - p_start.linear.y);
-	if (distance_x > epsilon_x || distance_y > epsilon_y)
-		return true;
-	else
-		return false;
-}
-
 //Function to generate a Linear Constant Velocity from robot's position to the target's position
 geometry_msgs::Twist generateConstantVelocity(double constant_speed, geometry_msgs::Twist p_start, geometry_msgs::Twist p_goal){
 
@@ -127,8 +113,8 @@ int main(int argc, char **argv){
 	ros::Publisher pub_vel_turtle = nh.advertise<geometry_msgs::Twist>("/target_vel_topic", rate_hz);
 
 	//Topics to acquire robot and target position (from the vision node) 
-	ros::Subscriber sub_robot_pos = nh.subscribe("/gazebo/model_states", 1, &getRobotPose); 
-	ros::Subscriber sub_ball_pos = nh.subscribe("/target_position_topic", 1, &getTargetPose);
+	// ros::Subscriber sub_robot_pos = nh.subscribe("/gazebo/model_states", 1, &getRobotPose);
+	ros::Subscriber sub_ball_pos = nh.subscribe("/target_pose", 1, &getTargetPose);
 
     //Twist variable to publish velocity (trajectories)
 	geometry_msgs::Twist desired_velocity;
@@ -143,18 +129,23 @@ int main(int argc, char **argv){
 	while (ros::ok())
 	{
         //ROS_INFO_STREAM use for debugging 
-		ROS_INFO_STREAM("Robot Position:"
-			<<" X="<<robot_position.linear.x
-			<<",Y="<<robot_position.linear.y
-			<<",W="<<robot_position.angular.z);
+		// ROS_INFO_STREAM("Robot Position:"
+		//	<<" X="<<robot_position.linear.x
+		//	<<",Y="<<robot_position.linear.y
+		//	<<",W="<<robot_position.angular.z);
 		ROS_INFO_STREAM("Target position:"
 			<<" X="<<target_position.linear.x
 			<<",Y="<<target_position.linear.y
 			<<",W="<<target_position.angular.z);
-		if (isGoalFar(robot_position, target_position)) {	
-			desired_velocity = generateConstantVelocity(cruise_speed, robot_position, target_position);
-			desired_velocity = boundVelocity(desired_velocity);
-		} else { 
+		
+		double distancia = sqrt(pow(target_position.linear.x,2) + pow(target_position.linear.y,2));
+		if(distancia > 0)	{
+			double Ke = 0.2; // constante velocidad+
+			double Kb = 0.5; // constante angulo
+			desired_velocity.linear.x = Ke * distancia;
+			desired_velocity.linear.y = 0;
+			desired_velocity.angular.z = Kb * target_position.angular.z;
+		} else {
             // Goal has been reach ==> dont move
 			desired_velocity.linear.x = 0;
 			desired_velocity.linear.y = 0;
