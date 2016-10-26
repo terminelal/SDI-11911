@@ -73,16 +73,16 @@ void callback(const PointCloud::ConstPtr& msg)
 		    if(!pendiente_calculada){
 			// angulo de la pose final
 			double m = (msg->points[max].y - msg->points[min].y) / (msg->points[max].x - msg->points[min].x);
-	  		theta = atan2((msg->points[max].y - msg->points[min].y), (msg->points[max].x - msg->points[min].x)) * 180 / PI;
+	  		theta = atan(m) * 180 / PI;
 		    	pendiente_calculada=true;
-			printf("\n(y2: %f, y1: %f)", msg->points[max].y, msg->points[min].y);
-			printf("\n(x2: %f, x1: %f)", msg->points[max].x, msg->points[min].x);
+			printf("\n(x1: %f, y1: %f)", msg->points[min].x, msg->points[min].y);
+			printf("\n(x2: %f, y2: %f)", msg->points[max].x, msg->points[max].y);
 			printf("\nm: %f, angulo: %f", m, theta);
 		    }
 		    // calcular punto medio linea anterior
 		    puntos_medios[l][0] = (msg->points[min].x + msg->points[max].x)/2;
 		    puntos_medios[l][1] = (msg->points[min].y + msg->points[max].y)/2;
-		    printf("Punto medio linea %d: (%f,%f) \n", line-1,puntos_medios[l][0], puntos_medios[l][1]);
+		    printf("\nPunto medio linea %d: (%f,%f)", line-1,puntos_medios[l][0], puntos_medios[l][1]);
 		    l++;
 		}
 	}

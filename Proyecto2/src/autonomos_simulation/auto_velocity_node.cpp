@@ -28,12 +28,14 @@ double rate_hz = 1;
 // Transform robot velocities (x,y,w) to motor velocities (m1,m2,m3,m4)
 double* getMotorValue(double x_velocity, double y_velocity, double w_velocity){
     
-    double R = 1;
-    double r = 3.4;
+    // double R = 1;
+    // double r = 3.4;
     
-    double velWMod = (w_velocity / 180)/2;
+    double velWMod = (w_velocity / 180);
     
     double velMots[3];
+
+    printf("\nvelocidad: %f, angulo: %f", x_velocity, velWMod);
     
     velMots[0] = (double)( x_velocity );
     velMots[1] = (double)( x_velocity );
@@ -45,7 +47,7 @@ double* getMotorValue(double x_velocity, double y_velocity, double w_velocity){
 void get_vel_vec(const geometry_msgs::Twist& msg) {
 	velocity_msg.linear.x = msg.linear.x;
 	velocity_msg.linear.y = msg.linear.y;
-    velocity_msg.angular.z = msg.linear.z; 
+    velocity_msg.angular.z = msg.angular.z; 
 }
 
 
@@ -106,7 +108,7 @@ int main(int argc, char **argv){
 			// Wheel-Joint 3
 			eff_msg[2].request.joint_name = "steer_joint";
 			eff_msg[2].request.duration = duration;
-			eff_msg[2].request.effort = effort[2];
+			eff_msg[2].request.effort = -effort[2];
 			eff_msg[2].request.start_time = start_time;
 
 			client.call(eff_msg[0]);
