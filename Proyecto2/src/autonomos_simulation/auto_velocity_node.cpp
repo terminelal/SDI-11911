@@ -11,6 +11,7 @@
 //#include <turtlesim/Pose.h>
 #include <Eigen/Geometry>
 #include "gazebo_msgs/ApplyJointEffort.h"
+#include "gazebo_msgs/GetJointProperties.h"
 #include <math.h>
 
 using namespace Eigen;
@@ -22,24 +23,27 @@ using namespace Eigen;
 geometry_msgs::Twist robot_position;
 geometry_msgs::Twist velocity_msg;
 
+
 //rate_hz assignment
-double rate_hz = 1;
+double rate_hz = 30;
 
 // Transform robot velocities (x,y,w) to motor velocities (m1,m2,m3,m4)
 double* getMotorValue(double x_velocity, double y_velocity, double w_velocity){
     
     // double R = 1;
-    // double r = 3.4;
+    double r = 3.4;
     
-    double velWMod = (w_velocity / 180);
+    // double Rx = 
+    // double velWMod = (w_velocity / 180);
     
     double velMots[3];
-
-    printf("\nvelocidad: %f, angulo: %f", x_velocity, velWMod);
     
-    velMots[0] = (double)( x_velocity );
-    velMots[1] = (double)( x_velocity );
-    velMots[2] = velWMod;
+    printf("\nvelocidad: %f, angulo: %f", y_velocity, w_velocity);
+    
+    velMots[0] = y_velocity;
+    velMots[1] = y_velocity;
+    
+    velMots[2] = w_velocity;
     
     return velMots;
 }
@@ -47,7 +51,7 @@ double* getMotorValue(double x_velocity, double y_velocity, double w_velocity){
 void get_vel_vec(const geometry_msgs::Twist& msg) {
 	velocity_msg.linear.x = msg.linear.x;
 	velocity_msg.linear.y = msg.linear.y;
-    velocity_msg.angular.z = msg.angular.z; 
+	velocity_msg.angular.z = msg.angular.z; 
 }
 
 
@@ -60,9 +64,14 @@ int main(int argc, char **argv){
 	// Suscribe to Gazebo service ApplyJointEffor
 	ros::ServiceClient client = nh.serviceClient<gazebo_msgs::ApplyJointEffort>("/gazebo/apply_joint_effort");
 	gazebo_msgs::ApplyJointEffort eff_msg[3];
-	
 
-	ros::Subscriber sub_vel = nh.subscribe("/target_vel_topic", 1000, &get_vel_vec);
+	// Suscribe to Gazebo service get_joint_properties
+	ros::ServiceClient clientSteer = nh.serviceClient<gazebo_msgs::GetJointProperties>("/gazebo/get_joint_properties");
+	gazebo_msgs::GetJointProperties joint_msg[1];	
+	joint_msg[0].request.joint_name = "steer_joint";
+	
+	
+	ros::Subscriber sub_vel = nh.subscribe("/target_vel_topic", 100, &get_vel_vec);
 
 	double tiempo = 0;
 
@@ -92,6 +101,18 @@ int main(int argc, char **argv){
 			duration.nsec = 0;
 
 			printf("\n effort: %f %f %f", effort[0],effort[1],effort[2]);
+			clientSteer.call(joint_msg[0]);
+    			if(joint_msg[0].response.success == 1) {
+				printf("\nposicion steer_joint (radianes): %f", joint_msg[0].response.position[0]);
+				double pos = joint_msg[0].response.position[0];
+				if(pos != effort[2])
+				{
+					if(effort[2] > 0)
+						effort[2] = 0.1;
+					else
+						effort[2] = -0.1;
+				}
+			}	
 
 			// Wheel-Joint 1
 			eff_msg[0].request.joint_name = "back_right_wheel_joint";
@@ -116,7 +137,7 @@ int main(int argc, char **argv){
 			client.call(eff_msg[2]);
 
 			ROS_INFO_STREAM("\nJoints ==> 1: " << ((eff_msg[0].response.success == 1) ? "TRUE" : "FALSE") << " 2: " << ((eff_msg[1].response.success == 1) ? "TRUE" : "FALSE") << " 3: " << ((eff_msg[2].response.success == 1) ? "TRUE" : "FALSE") );
-		}																																																																																																
+		}																																																																																												
 		
 		ros::spinOnce();
 		rate.sleep();

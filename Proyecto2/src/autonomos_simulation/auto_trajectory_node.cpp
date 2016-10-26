@@ -14,13 +14,15 @@
 #include "gazebo_msgs/LinkStates.h"
 // #include <LinkStates.h>
 
+#include <gazebo_msgs/GetJointProperties.h>
+
 using namespace Eigen;
 
 //For geometry_msgs::Twist using:
 // 		dummy.linear.x
 // 		dummy.linear.y
 // 		dummy.angular.z
-geometry_msgs::Twist robot_position;
+geometry_msgs::Pose rposition;
 geometry_msgs::Twist target_position;
 
 //rate_hz assignment
@@ -31,9 +33,12 @@ double rate_hz = 30;
 //and the information is in *.linear. This might need to be modifed
 void getRobotPose(const gazebo_msgs::LinkStates& msg) {
     // msg.name[1]
-    robot_position.linear.x = msg.pose[1].position.x;
-    robot_position.linear.y = msg.pose[1].position.y;
-    robot_position.angular.z = 0;//msg.pose[1].angular.z; 
+    rposition.position.x = msg.pose[1].position.x;
+    rposition.position.y = msg.pose[1].position.y;
+    rposition.orientation.x = msg.pose[1].orientation.x; 
+    rposition.orientation.y = msg.pose[1].orientation.y; 
+    rposition.orientation.z = msg.pose[1].orientation.z; 
+    rposition.orientation.w = msg.pose[1].orientation.w; 
 }
 
 //Assign the position of the target (from other topic) to target_position.
@@ -112,9 +117,12 @@ int main(int argc, char **argv){
     //Publish to the turtle topic "/turtle1/cmd_vel at rate_hz"
 	ros::Publisher pub_vel_turtle = nh.advertise<geometry_msgs::Twist>("/target_vel_topic", rate_hz);
 
-	//Topics to acquire robot and target position (from the vision node) 
+	//Topics to acquire robot position 
 	// ros::Subscriber sub_robot_pos = nh.subscribe("/gazebo/model_states", 1, &getRobotPose);
+	//Topics to acquire target position (from the vision node) 
 	ros::Subscriber sub_ball_pos = nh.subscribe("/target_pose", 1, &getTargetPose);
+
+	
 
     //Twist variable to publish velocity (trajectories)
 	geometry_msgs::Twist desired_velocity;
@@ -129,22 +137,31 @@ int main(int argc, char **argv){
 	while (ros::ok())
 	{
         //ROS_INFO_STREAM use for debugging 
-		// ROS_INFO_STREAM("Robot Position:"
-		//	<<" X="<<robot_position.linear.x
-		//	<<",Y="<<robot_position.linear.y
-		//	<<",W="<<robot_position.angular.z);
+	/*		
+		ROS_INFO_STREAM("Robot Position:"
+			<<" X="<<rposition.position.x
+			<<",Y="<<rposition.position.y
+			<<"\n Orientation: "
+			<<",X="<<rposition.orientation.x
+			<<",Y="<<rposition.orientation.y
+			<<",Z="<<rposition.orientation.z
+			<<",W="<<rposition.orientation.w);
+	*/	
 		ROS_INFO_STREAM("Target position:"
 			<<" X="<<target_position.linear.x
 			<<",Y="<<target_position.linear.y
 			<<",W="<<target_position.angular.z);
 		
 		double distancia = sqrt(pow(target_position.linear.x,2) + pow(target_position.linear.y,2));
-		if(distancia > 0)	{
-			double Ke = 0.2; // constante velocidad+
+		if(distancia > 0){
+			double Kp = 0.2; // constante velocidad+
+			double Ka = 0.5; // constante angulo
 			double Kb = 0.5; // constante angulo
-			desired_velocity.linear.x = Ke * distancia;
-			desired_velocity.linear.y = 0;
-			desired_velocity.angular.z = Kb * target_position.angular.z;
+			double alpha = atan2(target_position.linear.x, target_position.linear.y); // invertidos por modelo
+			
+			desired_velocity.linear.x = 0;
+			desired_velocity.linear.y = -Kp * cos(alpha); // dist
+			desired_velocity.angular.z = Kp*sin(alpha)-Ka*alpha-Kb*target_position.angular.z;
 		} else {
             // Goal has been reach ==> dont move
 			desired_velocity.linear.x = 0;
@@ -165,3 +182,4 @@ int main(int argc, char **argv){
     }
     return 0;
 }
+
