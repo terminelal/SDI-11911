@@ -24,7 +24,7 @@ geometry_msgs::Twist robot_position;
 geometry_msgs::Twist target_position;
 
 //rate_hz assignment
-double rate_hz = 30;
+double rate_hz = 1;
 
 //Assign the position of the robot (from other topic) to robot_position.
 //Assuming the topic that generate the robot position uses geometry_msgs::Twist
@@ -36,7 +36,7 @@ void getRobotPose(const gazebo_msgs::LinkStates& msg) {
 	robot_position.linear.y = msg.pose[1].position.y;
     robot_position.angular.z = 0;//msg.pose[1].angular.z; 
 }
-
+	
 //Assign the position of the target (from other topic) to target_position.
 //Assuming the topic that generate the robot position uses geometry_msgs::Twist
 //and the information is in *.linear. This might need to be modifed
@@ -70,24 +70,28 @@ geometry_msgs::Twist generateConstantVelocity(double constant_speed, geometry_ms
 	Vector3d goal_direction_vector = p_start_vector - p_goal_vector;
 
     // Compute speed in the direction to goal
-	Vector3d velocity_vector = constant_speed * (goal_direction_vector/ goal_direction_vector.norm());
+
+	//Vector3d velocity_vector = constant_speed * sqrt(pow( velocity_vector.x(),2)+ velocity_vector.y(),2);
+
+
+	Vector3d velocity_vector = (goal_direction_vector/ goal_direction_vector.norm());
 
 	geometry_msgs::Twist velocity;
 
-	velocity.linear.x = velocity_vector.x();
-	velocity.linear.y = velocity_vector.y();
-	velocity.angular.z = velocity_vector.z();
 
+	velocity.linear.x =  .01*sqrt(pow( velocity_vector.x(),2) +pow( velocity_vector.y(),2));
+	velocity.linear.y = 0;
+	velocity.angular.z = atan( velocity_vector.y()/ velocity_vector.x());//tan(, velocity_vector.x());
 	return velocity;
 }
 
 // Function to keep velocity under the allowed robot limits
 geometry_msgs::Twist boundVelocity(geometry_msgs::Twist velocity) {
 
-	double max_linear_speed = 30;
+	double max_linear_speed = .5;
 	double min_linear_speed = 0;
-	double max_angular_speed = M_PI*4;
-	double min_angular_speed = M_PI/16;
+	double max_angular_speed =.5;
+	double min_angular_speed = -.5;
 
 	if (velocity.linear.x > max_linear_speed)
 		velocity.linear.x = max_linear_speed;
@@ -116,6 +120,7 @@ geometry_msgs::Twist boundVelocity(geometry_msgs::Twist velocity) {
 	else if (velocity.angular.z < 0 && velocity.linear.z > - min_angular_speed )
 		velocity.angular.z = -min_angular_speed;
 
+	
 }
 
 
@@ -139,7 +144,7 @@ int main(int argc, char **argv){
 	double tiempo = 0;
 
     //define the max speed
-	double cruise_speed = .01;
+	double cruise_speed = .5;
 
     //define the rate
 	ros::Rate rate(rate_hz);
@@ -165,14 +170,16 @@ int main(int argc, char **argv){
 			desired_velocity.linear.x = 0;
 			desired_velocity.linear.y = 0;
 			desired_velocity.angular.z = 0;
+			printf("Fin!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n" );
 		}
-		//ROS_INFO_STREAM use for debugging 
+		//ROS_INFO_STREAM use for debugging 	
 		ROS_INFO_STREAM("Desired Velocity:"
 			<<"X:"<<desired_velocity.linear.x
 			<<",Y:"<<desired_velocity.linear.y
 			<<",W:"<<desired_velocity.angular.z);
 
 		//publish the new velocity
+		printf ("trayectoria \t(%f, %f, %f)\n", desired_velocity.linear.x,desired_velocity.linear.y,desired_velocity.linear.z);
 		pub_vel_turtle.publish(desired_velocity);
 		
 		ros::spinOnce();
