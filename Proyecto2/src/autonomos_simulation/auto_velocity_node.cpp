@@ -28,7 +28,7 @@ gazebo_msgs::GetJointProperties joint_msg[1];
 
 
 //rate_hz assignment
-double rate_hz = 10;
+double rate_hz = 5;
 
 // Transform robot velocities (x,y,w) to motor velocities (m1,m2,m3,m4)
 double* getMotorValue(double x_velocity, double y_velocity, double w_velocity){
@@ -39,25 +39,26 @@ double* getMotorValue(double x_velocity, double y_velocity, double w_velocity){
     // double Rx = 
     double velWMod = 0.0;
 
-    double factor_velocidad = 2;
+    double factor_velocidad = (0.02)/2;
     
     clientSteer.call(joint_msg[0]);
     if(joint_msg[0].response.success == 1) {
 	printf("\nposicion steer_joint (radianes): %f", joint_msg[0].response.position[0]);
 	double pos = joint_msg[0].response.position[0];
-	if(w_velocity > 0){
-		if(pos>w_velocity)
+	
+	if(w_velocity > 0){ // izquierda
+		if(pos<w_velocity)
 			velWMod = w_velocity;
-		else if(pos<w_velocity)
+		else if(pos>w_velocity)
 			velWMod = -w_velocity;
 		else
 			velWMod=0.0;
 	}
-	else if(w_velocity < 0){
+	else if(w_velocity < 0){ // derecha 
 		if(pos<w_velocity)
-			velWMod = w_velocity;
+			velWMod = -w_velocity;
 		else if(pos>w_velocity)
-			velWMod = -w_velocity;	
+			velWMod = w_velocity;	
 		else
 			velWMod=0.0;
 	}
@@ -99,15 +100,14 @@ int main(int argc, char **argv){
 	clientSteer = nh.serviceClient<gazebo_msgs::GetJointProperties>("/gazebo/get_joint_properties");	
 	joint_msg[0].request.joint_name = "steer_joint";
 	
-	
 	ros::Subscriber sub_vel = nh.subscribe("/target_vel_topic", 100, &get_vel_vec);
 
 	double tiempo = 0;
 
-    //define the max speed
+    	//define the max speed
 	double cruise_speed = 50;
 
-    //define the rate
+	//define the rate
 	ros::Rate rate(rate_hz);
 	ros::Time start_time ;
 	ros::Duration duration ;
@@ -117,7 +117,6 @@ int main(int argc, char **argv){
 	while (ros::ok())
 	{
 		double* velMots = getMotorValue(velocity_msg.linear.x,velocity_msg.linear.y,velocity_msg.angular.z);
-	
 		effort [0] = velMots[0];
 		effort [1] = velMots[1];
 		effort [2] = velMots[2];
@@ -126,12 +125,11 @@ int main(int argc, char **argv){
 			
 			start_time.sec = 0;
 			start_time.nsec = 0;
-			duration.sec = 1/rate_hz;
-			duration.nsec = 0;
-
+			duration.sec = 0;
+			duration.nsec = (1/rate_hz)*pow(10,9);
+			
 			printf("\n effort: %f %f %f", effort[0],effort[1],effort[2]);
 			
-
 			// Wheel-Joint 1
 			eff_msg[0].request.joint_name = "back_right_wheel_joint";
 			eff_msg[0].request.duration = duration;

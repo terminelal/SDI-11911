@@ -26,7 +26,7 @@ geometry_msgs::Pose rposition;
 geometry_msgs::Twist target_position;
 
 //rate_hz assignment
-double rate_hz = 30;
+double rate_hz = 5;
 
 //Assign the position of the robot (from other topic) to robot_position.
 //Assuming the topic that generate the robot position uses geometry_msgs::Twist
@@ -157,9 +157,15 @@ int main(int argc, char **argv){
 			double Kp = 0.2; // constante velocidad+
 			double Ka = 0.5; // constante angulo
 			double Kb = 0.5; // constante angulo
-			double alpha = atan2(target_position.linear.x, target_position.linear.y); // invertidos por modelo deberia ser (y,x)
-			double nov = 1.57; // 90 grados
-			double volante = -(alpha-nov);
+			double alpha = atan2(target_position.linear.y, target_position.linear.x); // invertidos por modelo deberia ser (y,x)
+			double noventa = 1.57; // 90 grados
+			double volante=0.0;
+			if(alpha>noventa)
+				volante=alpha-noventa;
+			else
+				volante=-(noventa-alpha); // derecha es steer joint negativo
+
+			printf("\noriginal: %f, modificacion: %f, (%f, %f)", alpha, volante, target_position.linear.x, target_position.linear.y);
 
 			if(volante > 0.5)
 				volante = 0.5;
