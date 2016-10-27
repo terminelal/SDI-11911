@@ -23,9 +23,12 @@ using namespace Eigen;
 geometry_msgs::Twist robot_position;
 geometry_msgs::Twist velocity_msg;
 
+ros::ServiceClient clientSteer;
+gazebo_msgs::GetJointProperties joint_msg[1];
+
 
 //rate_hz assignment
-double rate_hz = 30;
+double rate_hz = 10;
 
 // Transform robot velocities (x,y,w) to motor velocities (m1,m2,m3,m4)
 double* getMotorValue(double x_velocity, double y_velocity, double w_velocity){
@@ -34,16 +37,43 @@ double* getMotorValue(double x_velocity, double y_velocity, double w_velocity){
     double r = 3.4;
     
     // double Rx = 
-    // double velWMod = (w_velocity / 180);
+    double velWMod = 0.0;
+
+    double factor_velocidad = 2;
+    
+    clientSteer.call(joint_msg[0]);
+    if(joint_msg[0].response.success == 1) {
+	printf("\nposicion steer_joint (radianes): %f", joint_msg[0].response.position[0]);
+	double pos = joint_msg[0].response.position[0];
+	if(w_velocity > 0){
+		if(pos>w_velocity)
+			velWMod = w_velocity;
+		else if(pos<w_velocity)
+			velWMod = -w_velocity;
+		else
+			velWMod=0.0;
+	}
+	else if(w_velocity < 0){
+		if(pos<w_velocity)
+			velWMod = w_velocity;
+		else if(pos>w_velocity)
+			velWMod = -w_velocity;	
+		else
+			velWMod=0.0;
+	}
+	else {
+		velWMod=0.0;
+	}
+    }
     
     double velMots[3];
     
-    printf("\nvelocidad: %f, angulo: %f", y_velocity, w_velocity);
+    printf("\nvelocidad: %f, angulo: %f", x_velocity, w_velocity);
     
-    velMots[0] = y_velocity;
-    velMots[1] = y_velocity;
+    velMots[0] = x_velocity*factor_velocidad;
+    velMots[1] = x_velocity*factor_velocidad;
     
-    velMots[2] = w_velocity;
+    velMots[2] = velWMod;
     
     return velMots;
 }
@@ -66,8 +96,7 @@ int main(int argc, char **argv){
 	gazebo_msgs::ApplyJointEffort eff_msg[3];
 
 	// Suscribe to Gazebo service get_joint_properties
-	ros::ServiceClient clientSteer = nh.serviceClient<gazebo_msgs::GetJointProperties>("/gazebo/get_joint_properties");
-	gazebo_msgs::GetJointProperties joint_msg[1];	
+	clientSteer = nh.serviceClient<gazebo_msgs::GetJointProperties>("/gazebo/get_joint_properties");	
 	joint_msg[0].request.joint_name = "steer_joint";
 	
 	
@@ -101,18 +130,7 @@ int main(int argc, char **argv){
 			duration.nsec = 0;
 
 			printf("\n effort: %f %f %f", effort[0],effort[1],effort[2]);
-			clientSteer.call(joint_msg[0]);
-    			if(joint_msg[0].response.success == 1) {
-				printf("\nposicion steer_joint (radianes): %f", joint_msg[0].response.position[0]);
-				double pos = joint_msg[0].response.position[0];
-				if(pos != effort[2])
-				{
-					if(effort[2] > 0)
-						effort[2] = 0.1;
-					else
-						effort[2] = -0.1;
-				}
-			}	
+			
 
 			// Wheel-Joint 1
 			eff_msg[0].request.joint_name = "back_right_wheel_joint";
@@ -129,7 +147,7 @@ int main(int argc, char **argv){
 			// Wheel-Joint 3
 			eff_msg[2].request.joint_name = "steer_joint";
 			eff_msg[2].request.duration = duration;
-			eff_msg[2].request.effort = -effort[2];
+			eff_msg[2].request.effort = effort[2];
 			eff_msg[2].request.start_time = start_time;
 
 			client.call(eff_msg[0]);

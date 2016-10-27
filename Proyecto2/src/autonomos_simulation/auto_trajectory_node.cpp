@@ -157,11 +157,18 @@ int main(int argc, char **argv){
 			double Kp = 0.2; // constante velocidad+
 			double Ka = 0.5; // constante angulo
 			double Kb = 0.5; // constante angulo
-			double alpha = atan2(target_position.linear.x, target_position.linear.y); // invertidos por modelo
+			double alpha = atan2(target_position.linear.x, target_position.linear.y); // invertidos por modelo deberia ser (y,x)
+			double nov = 1.57; // 90 grados
+			double volante = -(alpha-nov);
+
+			if(volante > 0.5)
+				volante = 0.5;
+			if(volante < -0.5)
+				volante = -0.5;
 			
-			desired_velocity.linear.x = 0;
-			desired_velocity.linear.y = -Kp * cos(alpha); // dist
-			desired_velocity.angular.z = Kp*sin(alpha)-Ka*alpha-Kb*target_position.angular.z;
+			desired_velocity.linear.x = distancia;
+			desired_velocity.linear.y = 0; // dist
+			desired_velocity.angular.z = volante;
 		} else {
             // Goal has been reach ==> dont move
 			desired_velocity.linear.x = 0;
