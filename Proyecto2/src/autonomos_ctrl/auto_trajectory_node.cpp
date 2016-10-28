@@ -139,12 +139,24 @@ int main(int argc, char **argv){
 	ros::Rate rate(rate_hz);
 	int counter=0;
 	while (ros::ok()) { //ESTACIONAMIENTO DEL LADO DERECHO
-		if(counter < 50) { //AVANZA UNOS METROS
+		if(counter < 30) { //AVANZA UNOS METROS
 			ROS_INFO_STREAM("FORWARD");
-			desired_velocity.linear.x = 10;
+			desired_velocity.linear.x = 5;
 			desired_velocity.linear.y = 0; // dist
 			desired_velocity.angular.z = 0;
 		}else{
+			if(counter < 40){
+				ROS_INFO_STREAM("back");
+				desired_velocity.linear.x = -5;
+				desired_velocity.linear.y = 0; // dist
+				desired_velocity.angular.z = 0;
+			}else{
+					ROS_INFO_STREAM("STAHP");
+					desired_velocity.linear.x = 0;
+					desired_velocity.linear.y = 0; // dist
+					desired_velocity.angular.z = 0;
+			}
+		}/*else{
 			//STAHP //DETENTE
 			if(counter < 80 || counter > 250) { //DETENERSE EN EL MOMENTO DE VER EL ESPACIO Y ESTAR PARALELO AL SEGUNDO AUTO (80) Y DETENERESE AL FINAL TOTALMENTE (>250) 
 				ROS_INFO_STREAM("STOP!");
@@ -168,7 +180,7 @@ int main(int argc, char **argv){
 				}
 			}
 			
-		}
+		}*/
 		
 		ROS_INFO_STREAM("counter "<<counter);
 		counter++;

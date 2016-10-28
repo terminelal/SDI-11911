@@ -43,28 +43,28 @@ double* getMotorValue(double x_velocity, double y_velocity, double w_velocity){
     
     clientSteer.call(joint_msg[0]);
     if(joint_msg[0].response.success == 1) {
-	printf("\nposicion steer_joint (radianes): %f", joint_msg[0].response.position[0]);
-	double pos = joint_msg[0].response.position[0];
-	
-	if(w_velocity > 0){ // izquierda
-		if(pos<w_velocity)
-			velWMod = w_velocity;
-		else if(pos>w_velocity)
-			velWMod = -w_velocity;
-		else
+		printf("\nposicion steer_joint (radianes): %f", joint_msg[0].response.position[0]);
+		double pos = joint_msg[0].response.position[0];
+		
+		if(w_velocity > 0){ // izquierda
+			if(pos<w_velocity)
+				velWMod = w_velocity;
+			else if(pos>w_velocity)
+				velWMod = -w_velocity;
+			else
+				velWMod=0.0;
+		}
+		else if(w_velocity < 0){ // derecha 
+			if(pos<w_velocity)
+				velWMod = -w_velocity;
+			else if(pos>w_velocity)
+				velWMod = w_velocity;	
+			else
+				velWMod=0.0;
+		}
+		else {
 			velWMod=0.0;
-	}
-	else if(w_velocity < 0){ // derecha 
-		if(pos<w_velocity)
-			velWMod = -w_velocity;
-		else if(pos>w_velocity)
-			velWMod = w_velocity;	
-		else
-			velWMod=0.0;
-	}
-	else {
-		velWMod=0.0;
-	}
+		}
     }
     
     double velMots[3];
@@ -152,7 +152,7 @@ int main(int argc, char **argv){
 			client.call(eff_msg[1]);
 			client.call(eff_msg[2]);
 
-			ROS_INFO_STREAM("\nJoints ==> 1: " << ((eff_msg[0].response.success == 1) ? "TRUE" : "FALSE") << " 2: " << ((eff_msg[1].response.success == 1) ? "TRUE" : "FALSE") << " 3: " << ((eff_msg[2].response.success == 1) ? "TRUE" : "FALSE") );
+			//ROS_INFO_STREAM("\nJoints ==> 1: " << ((eff_msg[0].response.success == 1) ? "TRUE" : "FALSE") << " 2: " << ((eff_msg[1].response.success == 1) ? "TRUE" : "FALSE") << " 3: " << ((eff_msg[2].response.success == 1) ? "TRUE" : "FALSE") );
 		}																																																																																												
 		
 		ros::spinOnce();
