@@ -63,25 +63,30 @@ bool isGoalFar(geometry_msgs::Twist p_start, geometry_msgs::Twist p_goal) {
 //Function to generate a Linear Constant Velocity from robot's position to the target's position
 geometry_msgs::Twist generateConstantVelocity(double constant_speed, geometry_msgs::Twist p_start, geometry_msgs::Twist p_goal){
 
-    // Compute direction to goal
-	Vector3d p_start_vector(p_start.linear.x,p_start.linear.y,p_start.angular.z);
-	Vector3d p_goal_vector(p_goal.linear.x, p_goal.linear.y, p_goal.angular.z);
-	// Vector3d goal_direction_vector = p_goal_vector-p_start_vector;
-	Vector3d goal_direction_vector = p_start_vector - p_goal_vector;
+    Vector3d p_start_vector(p_start.linear.x,p_start.linear.y,p_start.angular.z);
+    Vector3d p_goal_vector(p_goal.linear.x, p_goal.linear.y, p_goal.angular.z);
+    // Vector3d goal_direction_vector = p_goal_vector-p_start_vector;
+    Vector3d goal_direction_vector = p_start_vector - p_goal_vector;
 
     // Compute speed in the direction to goal
+    Vector3d velocity_vector = constant_speed * (goal_direction_vector/ goal_direction_vector.norm());
 
-	//Vector3d velocity_vector = constant_speed * sqrt(pow( velocity_vector.x(),2)+ velocity_vector.y(),2);
+    geometry_msgs::Twist velocity;
+    velocity.linear.x = velocity_vector.x();
+    velocity.linear.y = velocity_vector.y();
+	velocity.angular.z = velocity_vector.z();
+	
+	double distancia = 0.1*sqrt(pow(velocity.linear.x,2) + pow(velocity.linear.y,2));
+	double alpha = atan2(target_position.linear.y, target_position.linear.x); // invertidos por modelo deberia ser (y,x)
+	double noventa = 1.57; // 90 grados
+	double volante=0.0;
 
+	printf("alpha %f\n", alpha);
+			
+	velocity.linear.x = distancia;
+	velocity.linear.y = 0; // dist
+	velocity.angular.z = alpha;
 
-	Vector3d velocity_vector = (goal_direction_vector/ goal_direction_vector.norm());
-
-	geometry_msgs::Twist velocity;
-
-
-	velocity.linear.x =  .01*sqrt(pow( velocity_vector.x(),2) +pow( velocity_vector.y(),2));
-	velocity.linear.y = 0;
-	velocity.angular.z = atan( velocity_vector.y()/ velocity_vector.x());//tan(, velocity_vector.x());
 	return velocity;
 }
 
@@ -89,9 +94,10 @@ geometry_msgs::Twist generateConstantVelocity(double constant_speed, geometry_ms
 geometry_msgs::Twist boundVelocity(geometry_msgs::Twist velocity) {
 
 	double max_linear_speed = .5;
-	double min_linear_speed = 0;
-	double max_angular_speed =.5;
-	double min_angular_speed = -.5;
+	double min_linear_speed = -.5;
+	double max_angular_speed = M_PI*4;
+	double min_angular_speed = M_PI/16;
+
 
 	if (velocity.linear.x > max_linear_speed)
 		velocity.linear.x = max_linear_speed;
@@ -119,7 +125,6 @@ geometry_msgs::Twist boundVelocity(geometry_msgs::Twist velocity) {
 		velocity.angular.z = min_angular_speed;
 	else if (velocity.angular.z < 0 && velocity.linear.z > - min_angular_speed )
 		velocity.angular.z = -min_angular_speed;
-
 	
 }
 
@@ -144,7 +149,7 @@ int main(int argc, char **argv){
 	double tiempo = 0;
 
     //define the max speed
-	double cruise_speed = .5;
+	double cruise_speed = .1;
 
     //define the rate
 	ros::Rate rate(rate_hz);
@@ -173,13 +178,14 @@ int main(int argc, char **argv){
 			printf("Fin!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n" );
 		}
 		//ROS_INFO_STREAM use for debugging 	
+		printf ("trayectoria \t(%f, %f, %f)\n", desired_velocity.linear.x,desired_velocity.linear.y,desired_velocity.angular.z);
+		
 		ROS_INFO_STREAM("Desired Velocity:"
 			<<"X:"<<desired_velocity.linear.x
 			<<",Y:"<<desired_velocity.linear.y
 			<<",W:"<<desired_velocity.angular.z);
 
 		//publish the new velocity
-		printf ("trayectoria \t(%f, %f, %f)\n", desired_velocity.linear.x,desired_velocity.linear.y,desired_velocity.linear.z);
 		pub_vel_turtle.publish(desired_velocity);
 		
 		ros::spinOnce();

@@ -42,14 +42,14 @@ double* getMotorValue(double x_velocity, double y_velocity, double w_velocity){
 
 	double velXMod = x_velocity;//	x_velocity * 3.5 / ( 2 * M_PI * r );
     double velYMod = x_velocity;// * 3.5 / ( 2 * M_PI * r );
-    double velWMod =atan (w_velocity);; //(x_velocity/dblL)*//w_velocity * 3.5 / ( 2 * M_PI * r );
+    //double velWMod =atan (w_velocity)	;; //(x_velocity/dblL)*//w_velocity * 3.5 / ( 2 * M_PI * r );
     //velWMod = R * velWMod;
     
     velMots[0] = x_velocity;//(double)( s1 * velXMod + c1 * velYMod + velWMod);
     //velMots[1] = x_velocity*.01;//(double)( s1 * velXMod + c1 * velYMod + velWMod);
 	double toRadianas ;
 	
-	velMots[1] = 0;;
+	velMots[1] = w_velocity;;
     return velMots;
 }
 
@@ -108,7 +108,7 @@ int main(int argc, char **argv){
 			get_jnt_state_client.call(get_joint_state_srv_msg);
 			double tst = get_joint_state_srv_msg.response.position[0];
 			
-		printf ("effort \t(%f, %f) \n",effort[0],effort[1]-tst);
+			printf ("effort \t(%f, %f, %f) \n",effort[0],effort[1],tst);
 			//get angle
 			//eff_msg1[0].request.joint_name = "steer_joint";
 			//double tst = eff_msg1[0].request.position;
@@ -128,7 +128,7 @@ int main(int argc, char **argv){
 			// Wheel-Joint 3
 			eff_msg[2].request.joint_name = "steer_joint";
 			eff_msg[2].request.duration = duration;
-			eff_msg[2].request.effort = effort[1]+.01*(effort[1]-tst);//falta agregarle el error para que sea i ahorita es pd
+			eff_msg[2].request.effort = .5*(effort[1]-tst);//falta agregarle el error para que sea i ahorita es pd
 			eff_msg[2].request.start_time = start_time;
 
 			client.call(eff_msg[0]);
