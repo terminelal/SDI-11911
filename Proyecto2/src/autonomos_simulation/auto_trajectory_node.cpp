@@ -23,6 +23,7 @@ using namespace Eigen;
 // 		dummy.linear.y
 // 		dummy.angular.z
 geometry_msgs::Pose rposition;
+geometry_msgs::Pose rpositionOld;
 geometry_msgs::Twist target_position;
 
 //rate_hz assignment
@@ -35,10 +36,16 @@ void getRobotPose(const gazebo_msgs::LinkStates& msg) {
     // msg.name[1]
     rposition.position.x = msg.pose[1].position.x;
     rposition.position.y = msg.pose[1].position.y;
-    rposition.orientation.x = msg.pose[1].orientation.x; 
-    rposition.orientation.y = msg.pose[1].orientation.y; 
-    rposition.orientation.z = msg.pose[1].orientation.z; 
-    rposition.orientation.w = msg.pose[1].orientation.w; 
+    // rposition.orientation.x = msg.pose[1].orientation.x; 
+    // rposition.orientation.y = msg.pose[1].orientation.y; 
+    // rposition.orientation.z = msg.pose[1].orientation.z; 
+    // rposition.orientation.w = msg.pose[1].orientation.w; 
+
+    double dblVel = sqrt(pow(rpositionOld.position.x - rposition.position.x,2) + pow   (rpositionOld.position.y-rposition.position.y,2))/(1/rate_hz);
+    printf("\nVelocity: %f \n", dblVel);
+
+    rpositionOld.position.x    = rposition.position.x;
+    rpositionOld.position.y    = rposition.position.y;
 }
 
 //Assign the position of the target (from other topic) to target_position.
@@ -118,7 +125,7 @@ int main(int argc, char **argv){
 	ros::Publisher pub_vel_turtle = nh.advertise<geometry_msgs::Twist>("/target_vel_topic", rate_hz);
 
 	//Topics to acquire robot position 
-	// ros::Subscriber sub_robot_pos = nh.subscribe("/gazebo/model_states", 1, &getRobotPose);
+	ros::Subscriber sub_robot_pos = nh.subscribe("/gazebo/model_states", 1, &getRobotPose);
 	//Topics to acquire target position (from the vision node) 
 	ros::Subscriber sub_ball_pos = nh.subscribe("/target_pose", 1, &getTargetPose);
 

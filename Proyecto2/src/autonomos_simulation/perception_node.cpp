@@ -2,6 +2,7 @@
 #include <tf2_ros/transform_listener.h>
 #include <geometry_msgs/TransformStamped.h>
 #include <geometry_msgs/Twist.h>
+#include <sensor_msgs/LaserScan.h>
 #include <pcl_ros/point_cloud.h>
 #include <pcl/point_types.h>
 #include <boost/foreach.hpp>
@@ -18,6 +19,39 @@ double rate_hz = 5;
 ros::Publisher pub_pose;
 
 typedef pcl::PointCloud<pcl::PointXYZ> PointCloud;
+
+void processLaserScan(const sensor_msgs::LaserScan::ConstPtr& scan){
+     //scan->ranges[] are laser readings
+     printf("\nLIDAR");
+     int min =0 ; int max = 0;
+     bool establecidos = false;
+     for(int i=0;i<360;i++)
+     {
+	// evitar la carcaza del carro, carcaza: 52-62, 141-154, 205-218, 295-308
+	// || (i>62 && i<141) || (i>154 && i<205) || (i>218 && i<295) ||
+	// solo considera el frente
+	if(i<52 || i>308)
+	{
+		if(scan->intensities[i] > 0) {
+			if(!establecidos)
+			{
+				min = max = i;
+				establecidos = true;
+			}
+			if(i>max)
+				max=i;
+		}
+	}
+     }
+     if(min > 0 && max > min)
+     {
+	double x1 = scan->ranges[max] * cos(max);
+	double y1 = scan->ranges[max] * sin(max);
+	double x2 = scan->ranges[min] * cos(min);
+	double y2 = scan->ranges[min] * sin(min);
+	printf("\nObjeto encontrado: \n P1: (%f, %f) \n P2: (%f, %f)", x1, y1, x2, y2);
+     }
+}
 
 void callback(const PointCloud::ConstPtr& msg)
 {
@@ -75,14 +109,14 @@ void callback(const PointCloud::ConstPtr& msg)
 			double m = (msg->points[max].y - msg->points[min].y) / (msg->points[max].x - msg->points[min].x);
 	  		theta = atan(m) * 180 / PI;
 		    	pendiente_calculada=true;
-			printf("\n(x1: %f, y1: %f)", msg->points[min].x, msg->points[min].y);
-			printf("\n(x2: %f, y2: %f)", msg->points[max].x, msg->points[max].y);
-			printf("\nm: %f, angulo: %f", m, theta);
+			// printf("\n(x1: %f, y1: %f)", msg->points[min].x, msg->points[min].y);
+			// printf("\n(x2: %f, y2: %f)", msg->points[max].x, msg->points[max].y);
+			// printf("\nm: %f, angulo: %f", m, theta);
 		    }
 		    // calcular punto medio linea anterior
 		    puntos_medios[l][0] = (msg->points[min].x + msg->points[max].x)/2;
 		    puntos_medios[l][1] = (msg->points[min].y + msg->points[max].y)/2;
-		    printf("\nPunto medio linea %d: (%f,%f)", line-1,puntos_medios[l][0], puntos_medios[l][1]);
+		    // printf("\nPunto medio linea %d: (%f,%f)", line-1,puntos_medios[l][0], puntos_medios[l][1]);
 		    l++;
 		}
 	}
@@ -106,10 +140,10 @@ void callback(const PointCloud::ConstPtr& msg)
 		desired_pose.linear.y = 0;
 		desired_pose.angular.z = 0;
 	}
-	ROS_INFO_STREAM("Desired pose:"
-		<<"X:"<<desired_pose.linear.x
-		<<",Y:"<<desired_pose.linear.y
-		<<",W:"<<desired_pose.angular.z);
+	// ROS_INFO_STREAM("Desired pose:"
+	// 	<<"X:"<<desired_pose.linear.x
+	//	<<",Y:"<<desired_pose.linear.y
+	//	<<",W:"<<desired_pose.angular.z);
 	
 	pub_pose.publish(desired_pose);
 	
@@ -131,8 +165,10 @@ int main(int argc, char** argv){
   ros::Rate loop_rate(rate_hz);
 
   ros::Subscriber sub = nh.subscribe<PointCloud>("pointCloud_vision", 1, callback);
+
   pub_pose = nh.advertise<geometry_msgs::Twist>("/target_pose", rate_hz);
 
+  ros::Subscriber scanSub=nh.subscribe<sensor_msgs::LaserScan>("/laser_scan",1, processLaserScan);
   while(nh.ok())
   {
     ros::spinOnce();
