@@ -35,7 +35,7 @@ void processLaserScan(const sensor_msgs::LaserScan::ConstPtr& scan){
      //scan->ranges[] are laser readings
      coords perspectiva;
      printf("\nLIDAR");
-     int min =0;
+     int max =0;
      bool objetoiniciado = false;
      std::cout << "\nPerspectiva: " << scan->header.frame_id;
      
@@ -51,27 +51,26 @@ void processLaserScan(const sensor_msgs::LaserScan::ConstPtr& scan){
 	{
 		if(scan->ranges[i] > 0.1 && scan->ranges[i] < 6.0) { // antes intensity > 0
 			if(!objetoiniciado) {
-				min = i;
+				max = i;
 				objetoiniciado = true;
 				obj++;
 			}
 			
 			double x1 = scan->ranges[i] * cos(i);
 			double y1 = scan->ranges[i] * sin(i);
-			double x2 = scan->ranges[min] * cos(min);
-			double y2 = scan->ranges[min] * sin(min);
+			double x2 = scan->ranges[max] * cos(max);
+			double y2 = scan->ranges[max] * sin(max);
 			double dist = sqrt(pow(x2-x1,2) + pow(y2-y1,2));
 			if(abs(dist)>0.05){
-				objetoiniciado = false;
+				obj++;
 			}
-			else {
-				perspectiva.object[v] = obj;
-				perspectiva.x[v] = x1;
-				perspectiva.y[v] = y1;
-				v++;
-			}
-			min = i;
 			
+			perspectiva.object[v] = obj;
+			perspectiva.x[v] = x1;
+			perspectiva.y[v] = y1;
+			v++;
+			
+			max = i;
 		}
 	}
      }
