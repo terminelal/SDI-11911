@@ -22,36 +22,24 @@ ros::Publisher pub_pose;
 
 int pers_min = 1000;
 
-struct mystruct
+struct coords
 {
-      std::string name;
       int object[100];
       double x[100];
       double y[100];
-      bool valido;
 }; 
-
-mystruct perspectiva[5];
 
 typedef pcl::PointCloud<pcl::PointXYZ> PointCloud;
 
 void processLaserScan(const sensor_msgs::LaserScan::ConstPtr& scan){
-     if(scan->header.seq < pers_min){
-	pers_min=scan->header.seq;
-	printf("\nMINIMO: %d", pers_min);
-	return;
-     }
-
      //scan->ranges[] are laser readings
+     coords perspectiva;
      printf("\nLIDAR");
-     int min =0 ; int max = 0;
+     int min =0;
      bool objetoiniciado = false;
-     // std::cout << "\nPerspectiva: " << scan->header.frame_id;
-     // std::string persp = scan->header.frame_id;
-     int p_i = scan->header.seq-pers_min;
+     std::cout << "\nPerspectiva: " << scan->header.frame_id;
      
-     perspectiva[p_i].name = scan->header.frame_id;
-     perspectiva[p_i].valido = true;
+     // std::string persp = scan->header.frame_id;
      int obj = -1;
      int v = 0;
      for(int i=0;i<360;i++)
@@ -62,46 +50,44 @@ void processLaserScan(const sensor_msgs::LaserScan::ConstPtr& scan){
 	if(i<52 || (i>62 && i<141) || (i>154 && i<205) || (i>218 && i<295) || i>308)
 	{
 		if(scan->ranges[i] > 0.1 && scan->ranges[i] < 6.0) { // antes intensity > 0
-			if(!objetoiniciado)
-			{
+			if(!objetoiniciado) {
 				min = i;
 				objetoiniciado = true;
 				obj++;
 			}
-			if(i>max) {
-				double x1 = scan->ranges[i] * cos(i);
-				double y1 = scan->ranges[i] * sin(i);
-				double x2 = scan->ranges[min] * cos(min);
-				double y2 = scan->ranges[min] * sin(min);
-				double dist = sqrt(pow(x2-x1,2) + pow(y2-y1,2));
-				if(dist>0.1){
-					objetoiniciado = false;
-				}
-				else {
-					perspectiva[p_i].object[v] = obj;
-					perspectiva[p_i].x[v] = x1;
-					perspectiva[p_i].y[v] = y1;
-				}
-				min = i;
+			
+			double x1 = scan->ranges[i] * cos(i);
+			double y1 = scan->ranges[i] * sin(i);
+			double x2 = scan->ranges[min] * cos(min);
+			double y2 = scan->ranges[min] * sin(min);
+			double dist = sqrt(pow(x2-x1,2) + pow(y2-y1,2));
+			if(abs(dist)>0.05){
+				objetoiniciado = false;
 			}
+			else {
+				perspectiva.object[v] = obj;
+				perspectiva.x[v] = x1;
+				perspectiva.y[v] = y1;
+				v++;
+			}
+			min = i;
+			
 		}
 	}
      }
-     for(int i=0;i<5;i++)
-     {
-	if(perspectiva[i].valido){
-		std::cout << "\n Punto de vista: " << i;
-		obj = -1;
-		for(int j=0;j<v;j++)
-	     	{
-			if(obj != perspectiva[i].object[j]) {
-				obj = perspectiva[i].object[j];
-				printf("\nObjeto %d", obj);
-			}
-			printf("\n(%f, %f)", perspectiva[i].x[j], perspectiva[i].y[j]);
+
+	
+	// std::cout << "\n Punto de vista: " << scan->header.frame_id;
+	obj = -1;
+	for(int j=0;j<v;j++)
+     	{
+		if(obj != perspectiva.object[j]) {
+			obj = perspectiva.object[j];
+			printf("\nObjeto %d", obj);
 		}
+		printf("\n(%f, %f)", perspectiva.x[j], perspectiva.y[j]);
 	}
-     }
+     
      /*
      if(min > 0 && max > min)
      {
