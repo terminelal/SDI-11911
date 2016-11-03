@@ -29,6 +29,8 @@ gazebo_msgs::GetJointProperties joint_msg[1];
 
 //rate_hz assignment
 double rate_hz = 5;
+int banner;
+//final int RRATE = 5;
 
 // Transform robot velocities (x,y,w) to motor velocities (m1,m2,m3,m4)
 double* getMotorValue(double x_velocity, double y_velocity, double w_velocity){
@@ -43,7 +45,7 @@ double* getMotorValue(double x_velocity, double y_velocity, double w_velocity){
     
     clientSteer.call(joint_msg[0]);
     if(joint_msg[0].response.success == 1) {
-		printf("\nposicion steer_joint (radianes): %f", joint_msg[0].response.position[0]);
+		if (banner % 5 ==0)  printf("\nposicion steer_joint (radianes): %f", joint_msg[0].response.position[0]);
 		double pos = joint_msg[0].response.position[0];
 		
 		if(w_velocity > 0){ // izquierda
@@ -69,7 +71,7 @@ double* getMotorValue(double x_velocity, double y_velocity, double w_velocity){
     
     double velMots[3];
     
-    printf("\nvelocidad: %f, angulo: %f", x_velocity, w_velocity);
+    if (banner % 5 ==0)  printf("\nvelocidad: %f, angulo: %f", x_velocity, w_velocity);
     
     velMots[0] = x_velocity*factor_velocidad;
     velMots[1] = x_velocity*factor_velocidad;
@@ -113,7 +115,7 @@ int main(int argc, char **argv){
 	ros::Duration duration ;
 
 	double effort[3];
-	
+	banner =0;
 	while (ros::ok())
 	{
 		double* velMots = getMotorValue(velocity_msg.linear.x,velocity_msg.linear.y,velocity_msg.angular.z);
@@ -128,7 +130,7 @@ int main(int argc, char **argv){
 			duration.sec = 0;
 			duration.nsec = (1/rate_hz)*pow(10,9);
 			
-			printf("\neffort: %f %f %f\n", effort[0],effort[1],effort[2]);
+			if (banner % 5 ==0) printf("\neffort: %f %f %f\n", effort[0],effort[1],effort[2]);
 			
 			// Wheel-Joint 1
 			eff_msg[0].request.joint_name = "back_right_wheel_joint";
@@ -151,6 +153,7 @@ int main(int argc, char **argv){
 			client.call(eff_msg[0]);
 			client.call(eff_msg[1]);
 			client.call(eff_msg[2]);
+			banner++;
 
 			//ROS_INFO_STREAM("\nJoints ==> 1: " << ((eff_msg[0].response.success == 1) ? "TRUE" : "FALSE") << " 2: " << ((eff_msg[1].response.success == 1) ? "TRUE" : "FALSE") << " 3: " << ((eff_msg[2].response.success == 1) ? "TRUE" : "FALSE") );
 		}																																																																																												

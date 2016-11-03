@@ -138,13 +138,29 @@ int main(int argc, char **argv){
     //define the rate
 	ros::Rate rate(rate_hz);
 	int counter=0;
+	int speed=8;
 	while (ros::ok()) { //ESTACIONAMIENTO DEL LADO DERECHO
 		if(counter < 30) { //AVANZA UNOS METROS
 			ROS_INFO_STREAM("FORWARD");
-			desired_velocity.linear.x = 5;
-			desired_velocity.linear.y = 0; // dist
+			desired_velocity.linear.x = speed;
+			desired_velocity.linear.y = 0; 
 			desired_velocity.angular.z = 0;
 		}else{
+			if(counter < 65){ //COMIENZA A DETENERTE Y HACERTE PARA ATRAS
+				ROS_INFO_STREAM("STOPPING AND BACKWARDS");
+				desired_velocity.linear.x = speed>=-25?speed:0;
+				desired_velocity.linear.y = 0;
+				desired_velocity.angular.z = 0;
+				speed--;
+			}
+			else{
+			     	ROS_INFO_STREAM("WHEELS RIGHT");
+			     	desired_velocity.linear.x = 0;
+				desired_velocity.linear.y = 0;
+				desired_velocity.angular.z = -0.32;
+			}
+		}
+/*else{
 			if(counter < 40){
 				ROS_INFO_STREAM("back");
 				desired_velocity.linear.x = -5;
@@ -156,7 +172,7 @@ int main(int argc, char **argv){
 					desired_velocity.linear.y = 0; // dist
 					desired_velocity.angular.z = 0;
 			}
-		}/*else{
+		}else{
 			//STAHP //DETENTE
 			if(counter < 80 || counter > 250) { //DETENERSE EN EL MOMENTO DE VER EL ESPACIO Y ESTAR PARALELO AL SEGUNDO AUTO (80) Y DETENERESE AL FINAL TOTALMENTE (>250) 
 				ROS_INFO_STREAM("STOP!");
@@ -182,11 +198,10 @@ int main(int argc, char **argv){
 			
 		}*/
 		
-		ROS_INFO_STREAM("counter "<<counter);
-		counter++;
+		if(counter <= 80) ROS_INFO_STREAM("counter "<<counter);
 		//publish the new velocity
-		pub_vel_turtle.publish(desired_velocity);
-		
+		if(counter <= 80) pub_vel_turtle.publish(desired_velocity);
+		counter++;
 		ros::spinOnce();
 		rate.sleep();
         tiempo+=(1/rate_hz); 
