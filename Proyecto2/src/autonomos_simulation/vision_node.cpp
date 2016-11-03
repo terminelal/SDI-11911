@@ -35,15 +35,32 @@ int pc_original_full = 0;
 void gen_point_cloud(const gazebo_msgs::LinkStates& gazebo_msg){
 	// because points are static and wont change in the entire simulation, gathering the points and filling 
 	// the pointcloud is only made once at the beginning of the simulation
+	
 	if(pc_original_full == 0)
 	{
 		// Assuming the name of each link is e.g.: 'AutoNOMOS_mini_intersection::L12_p50', get the last point (of the last line) and extract the total nomber of lines and points
-		int str_size = gazebo_msg.name.size() - 1;
+		// int str_size = gazebo_msg.name.size() - 1;
 		int lines = 0;
 		int points = 0;
 		int i = 30;
-		std::string str = gazebo_msg.name[str_size];
+		// std::string str = gazebo_msg.name[str_size]; // mal, no se toman en cuenta mas objetos
+		
+		int minRoad=0;
+		int maxRoad=0;
+		bool delimitado=false;
+		for(int j=0;j<gazebo_msg.name.size();j++){
+			if (gazebo_msg.name[j][29] == 'L'){
+				if(!delimitado){
+					minRoad = j;
+					maxRoad = j;
+					delimitado = true;
+				}
+				if(j>maxRoad)
+					maxRoad = j;
+			}
+		}
 
+		std::string str = gazebo_msg.name[maxRoad];
 		if (str[29] == 'L'){
 			while( str[i] != '_')
 			{
@@ -68,16 +85,16 @@ void gen_point_cloud(const gazebo_msgs::LinkStates& gazebo_msg){
 		int line = 0;
 		int point = 0;
 
-		 int first_point = 11; //FIRST POINT IF USING ONLY THE AUTONOMOS-MINI
+		int first_point = 11; //FIRST POINT IF USING ONLY THE AUTONOMOS-MINI
 	//	int first_point = 7; //FIRST POINT IF USING ONLY THE TURTLEBOT
 
-
-	    for (int i = first_point; i < gazebo_msg.pose.size(); ++i)
+		printf("\nlines %d points %d", lines,points); 
+	    for (int i = minRoad; i < maxRoad; ++i)
 	    {
 	       	pc_original -> points[line * points + point].x = gazebo_msg.pose[i].position.x;
 	    	pc_original -> points[line * points + point].y = gazebo_msg.pose[i].position.y;
 	    	pc_original -> points[line * points + point].z = gazebo_msg.pose[i].position.z;
-	
+
 	    	line++;
 	    	if (line % lines == 0)
 	    	{
