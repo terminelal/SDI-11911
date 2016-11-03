@@ -187,24 +187,8 @@ void callback(const PointCloud::ConstPtr& msg)
 		desired_pose.linear.y = 0;
 		desired_pose.angular.z = 0;
 	}
-
-	// ROS_INFO_STREAM("Desired pose:"
-	// 	<<"X:"<<desired_pose.linear.x
-	//	<<",Y:"<<desired_pose.linear.y
-	//	<<",W:"<<desired_pose.angular.z);
 	
 	pub_pose.publish(desired_pose);
-	
-	
-/*
-  destiny_position.linear.x;
-  destiny_position.linear.y;
-  destiny_position.linear.z;
-
-  destiny_position.angular.x;
-  destiny_position.angular.y;
-  destiny_position.angular.z;
-*/
 }
 
 int main(int argc, char** argv){
