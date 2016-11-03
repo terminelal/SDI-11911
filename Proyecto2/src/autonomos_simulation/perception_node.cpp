@@ -3,10 +3,12 @@
 #include <geometry_msgs/TransformStamped.h>
 #include <geometry_msgs/Twist.h>
 #include <sensor_msgs/LaserScan.h>
+#include <std_msgs/Header.h>
 #include <pcl_ros/point_cloud.h>
 #include <pcl/point_types.h>
 #include <boost/foreach.hpp>
 #include <math.h>
+#include <iostream>
 
 #define PI 3.14159265
 
@@ -18,31 +20,89 @@ geometry_msgs::Twist destiny_position;
 double rate_hz = 5;
 ros::Publisher pub_pose;
 
+int pers_min = 1000;
+
+struct mystruct
+{
+      std::string name;
+      int object[100];
+      double x[100];
+      double y[100];
+      bool valido;
+}; 
+
+mystruct perspectiva[5];
+
 typedef pcl::PointCloud<pcl::PointXYZ> PointCloud;
 
 void processLaserScan(const sensor_msgs::LaserScan::ConstPtr& scan){
+     if(scan->header.seq < pers_min){
+	pers_min=scan->header.seq;
+	printf("\nMINIMO: %d", pers_min);
+	return;
+     }
+
      //scan->ranges[] are laser readings
      printf("\nLIDAR");
      int min =0 ; int max = 0;
-     bool establecidos = false;
+     bool objetoiniciado = false;
+     // std::cout << "\nPerspectiva: " << scan->header.frame_id;
+     // std::string persp = scan->header.frame_id;
+     int p_i = scan->header.seq-pers_min;
+     
+     perspectiva[p_i].name = scan->header.frame_id;
+     perspectiva[p_i].valido = true;
+     int obj = -1;
+     int v = 0;
      for(int i=0;i<360;i++)
      {
 	// evitar la carcaza del carro, carcaza: 52-62, 141-154, 205-218, 295-308
 	// || (i>62 && i<141) || (i>154 && i<205) || (i>218 && i<295) ||
 	// solo considera el frente
-	if(i<52 || i>308)
+	if(i<52 || (i>62 && i<141) || (i>154 && i<205) || (i>218 && i<295) || i>308)
 	{
-		if(scan->intensities[i] > 0) {
-			if(!establecidos)
+		if(scan->ranges[i] > 0.1 && scan->ranges[i] < 6.0) { // antes intensity > 0
+			if(!objetoiniciado)
 			{
-				min = max = i;
-				establecidos = true;
+				min = i;
+				objetoiniciado = true;
+				obj++;
 			}
-			if(i>max)
-				max=i;
+			if(i>max) {
+				double x1 = scan->ranges[i] * cos(i);
+				double y1 = scan->ranges[i] * sin(i);
+				double x2 = scan->ranges[min] * cos(min);
+				double y2 = scan->ranges[min] * sin(min);
+				double dist = sqrt(pow(x2-x1,2) + pow(y2-y1,2));
+				if(dist>0.1){
+					objetoiniciado = false;
+				}
+				else {
+					perspectiva[p_i].object[v] = obj;
+					perspectiva[p_i].x[v] = x1;
+					perspectiva[p_i].y[v] = y1;
+				}
+				min = i;
+			}
 		}
 	}
      }
+     for(int i=0;i<5;i++)
+     {
+	if(perspectiva[i].valido){
+		std::cout << "\n Punto de vista: " << i;
+		obj = -1;
+		for(int j=0;j<v;j++)
+	     	{
+			if(obj != perspectiva[i].object[j]) {
+				obj = perspectiva[i].object[j];
+				printf("\nObjeto %d", obj);
+			}
+			printf("\n(%f, %f)", perspectiva[i].x[j], perspectiva[i].y[j]);
+		}
+	}
+     }
+     /*
      if(min > 0 && max > min)
      {
 	double x1 = scan->ranges[max] * cos(max);
@@ -51,6 +111,7 @@ void processLaserScan(const sensor_msgs::LaserScan::ConstPtr& scan){
 	double y2 = scan->ranges[min] * sin(min);
 	printf("\nObjeto encontrado: \n P1: (%f, %f) \n P2: (%f, %f)", x1, y1, x2, y2);
      }
+     */
 }
 
 void callback(const PointCloud::ConstPtr& msg)
@@ -140,6 +201,7 @@ void callback(const PointCloud::ConstPtr& msg)
 		desired_pose.linear.y = 0;
 		desired_pose.angular.z = 0;
 	}
+
 	// ROS_INFO_STREAM("Desired pose:"
 	// 	<<"X:"<<desired_pose.linear.x
 	//	<<",Y:"<<desired_pose.linear.y
