@@ -57,7 +57,7 @@ void processLaserScan(const sensor_msgs::LaserScan::ConstPtr& scan){
 	// Y LATERAL (i>62 && i<141) ||  (i>218 && i<295) ||
 	if(i<52 || i>308)
 	{
-		if(scan->ranges[i] > 0.1 && scan->ranges[i] < 3.0) { // antes intensity > 0
+		if(scan->ranges[i] > 0.1 && scan->ranges[i] < 6.0) { // antes intensity > 0
 			if(!objetoiniciado) {
 				max = i;
 				objetoiniciado = true;
@@ -127,18 +127,24 @@ void processLaserScan(const sensor_msgs::LaserScan::ConstPtr& scan){
 	double y=0.0;
 	for(int j=0;j<obj+1;j++)
      	{
-		printf("\n LIDAR: %d: (%f, %f)",j,vertobjs[j][0], vertobjs[j][1]);
+		// printf("\n LIDAR: %d: (%f, %f)",j,vertobjs[j][0], vertobjs[j][1]);
 		x += vertobjs[j][0];
 		y += vertobjs[j][1];
 	}
-	x/=obj+1;
-	y/=obj+1;
-	car_follow.linear.x = x;
-	car_follow.linear.y = y;
-	car_follow.angular.z = 0;
-     
-	pub_lidar.publish(car_follow);
+	x=x/obj+1;
+	y=y/obj+1;
 
+	if(x!=x || y!=y)
+	{}
+	else {
+		printf("\n LIDAR PUNTO OBJETIVO: (%f, %f)",x, y);
+	
+		car_follow.linear.x = x;
+		car_follow.linear.y = y;
+		car_follow.angular.z = 0;
+	     
+		pub_lidar.publish(car_follow);
+	}
 	/*
 	if(min > 0 && max > min)
 	{

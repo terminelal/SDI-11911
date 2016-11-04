@@ -91,16 +91,6 @@ int main(int argc, char **argv){
 	ros::NodeHandle nh;
 	ROS_INFO_STREAM("auto_velocity_node initialized");
 	ROS_INFO_STREAM(ros::this_node::getName());
-	
-	// Suscribe to Gazebo service ApplyJointEffor
-	ros::ServiceClient client = nh.serviceClient<gazebo_msgs::ApplyJointEffort>("/gazebo/apply_joint_effort");
-	gazebo_msgs::ApplyJointEffort eff_msg[3];
-
-	// Suscribe to Gazebo service get_joint_properties
-	clientSteer = nh.serviceClient<gazebo_msgs::GetJointProperties>("/gazebo/get_joint_properties");	
-	joint_msg[0].request.joint_name = "steer_joint";
-	
-	ros::Subscriber sub_vel = nh.subscribe("/target_vel_topic", 100, &get_vel_vec);
 
 	std::string nombre;
 	const std::string PARAM1 = "~lidar";
@@ -111,6 +101,18 @@ int main(int argc, char **argv){
 	}
 	else
 		std::cout<<"\nSolo concentrarse en lidar:"<<nombre;
+	
+	// Suscribe to Gazebo service ApplyJointEffor
+	ros::ServiceClient client = nh.serviceClient<gazebo_msgs::ApplyJointEffort>("/gazebo/apply_joint_effort");
+	gazebo_msgs::ApplyJointEffort eff_msg[3];
+
+	// Suscribe to Gazebo service get_joint_properties
+	clientSteer = nh.serviceClient<gazebo_msgs::GetJointProperties>("/gazebo/get_joint_properties");	
+	joint_msg[0].request.joint_name = nombre+"::steer_joint";
+	
+	ros::Subscriber sub_vel = nh.subscribe("/target_vel_topic", 100, &get_vel_vec);
+
+	
 
 	
 
@@ -149,13 +151,13 @@ int main(int argc, char **argv){
 			eff_msg[0].request.start_time = start_time;
 
 			// Wheel-Joint 2
-			eff_msg[1].request.joint_name = nombre+"back_left_wheel_joint";
+			eff_msg[1].request.joint_name = nombre+"::back_left_wheel_joint";
 			eff_msg[1].request.duration = duration;
 			eff_msg[1].request.effort = effort[1];
 			eff_msg[1].request.start_time = start_time;
 
 			// Wheel-Joint 3
-			eff_msg[2].request.joint_name = nombre+"steer_joint";
+			eff_msg[2].request.joint_name = nombre+"::steer_joint";
 			eff_msg[2].request.duration = duration;
 			eff_msg[2].request.effort = effort[2];
 			eff_msg[2].request.start_time = start_time;

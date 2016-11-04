@@ -54,7 +54,9 @@ void getRobotPose(const gazebo_msgs::LinkStates& msg) {
 //and the information is in *.linear. This might need to be modifed
 void getTargetPose(const geometry_msgs::Twist& msg) {
 
-    tposition_old = target_position;
+    tposition_old.linear.x = target_position.linear.x;
+    tposition_old.linear.y = target_position.linear.y;
+    tposition_old.angular.z = target_position.angular.z;
 
 
     target_position.linear.x = msg.linear.x;
@@ -153,10 +155,11 @@ int main(int argc, char **argv){
 			<<",Y="<<target_position.linear.y
 			<<",W="<<target_position.angular.z);
 
-		if(tposition_old.linear.x != 0)
-		{
+		if(tposition_old.linear.x != tposition_old.linear.x || tposition_old.linear.y != tposition_old.linear.y || target_position.linear.x != target_position.linear.x || target_position.linear.y != target_position.linear.y)
+		{}
+		else {
 		
-			double distancia = sqrt(pow(target_position.linear.x-tposition_old.linear.x,2) + pow(target_position.linear.y-tposition_old.linear.y,2))/1/rate_hz;
+			double distancia = sqrt(pow(target_position.linear.x,2) + pow(target_position.linear.y,2));
 			if(distancia > 0){
 				double Kp = 0.2; // constante velocidad+
 				double Ka = 0.5; // constante angulo
@@ -176,10 +179,6 @@ int main(int argc, char **argv){
 				if(volante < -0.5)
 					volante = -0.5;
 
-			
-						
-			
-			
 				desired_velocity.linear.x = distancia;
 				desired_velocity.linear.y = 0; // dist
 				desired_velocity.angular.z = volante;
