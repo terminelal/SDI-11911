@@ -139,6 +139,7 @@ int main(int argc, char **argv){
 	ros::Rate rate(rate_hz);
 	int counter=0;
 	int speed=8;
+	int lastspeed=10;
 	while (ros::ok()) { //ESTACIONAMIENTO DEL LADO DERECHO
 		if(counter < 30) { //AVANZA UNOS METROS
 			ROS_INFO_STREAM("FORWARD");
@@ -154,63 +155,35 @@ int main(int argc, char **argv){
 				speed--;
 			}
 			else{
-			    if(counter <= 100) {
+			    if(counter <= 150) {
 			    	ROS_INFO_STREAM("WHEELS RIGHT");
 			    	desired_velocity.linear.x = 0;
 					desired_velocity.linear.y = 0;
-					desired_velocity.angular.z = -0.32;
+					desired_velocity.angular.z = -0.52;
 				}
 				else{
-					if(counter <= 150) {
-						if(counter <= 150) ROS_INFO_STREAM("WHEELS LEFT");
+					if(counter <= 170) {
+						ROS_INFO_STREAM("WHEELS LEFT");
 			    		desired_velocity.linear.x = 0;
 						desired_velocity.linear.y = 0;
 						desired_velocity.angular.z = 0.32;
 					}
-				}
-			}
-		}
-/*else{
-			if(counter < 40){
-				ROS_INFO_STREAM("back");
-				desired_velocity.linear.x = -5;
-				desired_velocity.linear.y = 0; // dist
-				desired_velocity.angular.z = 0;
-			}else{
-					ROS_INFO_STREAM("STAHP");
-					desired_velocity.linear.x = 0;
-					desired_velocity.linear.y = 0; // dist
-					desired_velocity.angular.z = 0;
-			}
-		}else{
-			//STAHP //DETENTE
-			if(counter < 80 || counter > 250) { //DETENERSE EN EL MOMENTO DE VER EL ESPACIO Y ESTAR PARALELO AL SEGUNDO AUTO (80) Y DETENERESE AL FINAL TOTALMENTE (>250) 
-				ROS_INFO_STREAM("STOP!");
-				desired_velocity.linear.x = 0;
-				desired_velocity.linear.y = 0; // dist
-				desired_velocity.angular.z = 0;
-			}else{
-				if(counter < 160 ){	//ESTE MOMENTO SE ESTA METIENDO EN EL ESPACIO
-					ROS_INFO_STREAM("RIGHT AND BACKWARD!");
-					desired_velocity.linear.x = -5; //EN REVERSA SEGúN
-					desired_velocity.linear.y = 0; // dist
-					desired_velocity.angular.z = 0;//TODO: Modificar el angulo para q las ruedas apunten a la derecha max
-				}
-				else{
-					if(counter < 240 ){ //SE ALINEA EN EL ESPACIO
-						ROS_INFO_STREAM("LEFT AND BACKWARD!");
-						desired_velocity.linear.x = -5; //EN REVERSA SEGúN
-						desired_velocity.linear.y = 0; // dist
-						desired_velocity.angular.z = 0;// TODO: Ahora modificar el angulo para que las ruedas apunten hacia la izquierda Max
+					else{
+						if(counter <= 180) {
+							ROS_INFO_STREAM("final");
+							desired_velocity.linear.x = lastspeed>=0?lastspeed:0;
+							desired_velocity.linear.y = 0;
+							desired_velocity.angular.z = 0;
+							lastspeed--;
+						}
 					}
 				}
 			}
-			
-		}*/
+		}
 		
-		if(counter <= 160) ROS_INFO_STREAM("counter "<<counter);
+		if(counter <= 180) ROS_INFO_STREAM("counter "<<counter);
 		//publish the new velocity
-		if(counter <= 160) pub_vel_turtle.publish(desired_velocity);
+		if(counter <= 180) pub_vel_turtle.publish(desired_velocity);
 		counter++;
 		ros::spinOnce();
 		rate.sleep();
