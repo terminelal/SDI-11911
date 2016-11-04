@@ -25,6 +25,7 @@ using namespace Eigen;
 geometry_msgs::Pose rposition;
 geometry_msgs::Pose rpositionOld;
 geometry_msgs::Twist target_position;
+geometry_msgs::Twist tposition_old;
 
 //rate_hz assignment
 double rate_hz = 5;
@@ -52,6 +53,10 @@ void getRobotPose(const gazebo_msgs::LinkStates& msg) {
 //Assuming the topic that generate the robot position uses geometry_msgs::Twist
 //and the information is in *.linear. This might need to be modifed
 void getTargetPose(const geometry_msgs::Twist& msg) {
+
+    tposition_old = target_position;
+
+
     target_position.linear.x = msg.linear.x;
     target_position.linear.y = msg.linear.y;
     target_position.angular.z = msg.angular.z; 
@@ -114,7 +119,7 @@ geometry_msgs::Twist boundVelocity(geometry_msgs::Twist velocity) {
 
 
 int main(int argc, char **argv){
-	ros::init(argc,argv,"turtle_trajectory_node");
+	ros::init(argc,argv,"turtle_trajectory_node_follow");
 	ros::NodeHandle nh;
 	ROS_INFO_STREAM("turtle_trajectory_node initialized");
 	ROS_INFO_STREAM(ros::this_node::getName());
@@ -122,12 +127,12 @@ int main(int argc, char **argv){
 	//Topic to publish velocity command, queue size equals rate_hz to keep up with the rate at which messages are generated,
 
     //Publish to the turtle topic "/turtle1/cmd_vel at rate_hz"
-	ros::Publisher pub_vel_turtle = nh.advertise<geometry_msgs::Twist>("/target_vel_topic", rate_hz);
+	ros::Publisher pub_vel_turtle = nh.advertise<geometry_msgs::Twist>("/target_lidar_topic", rate_hz);
 
 	//Topics to acquire robot position 
 	ros::Subscriber sub_robot_pos = nh.subscribe("/gazebo/model_states", 1, &getRobotPose);
 	//Topics to acquire target position (from the vision node) 
-	ros::Subscriber sub_ball_pos = nh.subscribe("/target_pose", 1, &getTargetPose);
+	ros::Subscriber sub_ball_pos = nh.subscribe("/target_lidar", 1, &getTargetPose);
 
 	
 
@@ -143,48 +148,55 @@ int main(int argc, char **argv){
 
 	while (ros::ok())
 	{
-		ROS_INFO_STREAM("Target position:"
+		ROS_INFO_STREAM("Target position lidar:"
 			<<" X="<<target_position.linear.x
 			<<",Y="<<target_position.linear.y
 			<<",W="<<target_position.angular.z);
+
+		if(tposition_old.linear.x != 0)
+		{
 		
-		double distancia = sqrt(pow(target_position.linear.x,2) + pow(target_position.linear.y,2));
-		if(distancia > 0){
-			double Kp = 0.2; // constante velocidad+
-			double Ka = 0.5; // constante angulo
-			double Kb = 0.5; // constante angulo
-			double alpha = atan2(target_position.linear.y, target_position.linear.x); // invertidos por modelo deberia ser (y,x)
-			double noventa = 1.57; // 90 grados
-			double volante=0.0;
-			if(alpha>noventa)
-				volante=alpha-noventa;
-			else
-				volante=-(noventa-alpha); // derecha es steer joint negativo
+			double distancia = sqrt(pow(target_position.linear.x-tposition_old.linear.x,2) + pow(target_position.linear.y-tposition_old.linear.y,2))/1/rate_hz;
+			if(distancia > 0){
+				double Kp = 0.2; // constante velocidad+
+				double Ka = 0.5; // constante angulo
+				double Kb = 0.5; // constante angulo
+				double alpha = atan2(target_position.linear.y, target_position.linear.x); // invertidos por modelo deberia ser (y,x)
+				double noventa = 1.57; // 90 grados
+				double volante=0.0;
+				if(alpha>noventa)
+					volante=alpha-noventa;
+				else
+					volante=-(noventa-alpha); // derecha es steer joint negativo
 
-			printf("\noriginal: %f, modificacion: %f, (%f, %f)", alpha, volante, target_position.linear.x, target_position.linear.y);
+				printf("\noriginal: %f, modificacion: %f, (%f, %f)", alpha, volante, target_position.linear.x, target_position.linear.y);
 
-			if(volante > 0.5)
-				volante = 0.5;
-			if(volante < -0.5)
-				volante = -0.5;
+				if(volante > 0.5)
+					volante = 0.5;
+				if(volante < -0.5)
+					volante = -0.5;
+
 			
-			desired_velocity.linear.x = distancia;
-			desired_velocity.linear.y = 0; // dist
-			desired_velocity.angular.z = volante;
-		} else {
-            // Goal has been reach ==> dont move
-			desired_velocity.linear.x = 0;
-			desired_velocity.linear.y = 0;
-			desired_velocity.angular.z = 0;
+						
+			
+			
+				desired_velocity.linear.x = distancia;
+				desired_velocity.linear.y = 0; // dist
+				desired_velocity.angular.z = volante;
+			} else {
+		    // Goal has been reach ==> dont move
+				desired_velocity.linear.x = 0;
+				desired_velocity.linear.y = 0;
+				desired_velocity.angular.z = 0;
+			}
+			//ROS_INFO_STREAM use for debugging 
+			ROS_INFO_STREAM("Desired Velocity:"
+				<<"X:"<<desired_velocity.linear.x
+				<<",Y:"<<desired_velocity.linear.y
+				<<",W:"<<desired_velocity.angular.z);
+			//publish the new velocity
+			pub_vel_turtle.publish(desired_velocity);
 		}
-		//ROS_INFO_STREAM use for debugging 
-		ROS_INFO_STREAM("Desired Velocity:"
-			<<"X:"<<desired_velocity.linear.x
-			<<",Y:"<<desired_velocity.linear.y
-			<<",W:"<<desired_velocity.angular.z);
-		//publish the new velocity
-		pub_vel_turtle.publish(desired_velocity);
-		
 		ros::spinOnce();
 		rate.sleep();
         tiempo+=(1/rate_hz); 

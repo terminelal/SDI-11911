@@ -146,6 +146,9 @@ add_executable(vision_node vision_node.cpp)
 add_executable(auto_velocity_node auto_velocity_node.cpp)
 add_executable(auto_trajectory_node auto_trajectory_node.cpp)
 
+add_executable(auto_velocity_node_follow auto_velocity_node_follow.cpp)
+add_executable(auto_trajectory_node_follow auto_trajectory_node_follow.cpp)
+
 # target_link_libraries(robot_velocity_node ${catkin_LIBRARIES})
 # target_link_libraries(robot_trajectory_node ${catkin_LIBRARIES})
 
@@ -155,6 +158,9 @@ target_link_libraries(vision_node ${catkin_LIBRARIES} ${PCL_LIBRARIES})
 
 target_link_libraries(auto_velocity_node ${catkin_LIBRARIES})
 target_link_libraries(auto_trajectory_node ${catkin_LIBRARIES})
+
+target_link_libraries(auto_velocity_node_follow ${catkin_LIBRARIES})
+target_link_libraries(auto_trajectory_node_follow ${catkin_LIBRARIES})
 # target_link_libraries(robot_trajectory_node ${catkin_LIBRARIES})
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes

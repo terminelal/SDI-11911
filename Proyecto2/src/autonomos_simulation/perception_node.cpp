@@ -54,7 +54,8 @@ void processLaserScan(const sensor_msgs::LaserScan::ConstPtr& scan){
 	// || (i>62 && i<141) || (i>154 && i<205) || (i>218 && i<295) ||
 	// solo considera el frente
 	// SE QUITO LA PERCEPCION TRASERA (i>154 && i<205) ||
-	if(i<52 || (i>62 && i<141) ||  (i>218 && i<295) || i>308)
+	// Y LATERAL (i>62 && i<141) ||  (i>218 && i<295) ||
+	if(i<52 || i>308)
 	{
 		if(scan->ranges[i] > 0.1 && scan->ranges[i] < 3.0) { // antes intensity > 0
 			if(!objetoiniciado) {
@@ -120,23 +121,34 @@ void processLaserScan(const sensor_msgs::LaserScan::ConstPtr& scan){
 	
 	// vertices de objetos observados
 	// convertir a pcl::PointCloud<pcl::PointXYZ> y publicar
+	geometry_msgs::Twist car_follow;
 	printf("\nVertices");
+	double x=0.0;
+	double y=0.0;
 	for(int j=0;j<obj+1;j++)
      	{
 		printf("\n %d: (%f, %f)",j,vertobjs[j][0], vertobjs[j][1]);
-		
+		x += vertobjs[j][0];
+		y += vertobjs[j][1];
 	}
+	x/=obj+1;
+	y/=obj+1;
+	car_follow.linear.x = x;
+	car_follow.linear.y = y;
+	car_follow.angular.z = 0;
      
-     /*
-     if(min > 0 && max > min)
-     {
+	pub_lidar.publish(car_follow);
+
+	/*
+	if(min > 0 && max > min)
+	{
 	double x1 = scan->ranges[max] * cos(max);
 	double y1 = scan->ranges[max] * sin(max);
 	double x2 = scan->ranges[min] * cos(min);
 	double y2 = scan->ranges[min] * sin(min);
 	printf("\nObjeto encontrado: \n P1: (%f, %f) \n P2: (%f, %f)", x1, y1, x2, y2);
-     }
-     */
+	}
+	*/
 }
 
 
@@ -237,20 +249,20 @@ int main(int argc, char** argv){
   ros::NodeHandle nh;
   ros::Rate loop_rate(rate_hz);
 
-const std::string PARAM1 = "~lidar";
+	const std::string PARAM1 = "~lidar";
 	bool okx = ros::param::get(PARAM1, nombre);
 	if(!okx) {
 		ROS_FATAL_STREAM("No se pudo obtener el parametro " << PARAM1);
 		exit(1);
 	}
-else
-	std::cout<<"\nSolo concentrarse en lidar:"<<nombre;
+	else
+		std::cout<<"\nSolo concentrarse en lidar:"<<nombre;
 
   ros::Subscriber sub = nh.subscribe<PointCloud>("pointCloud_vision", 1, callback);
 
   pub_pose = nh.advertise<geometry_msgs::Twist>("/target_pose", rate_hz);
+  pub_lidar = nh.advertise<geometry_msgs::Twist>("/target_lidar", rate_hz);
 
-  pub_lidar = nh.advertise<pcl::PointCloud<pcl::PointXYZ>>("/objetos_lidar", rate_hz);
 
 	
 	

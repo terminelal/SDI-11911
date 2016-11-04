@@ -87,7 +87,7 @@ void get_vel_vec(const geometry_msgs::Twist& msg) {
 
 
 int main(int argc, char **argv){
-	ros::init(argc,argv,"auto_velocity_node");
+	ros::init(argc,argv,"auto_velocity_node_follow");
 	ros::NodeHandle nh;
 	ROS_INFO_STREAM("auto_velocity_node initialized");
 	ROS_INFO_STREAM(ros::this_node::getName());
@@ -100,7 +100,7 @@ int main(int argc, char **argv){
 	clientSteer = nh.serviceClient<gazebo_msgs::GetJointProperties>("/gazebo/get_joint_properties");	
 	joint_msg[0].request.joint_name = "steer_joint";
 	
-	ros::Subscriber sub_vel = nh.subscribe("/target_vel_topic", 100, &get_vel_vec);
+	ros::Subscriber sub_vel = nh.subscribe("/target_lidar_topic", 100, &get_vel_vec);
 
 	std::string nombre;
 	const std::string PARAM1 = "~lidar";
@@ -111,10 +111,10 @@ int main(int argc, char **argv){
 	}
 	else
 		std::cout<<"\nSolo concentrarse en lidar:"<<nombre;
-
+	
 	char *cstr = new char[nombre.length() + 1];
 	strcpy(cstr, nombre.c_str());
-
+	
 	double tiempo = 0;
 
     	//define the max speed
