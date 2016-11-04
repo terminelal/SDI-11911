@@ -37,12 +37,12 @@ typedef pcl::PointCloud<pcl::PointXYZ> PointCloud;
 void processLaserScan(const sensor_msgs::LaserScan::ConstPtr& scan){
      //scan->ranges[] are laser readings
      coords perspectiva;
-     printf("\nLIDAR");
+     // printf("\nLIDAR");
      int max =0;
      bool objetoiniciado = false;
-     std::cout << "\nPerspectiva: " << scan->header.frame_id;
+     // std::cout << "\nPerspectiva: " << scan->header.frame_id;
 
-     if(scan->header.frame_id != nombre)
+     if(strcmp(scan->header.frame_id.c_str(), nombre.c_str())!=0)
 	return;     
 
      // std::string persp = scan->header.frame_id;
@@ -76,7 +76,7 @@ void processLaserScan(const sensor_msgs::LaserScan::ConstPtr& scan){
 				{
 					// cambio de objeto
 					obj++;
-					printf("\ni: %d max: %d, distancia: %f obj: %d", i, max, dist, obj);
+					// printf("\ni: %d max: %d, distancia: %f obj: %d", i, max, dist, obj);
 				}
 			}
 
@@ -104,10 +104,10 @@ void processLaserScan(const sensor_msgs::LaserScan::ConstPtr& scan){
 				vertobjs[nobj][1] /= vxobj;
 			}
 			nobj = perspectiva.object[j];
-			printf("\nObjeto %d", nobj);
+			// printf("\nObjeto %d", nobj);
 			vxobj=0;
 		}
-		printf("\n(%f, %f)", perspectiva.x[j], perspectiva.y[j]);
+		// printf("\n(%f, %f)", perspectiva.x[j], perspectiva.y[j]);
 		
 		vxobj++;
 		vertobjs[nobj][0] += perspectiva.x[j];
@@ -122,12 +122,12 @@ void processLaserScan(const sensor_msgs::LaserScan::ConstPtr& scan){
 	// vertices de objetos observados
 	// convertir a pcl::PointCloud<pcl::PointXYZ> y publicar
 	geometry_msgs::Twist car_follow;
-	printf("\nVertices");
+	// printf("\nVertices");
 	double x=0.0;
 	double y=0.0;
 	for(int j=0;j<obj+1;j++)
      	{
-		printf("\n %d: (%f, %f)",j,vertobjs[j][0], vertobjs[j][1]);
+		printf("\n LIDAR: %d: (%f, %f)",j,vertobjs[j][0], vertobjs[j][1]);
 		x += vertobjs[j][0];
 		y += vertobjs[j][1];
 	}
@@ -158,7 +158,8 @@ void callback(const PointCloud::ConstPtr& msg)
   // width = max number of points in each line
   // height = max number of lines
   // not all points are valid, not all lines have valid points.
-  printf ("Cloud: width = %d, height = %d\n", msg->width, msg->height);
+  // printf ("\nVISION");  
+  //printf ("\nCloud: width = %d, height = %d\n", msg->width, msg->height);
   int line  = 0;
   int point = 0;
   int l=0;
@@ -229,7 +230,7 @@ void callback(const PointCloud::ConstPtr& msg)
 		double y = (puntos_medios[0][1] + puntos_medios[1][1])/2;
 		// double alpha = atan2(y, x) * 180 / PI;		
 		// double beta = -theta-alpha;
-		printf("\n Punto a desplazarse: (%f,%f), con angulo %f \n", x,y, theta);
+		printf("\n Punto a desplazarse VISION: (%f,%f), con angulo %f \n", x,y, theta);
 		//ROS_INFO_STREAM use for debugging 
 		desired_pose.linear.x = x;
 		desired_pose.linear.y = y;

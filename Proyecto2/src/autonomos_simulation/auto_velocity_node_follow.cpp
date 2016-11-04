@@ -112,8 +112,6 @@ int main(int argc, char **argv){
 	else
 		std::cout<<"\nSolo concentrarse en lidar:"<<nombre;
 	
-	char *cstr = new char[nombre.length() + 1];
-	strcpy(cstr, nombre.c_str());
 	
 	double tiempo = 0;
 
@@ -144,19 +142,19 @@ int main(int argc, char **argv){
 			printf("\n effort: %f %f %f", effort[0],effort[1],effort[2]);
 			
 			// Wheel-Joint 1
-			eff_msg[0].request.joint_name = std::strcat(cstr,"::back_right_wheel_joint");
+			eff_msg[0].request.joint_name = nombre+"::back_right_wheel_joint";
 			eff_msg[0].request.duration = duration;
 			eff_msg[0].request.effort = effort[0];
 			eff_msg[0].request.start_time = start_time;
 
 			// Wheel-Joint 2
-			eff_msg[1].request.joint_name = std::strcat(cstr,"back_left_wheel_joint");
+			eff_msg[1].request.joint_name = nombre+"back_left_wheel_joint";
 			eff_msg[1].request.duration = duration;
 			eff_msg[1].request.effort = effort[1];
 			eff_msg[1].request.start_time = start_time;
 
 			// Wheel-Joint 3
-			eff_msg[2].request.joint_name = std::strcat(cstr,"steer_joint");
+			eff_msg[2].request.joint_name = nombre+"steer_joint";
 			eff_msg[2].request.duration = duration;
 			eff_msg[2].request.effort = effort[2];
 			eff_msg[2].request.start_time = start_time;
