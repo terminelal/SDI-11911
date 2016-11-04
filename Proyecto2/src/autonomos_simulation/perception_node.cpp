@@ -19,8 +19,9 @@
 geometry_msgs::Twist destiny_position;
 double rate_hz = 5;
 ros::Publisher pub_pose;
+ros::Publisher pub_lidar;
+std::string nombre;
 
-int pers_min = 1000;
 
 struct coords
 {
@@ -29,8 +30,10 @@ struct coords
       double y[100];
 }; 
 
+
 typedef pcl::PointCloud<pcl::PointXYZ> PointCloud;
 
+// PERCEPCION DE LIDAR
 void processLaserScan(const sensor_msgs::LaserScan::ConstPtr& scan){
      //scan->ranges[] are laser readings
      coords perspectiva;
@@ -38,7 +41,10 @@ void processLaserScan(const sensor_msgs::LaserScan::ConstPtr& scan){
      int max =0;
      bool objetoiniciado = false;
      std::cout << "\nPerspectiva: " << scan->header.frame_id;
-     
+
+     if(scan->header.frame_id != nombre)
+	return;     
+
      // std::string persp = scan->header.frame_id;
      int obj = -1;
      int v = 0;
@@ -47,24 +53,32 @@ void processLaserScan(const sensor_msgs::LaserScan::ConstPtr& scan){
 	// evitar la carcaza del carro, carcaza: 52-62, 141-154, 205-218, 295-308
 	// || (i>62 && i<141) || (i>154 && i<205) || (i>218 && i<295) ||
 	// solo considera el frente
-	if(i<52 || (i>62 && i<141) || (i>154 && i<205) || (i>218 && i<295) || i>308)
+	// SE QUITO LA PERCEPCION TRASERA (i>154 && i<205) ||
+	if(i<52 || (i>62 && i<141) ||  (i>218 && i<295) || i>308)
 	{
-		if(scan->ranges[i] > 0.1 && scan->ranges[i] < 6.0) { // antes intensity > 0
+		if(scan->ranges[i] > 0.1 && scan->ranges[i] < 3.0) { // antes intensity > 0
 			if(!objetoiniciado) {
 				max = i;
 				objetoiniciado = true;
 				obj++;
 			}
+			// printf("\n%d, %f", i, scan->ranges[i]);
+			double x1 = scan->ranges[i] * cos(i*PI/180);
+			double y1 = scan->ranges[i] * sin(i*PI/180);
 			
-			double x1 = scan->ranges[i] * cos(i);
-			double y1 = scan->ranges[i] * sin(i);
-			double x2 = scan->ranges[max] * cos(max);
-			double y2 = scan->ranges[max] * sin(max);
-			double dist = sqrt(pow(x2-x1,2) + pow(y2-y1,2));
-			if(abs(dist)>0.05){
-				obj++;
+			if(max != i)
+			{
+				double x2 = scan->ranges[max] * cos(max*PI/180);
+				double y2 = scan->ranges[max] * sin(max*PI/180);
+				double dist = sqrt(pow(x2-x1,2) + pow(y2-y1,2));
+				if(abs(max-i)>1 || abs(dist)>0.05)
+				{
+					// cambio de objeto
+					obj++;
+					printf("\ni: %d max: %d, distancia: %f obj: %d", i, max, dist, obj);
+				}
 			}
-			
+
 			perspectiva.object[v] = obj;
 			perspectiva.x[v] = x1;
 			perspectiva.y[v] = y1;
@@ -76,15 +90,41 @@ void processLaserScan(const sensor_msgs::LaserScan::ConstPtr& scan){
      }
 
 	
-	// std::cout << "\n Punto de vista: " << scan->header.frame_id;
-	obj = -1;
+	// itera sobre objetos identificados, agrupa vertices por promedio
+	double vertobjs [obj][2];
+	int nobj = -1;
+	int vxobj =0;
 	for(int j=0;j<v;j++)
      	{
-		if(obj != perspectiva.object[j]) {
-			obj = perspectiva.object[j];
-			printf("\nObjeto %d", obj);
+		if(nobj != perspectiva.object[j]) {
+			if(nobj > -1)
+			{
+				vertobjs[nobj][0] /= vxobj;
+				vertobjs[nobj][1] /= vxobj;
+			}
+			nobj = perspectiva.object[j];
+			printf("\nObjeto %d", nobj);
+			vxobj=0;
 		}
 		printf("\n(%f, %f)", perspectiva.x[j], perspectiva.y[j]);
+		
+		vxobj++;
+		vertobjs[nobj][0] += perspectiva.x[j];
+		vertobjs[nobj][1] += perspectiva.y[j];	
+
+		if(j == v-1){
+			vertobjs[nobj][0] /= vxobj;
+			vertobjs[nobj][1] /= vxobj;
+		}
+	}
+	
+	// vertices de objetos observados
+	// convertir a pcl::PointCloud<pcl::PointXYZ> y publicar
+	printf("\nVertices");
+	for(int j=0;j<obj+1;j++)
+     	{
+		printf("\n %d: (%f, %f)",j,vertobjs[j][0], vertobjs[j][1]);
+		
 	}
      
      /*
@@ -99,6 +139,8 @@ void processLaserScan(const sensor_msgs::LaserScan::ConstPtr& scan){
      */
 }
 
+
+// PERCEPCION DE VISION
 void callback(const PointCloud::ConstPtr& msg)
 {
   // width = max number of points in each line
@@ -195,9 +237,23 @@ int main(int argc, char** argv){
   ros::NodeHandle nh;
   ros::Rate loop_rate(rate_hz);
 
+const std::string PARAM1 = "~lidar";
+	bool okx = ros::param::get(PARAM1, nombre);
+	if(!okx) {
+		ROS_FATAL_STREAM("No se pudo obtener el parametro " << PARAM1);
+		exit(1);
+	}
+else
+	std::cout<<"\nSolo concentrarse en lidar:"<<nombre;
+
   ros::Subscriber sub = nh.subscribe<PointCloud>("pointCloud_vision", 1, callback);
 
   pub_pose = nh.advertise<geometry_msgs::Twist>("/target_pose", rate_hz);
+
+  pub_lidar = nh.advertise<pcl::PointCloud<pcl::PointXYZ>>("/objetos_lidar", rate_hz);
+
+	
+	
 
   ros::Subscriber scanSub=nh.subscribe<sensor_msgs::LaserScan>("/laser_scan",1, processLaserScan);
   while(nh.ok())

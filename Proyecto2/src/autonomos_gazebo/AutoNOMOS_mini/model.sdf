@@ -184,7 +184,6 @@
 
       <sensor name="laser" type="ray">
         <pose>0.01 0 0.07 0 -0 0</pose>
-        
         <ray>
           <scan>
             <horizontal>
@@ -196,7 +195,7 @@
           </scan>
           <range>
             <min>0.08</min>
-            <max>6</max>
+            <max>3</max>
             <resolution>0.01</resolution>
           </range>
         </ray>
