@@ -148,16 +148,26 @@ int main(int argc, char **argv){
 		}else{
 			if(counter < 65){ //COMIENZA A DETENERTE Y HACERTE PARA ATRAS
 				ROS_INFO_STREAM("STOPPING AND BACKWARDS");
-				desired_velocity.linear.x = speed>=-25?speed:0;
+				desired_velocity.linear.x = speed>=-26?speed:0;
 				desired_velocity.linear.y = 0;
 				desired_velocity.angular.z = 0;
 				speed--;
 			}
 			else{
-			     	ROS_INFO_STREAM("WHEELS RIGHT");
-			     	desired_velocity.linear.x = 0;
-				desired_velocity.linear.y = 0;
-				desired_velocity.angular.z = -0.32;
+			    if(counter <= 100) {
+			    	ROS_INFO_STREAM("WHEELS RIGHT");
+			    	desired_velocity.linear.x = 0;
+					desired_velocity.linear.y = 0;
+					desired_velocity.angular.z = -0.32;
+				}
+				else{
+					if(counter <= 150) {
+						if(counter <= 150) ROS_INFO_STREAM("WHEELS LEFT");
+			    		desired_velocity.linear.x = 0;
+						desired_velocity.linear.y = 0;
+						desired_velocity.angular.z = 0.32;
+					}
+				}
 			}
 		}
 /*else{
@@ -198,9 +208,9 @@ int main(int argc, char **argv){
 			
 		}*/
 		
-		if(counter <= 80) ROS_INFO_STREAM("counter "<<counter);
+		if(counter <= 160) ROS_INFO_STREAM("counter "<<counter);
 		//publish the new velocity
-		if(counter <= 80) pub_vel_turtle.publish(desired_velocity);
+		if(counter <= 160) pub_vel_turtle.publish(desired_velocity);
 		counter++;
 		ros::spinOnce();
 		rate.sleep();

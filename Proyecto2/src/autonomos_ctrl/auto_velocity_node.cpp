@@ -50,17 +50,17 @@ double* getMotorValue(double x_velocity, double y_velocity, double w_velocity){
 		
 		if(w_velocity > 0){ // izquierda
 			if(pos<w_velocity)
-				velWMod = w_velocity;
+				velWMod = w_velocity/2;
 			else if(pos>w_velocity)
-				velWMod = -w_velocity;
+				velWMod = -w_velocity/2;
 			else
 				velWMod=0.0;
 		}
 		else if(w_velocity < 0){ // derecha 
 			if(pos<w_velocity)
-				velWMod = -w_velocity;
+				velWMod = -w_velocity/2;
 			else if(pos>w_velocity)
-				velWMod = w_velocity;	
+				velWMod = w_velocity/2;	
 			else
 				velWMod=0.0;
 		}
