@@ -59,8 +59,8 @@ void getTargetPose(const geometry_msgs::Twist& msg) {
     tposition_old.angular.z = target_position.angular.z;
 
 
-    target_position.linear.x = msg.linear.x;
-    target_position.linear.y = msg.linear.y;
+    target_position.linear.x = -msg.linear.y;
+    target_position.linear.y = msg.linear.x;
     target_position.angular.z = msg.angular.z; 
 }
 

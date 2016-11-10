@@ -41,8 +41,8 @@ void processLaserScan(const sensor_msgs::LaserScan::ConstPtr& scan){
      int max =0;
      bool objetoiniciado = false;
      // std::cout << "\nPerspectiva: " << scan->header.frame_id;
-
-     if(strcmp(scan->header.frame_id.c_str(), nombre.c_str())!=0)
+     std::string ncompleto = nombre + "/map";
+     if(strcmp(scan->header.frame_id.c_str(), ncompleto.c_str())!=0)
 	return;     
 
      // std::string persp = scan->header.frame_id;
@@ -57,7 +57,7 @@ void processLaserScan(const sensor_msgs::LaserScan::ConstPtr& scan){
 	// Y LATERAL (i>62 && i<141) ||  (i>218 && i<295) ||
 	if(i<52 || i>308)
 	{
-		if(scan->ranges[i] > 0.1 && scan->ranges[i] < 6.0) { // antes intensity > 0
+		if(scan->ranges[i] > 0.1 && scan->ranges[i] < 3.0) { // antes intensity > 0
 			if(!objetoiniciado) {
 				max = i;
 				objetoiniciado = true;
@@ -83,6 +83,7 @@ void processLaserScan(const sensor_msgs::LaserScan::ConstPtr& scan){
 			perspectiva.object[v] = obj;
 			perspectiva.x[v] = x1;
 			perspectiva.y[v] = y1;
+			printf("\nPuntos: %d (%f,%f)",obj,x1,y1);
 			v++;
 			
 			max = i;
@@ -108,7 +109,6 @@ void processLaserScan(const sensor_msgs::LaserScan::ConstPtr& scan){
 			vxobj=0;
 		}
 		// printf("\n(%f, %f)", perspectiva.x[j], perspectiva.y[j]);
-		
 		vxobj++;
 		vertobjs[nobj][0] += perspectiva.x[j];
 		vertobjs[nobj][1] += perspectiva.y[j];	
@@ -127,12 +127,16 @@ void processLaserScan(const sensor_msgs::LaserScan::ConstPtr& scan){
 	double y=0.0;
 	for(int j=0;j<obj+1;j++)
      	{
-		// printf("\n LIDAR: %d: (%f, %f)",j,vertobjs[j][0], vertobjs[j][1]);
+		printf("\n Objeto vertice: %d: (%f, %f)",j,vertobjs[j][0], vertobjs[j][1]);
 		x += vertobjs[j][0];
 		y += vertobjs[j][1];
 	}
-	x=x/obj+1;
-	y=y/obj+1;
+	printf("\nObjetivo (%f,%f), objs:%d",x,y,obj+1);	
+
+	x=x/(obj+1);
+	y=y/(obj+1);
+
+	printf("\nObjetivo (%f,%f)",x,y);
 
 	if(x!=x || y!=y)
 	{}
