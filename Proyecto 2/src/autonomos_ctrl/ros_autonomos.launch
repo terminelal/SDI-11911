@@ -1,0 +1,7 @@
+<launch>
+
+    <node pkg="autonomos_ctrl" type="auto_velocity_node" name="auto_velocity_node"/>
+    <node pkg="rostopic" type="rostopic" name="pub_vels" args="pub /target_position_topic geometry_msgs/Twist -- '[3,0,0]' '[0,0,0]'"/> -->
+    
+
+</launch>
