@@ -1,0 +1,336 @@
+
+/opt/ros/indigo/lib/libcv_bridge.so:     file format elf64-x86-64
+
+DYNAMIC SYMBOL TABLE:
+000000000000a5d8 l    d  .init	0000000000000000              .init
+0000000000000000      DF *UND*	0000000000000000  GLIBCXX_3.4 std::_Rb_tree_insert_and_rebalance(bool, std::_Rb_tree_node_base*, std::_Rb_tree_node_base*, std::_Rb_tree_node_base&)
+0000000000000000      DF *UND*	0000000000000000              cv::fastFree(void*)
+0000000000000000      DF *UND*	0000000000000000              cv::Mat::setTo(cv::_InputArray const&, cv::_InputArray const&)
+0000000000000000      DF *UND*	0000000000000000  GLIBCXX_3.4 std::string::append(char const*, unsigned long)
+0000000000000000      DF *UND*	0000000000000000  GLIBCXX_3.4 std::string::compare(char const*) const
+0000000000000000      DO *UND*	0000000000000000  GLIBCXX_3.4 std::string::_Rep::_S_empty_rep_storage
+0000000000000000      DF *UND*	0000000000000000              boost::match_results<char const*, std::allocator<boost::sub_match<char const*> > >::maybe_assign(boost::match_results<char const*, std::allocator<boost::sub_match<char const*> > > const&)
+0000000000000000      DF *UND*	0000000000000000  GLIBCXX_3.4 std::__throw_bad_alloc()
+0000000000000000      DF *UND*	0000000000000000  GLIBCXX_3.4 std::string::_M_replace_aux(unsigned long, unsigned long, unsigned long, char)
+0000000000000000      DF *UND*	0000000000000000  CXXABI_1.3  __cxa_begin_catch
+0000000000000000  w   DF *UND*	0000000000000000  GLIBC_2.2.5 __cxa_finalize
+0000000000000000      DF *UND*	0000000000000000  GLIBC_2.2.5 strlen
+0000000000000000      DF *UND*	0000000000000000  GLIBC_2.2.5 memcmp
+0000000000000000      DF *UND*	0000000000000000              boost::re_detail::verify_options(unsigned int, boost::regex_constants::_match_flags)
+0000000000000000      DF *UND*	0000000000000000              cv::noArray()
+0000000000000000      DF *UND*	0000000000000000              boost::re_detail::get_mem_block()
+0000000000000000      DF *UND*	0000000000000000  CXXABI_1.3  __cxa_allocate_exception
+0000000000000000      DF *UND*	0000000000000000  GLIBCXX_3.4 std::__throw_length_error(char const*)
+0000000000000000      DF *UND*	0000000000000000  GLIBC_2.2.5 memset
+0000000000000000      DF *UND*	0000000000000000  GLIBCXX_3.4 std::basic_string<char, std::char_traits<char>, std::allocator<char> >::basic_string(std::string const&)
+0000000000000000      DF *UND*	0000000000000000  GLIBCXX_3.4 std::string::_Rep::_M_dispose(std::allocator<char> const&)
+0000000000000000      DF *UND*	0000000000000000  CXXABI_1.3  __cxa_guard_abort
+0000000000000000      DF *UND*	0000000000000000  CXXABI_1.3  __cxa_guard_release
+0000000000000000      DF *UND*	0000000000000000  GLIBCXX_3.4 std::string::append(unsigned long, char)
+0000000000000000      DF *UND*	0000000000000000  GLIBCXX_3.4.9 std::ostream& std::ostream::_M_insert<unsigned long>(unsigned long)
+0000000000000000      DF *UND*	0000000000000000  GLIBCXX_3.4 std::runtime_error::runtime_error(std::string const&)
+0000000000000000      DF *UND*	0000000000000000  GLIBCXX_3.4 std::_Rb_tree_increment(std::_Rb_tree_node_base*)
+0000000000000000      DO *UND*	0000000000000000  CXXABI_1.3  vtable for __cxxabiv1::__class_type_info
+0000000000000000      DF *UND*	0000000000000000  CXXABI_1.3  __cxa_free_exception
+0000000000000000      DF *UND*	0000000000000000  GLIBCXX_3.4 std::basic_stringbuf<char, std::char_traits<char>, std::allocator<char> >::str() const
+0000000000000000      DF *UND*	0000000000000000  GLIBCXX_3.4 std::string::reserve(unsigned long)
+0000000000000000      DF *UND*	0000000000000000  GLIBCXX_3.4 std::string::_Rep::_M_destroy(std::allocator<char> const&)
+0000000000000000      DF *UND*	0000000000000000              cv::Mat::create(int, int const*, int)
+0000000000000000      DF *UND*	0000000000000000  GLIBC_2.14  memcpy
+0000000000000000      DF *UND*	0000000000000000  GLIBCXX_3.4 std::basic_stringstream<char, std::char_traits<char>, std::allocator<char> >::basic_stringstream(std::_Ios_Openmode)
+0000000000000000      DF *UND*	0000000000000000  GLIBCXX_3.4 std::logic_error::logic_error(std::string const&)
+0000000000000000      DF *UND*	0000000000000000  GLIBC_2.2.5 __cxa_atexit
+0000000000000000  w   D  *UND*	0000000000000000              __pthread_key_create
+0000000000000000      DF *UND*	0000000000000000              cv::imdecode(cv::_InputArray const&, int)
+0000000000000000      DF *UND*	0000000000000000              cv::_InputArray::_InputArray(std::vector<cv::Mat, std::allocator<cv::Mat> > const&)
+0000000000000000      DF *UND*	0000000000000000              cv::_OutputArray::_OutputArray(cv::Mat&)
+0000000000000000      DF *UND*	0000000000000000  GLIBCXX_3.4 operator delete(void*)
+0000000000000000      DF *UND*	0000000000000000  GLIBCXX_3.4 std::basic_ostream<char, std::char_traits<char> >& std::operator<< <std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*)
+0000000000000000      DF *UND*	0000000000000000  GLIBCXX_3.4 operator new(unsigned long)
+0000000000000000      DF *UND*	0000000000000000              cv::_InputArray::_InputArray(cv::Mat const&)
+0000000000000000      DF *UND*	0000000000000000  GLIBCXX_3.4 std::runtime_error::~runtime_error()
+0000000000000000      DF *UND*	0000000000000000  GLIBCXX_3.4 std::_Rb_tree_decrement(std::_Rb_tree_node_base*)
+0000000000000000      DF *UND*	0000000000000000              boost::re_detail::perl_matcher<char const*, std::allocator<boost::sub_match<char const*> >, boost::regex_traits<char, boost::cpp_regex_traits<char> > >::construct_init(boost::basic_regex<char, boost::regex_traits<char, boost::cpp_regex_traits<char> > > const&, boost::regex_constants::_match_flags)
+0000000000000000      DF *UND*	0000000000000000  GLIBCXX_3.4 std::string::append(std::string const&)
+0000000000000000      DF *UND*	0000000000000000              cv::Mat::convertTo(cv::_OutputArray const&, int, double, double) const
+0000000000000000      DO *UND*	0000000000000000              vtable for cv::_InputArray
+0000000000000000      DF *UND*	0000000000000000  GLIBCXX_3.4 std::runtime_error::~runtime_error()
+0000000000000000      DF *UND*	0000000000000000  GLIBCXX_3.4 std::basic_string<char, std::char_traits<char>, std::allocator<char> >::basic_string(char const*, std::allocator<char> const&)
+0000000000000000  w   D  *UND*	0000000000000000              _Jv_RegisterClasses
+0000000000000000      DF *UND*	0000000000000000  GLIBCXX_3.4 std::logic_error::~logic_error()
+0000000000000000      DF *UND*	0000000000000000              boost::re_detail::cpp_regex_traits_implementation<char>::transform_primary(char const*, char const*) const
+0000000000000000      DF *UND*	0000000000000000  CXXABI_1.3  __cxa_call_unexpected
+0000000000000000      DO *UND*	0000000000000000  CXXABI_1.3  vtable for __cxxabiv1::__si_class_type_info
+0000000000000000      DF *UND*	0000000000000000  GLIBCXX_3.4 std::string::assign(std::string const&)
+0000000000000000      DF *UND*	0000000000000000  GLIBCXX_3.4 std::runtime_error::what() const
+0000000000000000      DF *UND*	0000000000000000              cv::imencode(std::string const&, cv::_InputArray const&, std::vector<unsigned char, std::allocator<unsigned char> >&, std::vector<int, std::allocator<int> > const&)
+0000000000000000      DF *UND*	0000000000000000  GLIBC_2.2.5 strtol
+0000000000000000      DF *UND*	0000000000000000              cv::cvtColor(cv::_InputArray const&, cv::_OutputArray const&, int, int)
+0000000000000000      DF *UND*	0000000000000000              cv::mixChannels(cv::_InputArray const&, cv::_InputArray const&, std::vector<int, std::allocator<int> > const&)
+0000000000000000      DF *UND*	0000000000000000  CXXABI_1.3  __cxa_rethrow
+0000000000000000      DF *UND*	0000000000000000  GLIBCXX_3.4 std::logic_error::what() const
+0000000000000000      DF *UND*	0000000000000000  GLIBCXX_3.4 std::basic_stringstream<char, std::char_traits<char>, std::allocator<char> >::~basic_stringstream()
+0000000000000000      DF *UND*	0000000000000000  GLIBCXX_3.4 std::ios_base::Init::Init()
+0000000000000000      DF *UND*	0000000000000000              boost::re_detail::get_default_error_string(boost::regex_constants::error_type)
+0000000000000000      DF *UND*	0000000000000000  GLIBCXX_3.4 std::basic_string<char, std::char_traits<char>, std::allocator<char> >::~basic_string()
+0000000000000000      DF *UND*	0000000000000000  GLIBCXX_3.4 std::runtime_error::runtime_error(std::string const&)
+0000000000000000      DF *UND*	0000000000000000  GLIBC_2.2.5 memmove
+0000000000000000      DF *UND*	0000000000000000  CXXABI_1.3  __cxa_end_catch
+0000000000000000      DF *UND*	0000000000000000  CXXABI_1.3  __gxx_personality_v0
+0000000000000000      DF *UND*	0000000000000000              boost::re_detail::cpp_regex_traits_implementation<char>::transform(char const*, char const*) const
+0000000000000000      DO *UND*	0000000000000000  GLIBCXX_3.4 vtable for std::logic_error
+0000000000000000      DF *UND*	0000000000000000  CXXABI_1.3  __cxa_throw
+0000000000000000      DF *UND*	0000000000000000  GLIBCXX_3.4 std::ostream::operator<<(int)
+0000000000000000      DF *UND*	0000000000000000              boost::re_detail::put_mem_block(void*)
+0000000000000000      DF *UND*	0000000000000000              boost::basic_regex<char, boost::regex_traits<char, boost::cpp_regex_traits<char> > >::do_assign(char const*, char const*, unsigned int)
+0000000000000000      DO *UND*	0000000000000000  CXXABI_1.3  vtable for __cxxabiv1::__vmi_class_type_info
+0000000000000000  w   D  *UND*	0000000000000000              _ITM_deregisterTMCloneTable
+0000000000000000      DF *UND*	0000000000000000  GCC_3.0     _Unwind_Resume
+0000000000000000      DF *UND*	0000000000000000  GLIBCXX_3.4 std::logic_error::~logic_error()
+0000000000000000      DF *UND*	0000000000000000              boost::re_detail::raise_runtime_error(std::runtime_error const&)
+0000000000000000      DO *UND*	0000000000000000  GLIBCXX_3.4 typeinfo for std::logic_error
+0000000000000000      DF *UND*	0000000000000000  CXXABI_1.3  __cxa_guard_acquire
+0000000000000000      DF *UND*	0000000000000000              cv::operator-(cv::Mat const&, cv::Scalar_<double> const&)
+0000000000000000      DF *UND*	0000000000000000  GLIBCXX_3.4 std::exception::~exception()
+0000000000000000      DF *UND*	0000000000000000              cv::applyColorMap(cv::_InputArray const&, cv::_OutputArray const&, int)
+0000000000000000      DF *UND*	0000000000000000              cv::Mat::copySize(cv::Mat const&)
+0000000000000000  w   D  *UND*	0000000000000000              __gmon_start__
+0000000000000000      DF *UND*	0000000000000000  CXXABI_1.3  __cxa_pure_virtual
+0000000000000000  w   D  *UND*	0000000000000000              _ITM_registerTMCloneTable
+0000000000000000      DF *UND*	0000000000000000              cv::Mat::copyTo(cv::_OutputArray const&) const
+0000000000000000      DF *UND*	0000000000000000              cv::Mat::deallocate()
+0000000000000000      DF *UND*	0000000000000000              cv::_InputArray::_InputArray(double const&)
+0000000000000000      DF *UND*	0000000000000000              cv::minMaxLoc(cv::_InputArray const&, double*, double*, cv::Point_<int>*, cv::Point_<int>*, cv::_InputArray const&)
+0000000000000000      DO *UND*	0000000000000000  GLIBCXX_3.4 typeinfo for std::runtime_error
+0000000000000000      DF *UND*	0000000000000000  GLIBCXX_3.4 std::ios_base::Init::~Init()
+0000000000011850  w   DF .text	0000000000000012  Base        boost::detail::sp_counted_base::destroy()
+000000000001a5e0 g    DF .text	00000000000014a5  Base        cv_bridge::rgb_colors::getRGBColor(int)
+000000000001c2e0  w   DO .rodata	0000000000000041  Base        typeinfo name for boost::exception_detail::error_info_injector<std::logic_error>
+0000000000019440  w   DF .text	0000000000000139  Base        boost::match_results<char const*, std::allocator<boost::sub_match<char const*> > >::match_results(boost::match_results<char const*, std::allocator<boost::sub_match<char const*> > > const&)
+00000000000140e0  w   DF .text	0000000000000055  Base        boost::basic_regex<char, boost::regex_traits<char, boost::cpp_regex_traits<char> > >::basic_regex(char const*, unsigned int)
+0000000000018e30  w   DF .text	0000000000000213  Base        boost::re_detail::perl_matcher<char const*, std::allocator<boost::sub_match<char const*> >, boost::regex_traits<char, boost::cpp_regex_traits<char> > >::match_set_repeat()
+000000000001c2b0  w   DO .rodata	0000000000000017  Base        typeinfo name for cv_bridge::Exception
+0000000000011fb0  w   DF .text	0000000000000013  Base        cv_bridge::Exception::~Exception()
+0000000000012970  w   DF .text	0000000000000009  Base        non-virtual thunk to boost::exception_detail::clone_impl<boost::exception_detail::error_info_injector<std::logic_error> >::~clone_impl()
+0000000000012e60  w   DF .text	00000000000000d9  Base        boost::detail::sp_counted_impl_pd<sensor_msgs::Image_<std::allocator<void> >*, boost::detail::sp_ms_deleter<sensor_msgs::Image_<std::allocator<void> > > >::~sp_counted_impl_pd()
+0000000000014610  w   DF .text	00000000000001f2  Base        boost::detail::sp_if_not_array<cv_bridge::CvImage>::type boost::make_shared<cv_bridge::CvImage, cv_bridge::CvImage>(cv_bridge::CvImage const&)
+0000000000015880  w   DF .text	0000000000000169  Base        boost::re_detail::perl_matcher<char const*, std::allocator<boost::sub_match<char const*> >, boost::regex_traits<char, boost::cpp_regex_traits<char> > >::~perl_matcher()
+0000000000013f00  w   DF .text	0000000000000082  Base        std::basic_string<char, std::char_traits<char>, std::allocator<char> > std::operator+<char, std::char_traits<char>, std::allocator<char> >(char const*, std::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)
+0000000000016020  w   DF .text	00000000000000d3  Base        std::map<std::pair<cv_bridge::Encoding, cv_bridge::Encoding>, std::vector<int, std::allocator<int> >, std::less<std::pair<cv_bridge::Encoding, cv_bridge::Encoding> >, std::allocator<std::pair<std::pair<cv_bridge::Encoding, cv_bridge::Encoding> const, std::vector<int, std::allocator<int> > > > >::operator[](std::pair<cv_bridge::Encoding, cv_bridge::Encoding> const&)
+00000000000141e0  w   DF .text	000000000000004d  Base        std::basic_string<char, std::char_traits<char>, std::allocator<char> > std::operator+<char, std::char_traits<char>, std::allocator<char> >(std::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, char const*)
+0000000000011f90  w   DF .text	0000000000000013  Base        boost::detail::sp_counted_impl_p<cv_bridge::CvImage>::~sp_counted_impl_p()
+000000000000a5d8 g    DF .init	0000000000000000  Base        _init
+00000000000189c0  w   DF .text	0000000000000246  Base        boost::re_detail::perl_matcher<char const*, std::allocator<boost::sub_match<char const*> >, boost::regex_traits<char, boost::cpp_regex_traits<char> > >::match_long_set_repeat()
+00000000000122d0  w   DF .text	000000000000009e  Base        boost::re_detail::perl_matcher<char const*, std::allocator<boost::sub_match<char const*> >, boost::regex_traits<char, boost::cpp_regex_traits<char> > >::match_literal()
+0000000000012d80  w   DF .text	00000000000000d9  Base        boost::detail::sp_counted_impl_pd<sensor_msgs::CompressedImage_<std::allocator<void> >*, boost::detail::sp_ms_deleter<sensor_msgs::CompressedImage_<std::allocator<void> > > >::~sp_counted_impl_pd()
+0000000000220ae0  w   DO .data.rel.ro	00000000000000a8  Base        vtable for boost::exception_detail::clone_impl<boost::exception_detail::error_info_injector<std::logic_error> >
+0000000000012f40  w   DF .text	00000000000000de  Base        boost::exception_detail::clone_impl<boost::exception_detail::error_info_injector<std::logic_error> >::rethrow() const
+0000000000017910  w   DF .text	0000000000000269  Base        bool boost::regex_match<char, std::allocator<boost::sub_match<char const*> >, boost::regex_traits<char, boost::cpp_regex_traits<char> > >(char const*, boost::match_results<char const*, std::allocator<boost::sub_match<char const*> > >&, boost::basic_regex<char, boost::regex_traits<char, boost::cpp_regex_traits<char> > > const&, boost::regex_constants::_match_flags)
+000000000001c220  w   DO .rodata	0000000000000013  Base        typeinfo name for boost::exception
+0000000000012be0  w   DF .text	00000000000000d1  Base        boost::detail::sp_counted_impl_pd<sensor_msgs::Image_<std::allocator<void> >*, boost::detail::sp_ms_deleter<sensor_msgs::Image_<std::allocator<void> > > >::~sp_counted_impl_pd()
+0000000000011ff0  w   DF .text	000000000000003a  Base        boost::re_detail::perl_matcher<char const*, std::allocator<boost::sub_match<char const*> >, boost::regex_traits<char, boost::cpp_regex_traits<char> > >::unwind_extra_block(bool)
+0000000000014bd0  w   DF .text	0000000000000009  Base        std::map<std::pair<cv_bridge::Encoding, cv_bridge::Encoding>, std::vector<int, std::allocator<int> >, std::less<std::pair<cv_bridge::Encoding, cv_bridge::Encoding> >, std::allocator<std::pair<std::pair<cv_bridge::Encoding, cv_bridge::Encoding> const, std::vector<int, std::allocator<int> > > > >::~map()
+000000000000cb50 g    DF .text	000000000000013c  Base        cv_bridge::CvImage::toImageMsg(sensor_msgs::Image_<std::allocator<void> >&) const
+00000000000128d0  w   DF .text	0000000000000006  Base        non-virtual thunk to boost::exception_detail::error_info_injector<std::logic_error>::~error_info_injector()
+000000000001a2e0  w   DF .text	00000000000002f1  Base        boost::re_detail::perl_matcher<char const*, std::allocator<boost::sub_match<char const*> >, boost::regex_traits<char, boost::cpp_regex_traits<char> > >::unwind_recursion(bool)
+0000000000013c00  w   DF .text	00000000000001b8  Base        cv::MatExpr::~MatExpr()
+0000000000011ef0  w   DF .text	000000000000000f  Base        boost::detail::sp_counted_impl_p<cv_bridge::CvImage>::~sp_counted_impl_p()
+0000000000014eb0  w   DF .text	00000000000001cf  Base        void boost::throw_exception<std::logic_error>(std::logic_error const&)
+0000000000012cc0  w   DF .text	00000000000000b8  Base        boost::re_detail::perl_matcher<char const*, std::allocator<boost::sub_match<char const*> >, boost::regex_traits<char, boost::cpp_regex_traits<char> > >::unwind_recursion_pop(bool)
+000000000001c1e0  w   DO .rodata	0000000000000035  Base        typeinfo name for boost::detail::sp_ms_deleter<cv_bridge::CvImage>
+0000000000012b00  w   DF .text	00000000000000d1  Base        boost::detail::sp_counted_impl_pd<sensor_msgs::CompressedImage_<std::allocator<void> >*, boost::detail::sp_ms_deleter<sensor_msgs::CompressedImage_<std::allocator<void> > > >::~sp_counted_impl_pd()
+0000000000220860  w   DO .data.rel.ro	0000000000000010  Base        typeinfo for boost::detail::sp_counted_base
+0000000000013020  w   DF .text	000000000000000c  Base        virtual thunk to boost::exception_detail::clone_impl<boost::exception_detail::error_info_injector<std::logic_error> >::rethrow() const
+0000000000011940  w   DF .text	00000000000000da  Base        boost::re_detail::perl_matcher<char const*, std::allocator<boost::sub_match<char const*> >, boost::regex_traits<char, boost::cpp_regex_traits<char> > >::unwind_greedy_single_repeat(bool)
+0000000000012960  w   DF .text	000000000000000c  Base        virtual thunk to boost::exception_detail::clone_impl<boost::exception_detail::error_info_injector<std::logic_error> >::~clone_impl()
+0000000000220850  w   DO .data.rel.ro	0000000000000010  Base        typeinfo for boost::exception_detail::clone_base
+0000000000012760  w   DF .text	0000000000000058  Base        boost::exception_detail::error_info_injector<std::logic_error>::~error_info_injector()
+000000000000ba10 g    DF .text	000000000000016d  Base        cv_bridge::matFromImage(sensor_msgs::CompressedImage_<std::allocator<void> > const&)
+0000000000011ed0  w   DF .text	0000000000000019  Base        boost::re_detail::perl_matcher<char const*, std::allocator<boost::sub_match<char const*> >, boost::regex_traits<char, boost::cpp_regex_traits<char> > >::match_toggle_case()
+0000000000011840  w   DF .text	000000000000000f  Base        boost::detail::sp_counted_base::~sp_counted_base()
+0000000000014dc0  w   DF .text	00000000000000ef  Base        std::vector<boost::re_detail::recursion_info<boost::match_results<char const*, std::allocator<boost::sub_match<char const*> > > >, std::allocator<boost::re_detail::recursion_info<boost::match_results<char const*, std::allocator<boost::sub_match<char const*> > > > > >::~vector()
+00000000000140e0  w   DF .text	0000000000000055  Base        boost::basic_regex<char, boost::regex_traits<char, boost::cpp_regex_traits<char> > >::basic_regex(char const*, unsigned int)
+0000000000014230  w   DF .text	0000000000000042  Base        std::basic_string<char, std::char_traits<char>, std::allocator<char> > std::operator+<char, std::char_traits<char>, std::allocator<char> >(std::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)
+00000000000143f0  w   DF .text	0000000000000115  Base        boost::detail::sp_if_not_array<sensor_msgs::Image_<std::allocator<void> > >::type boost::make_shared<sensor_msgs::Image_<std::allocator<void> > >()
+0000000000015360  w   DF .text	0000000000000258  Base        boost::re_detail::perl_matcher<char const*, std::allocator<boost::sub_match<char const*> >, boost::regex_traits<char, boost::cpp_regex_traits<char> > >::match_backref()
+0000000000018640  w   DF .text	000000000000037b  Base        boost::re_detail::perl_matcher<char const*, std::allocator<boost::sub_match<char const*> >, boost::regex_traits<char, boost::cpp_regex_traits<char> > >::match_rep()
+00000000000118e0  w   DF .text	000000000000002a  Base        boost::re_detail::perl_matcher<char const*, std::allocator<boost::sub_match<char const*> >, boost::regex_traits<char, boost::cpp_regex_traits<char> > >::unwind_alt(bool)
+0000000000011870  w   DF .text	000000000000000b  Base        boost::re_detail::perl_matcher<char const*, std::allocator<boost::sub_match<char const*> >, boost::regex_traits<char, boost::cpp_regex_traits<char> > >::unwind_end(bool)
+00000000000131c0  w   DF .text	00000000000000a4  Base        cv::Mat::Mat(cv::Mat const&)
+0000000000011de0  w   DF .text	0000000000000028  Base        boost::re_detail::perl_matcher<char const*, std::allocator<boost::sub_match<char const*> >, boost::regex_traits<char, boost::cpp_regex_traits<char> > >::match_buffer_start()
+0000000000019580  w   DF .text	0000000000000236  Base        boost::re_detail::recursion_info<boost::match_results<char const*, std::allocator<boost::sub_match<char const*> > > >* std::__uninitialized_copy<false>::__uninit_copy<boost::re_detail::recursion_info<boost::match_results<char const*, std::allocator<boost::sub_match<char const*> > > >*, boost::re_detail::recursion_info<boost::match_results<char const*, std::allocator<boost::sub_match<char const*> > > >*>(boost::re_detail::recursion_info<boost::match_results<char const*, std::allocator<boost::sub_match<char const*> > > >*, boost::re_detail::recursion_info<boost::match_results<char const*, std::allocator<boost::sub_match<char const*> > > >*, boost::re_detail::recursion_info<boost::match_results<char const*, std::allocator<boost::sub_match<char const*> > > >*)
+0000000000012150  w   DF .text	0000000000000072  Base        boost::re_detail::perl_matcher<char const*, std::allocator<boost::sub_match<char const*> >, boost::regex_traits<char, boost::cpp_regex_traits<char> > >::match_set()
+00000000000181d0  w   DF .text	000000000000038e  Base        boost::re_detail::perl_matcher<char const*, std::allocator<boost::sub_match<char const*> >, boost::regex_traits<char, boost::cpp_regex_traits<char> > >::match_startmark()
+000000000001c460  w   DO .rodata	0000000000000068  Base        typeinfo name for boost::detail::sp_counted_impl_pd<sensor_msgs::CompressedImage_<std::allocator<void> >*, boost::detail::sp_ms_deleter<sensor_msgs::CompressedImage_<std::allocator<void> > > >
+0000000000011810 g    DF .text	0000000000000011  Base        cv_bridge::toCvCopy(boost::shared_ptr<sensor_msgs::CompressedImage_<std::allocator<void> > const> const&, std::string const&)
+0000000000015d90  w   DF .text	0000000000000107  Base        std::_Rb_tree<std::pair<cv_bridge::Encoding, cv_bridge::Encoding>, std::pair<std::pair<cv_bridge::Encoding, cv_bridge::Encoding> const, std::vector<int, std::allocator<int> > >, std::_Select1st<std::pair<std::pair<cv_bridge::Encoding, cv_bridge::Encoding> const, std::vector<int, std::allocator<int> > > >, std::less<std::pair<cv_bridge::Encoding, cv_bridge::Encoding> >, std::allocator<std::pair<std::pair<cv_bridge::Encoding, cv_bridge::Encoding> const, std::vector<int, std::allocator<int> > > > >::_M_get_insert_hint_unique_pos(std::_Rb_tree_const_iterator<std::pair<std::pair<cv_bridge::Encoding, cv_bridge::Encoding> const, std::vector<int, std::allocator<int> > > >, std::pair<cv_bridge::Encoding, cv_bridge::Encoding> const&)
+0000000000017180  w   DF .text	000000000000004c  Base        boost::re_detail::perl_matcher<char const*, std::allocator<boost::sub_match<char const*> >, boost::regex_traits<char, boost::cpp_regex_traits<char> > >::match_long_set()
+0000000000013950  w   DF .text	00000000000001a5  Base        boost::detail::sp_counted_impl_pd<cv_bridge::CvImage*, boost::detail::sp_ms_deleter<cv_bridge::CvImage> >::~sp_counted_impl_pd()
+0000000000011910  w   DF .text	0000000000000028  Base        boost::re_detail::perl_matcher<char const*, std::allocator<boost::sub_match<char const*> >, boost::regex_traits<char, boost::cpp_regex_traits<char> > >::unwind_repeater_counter(bool)
+000000000000fdb0 g    DF .text	0000000000001996  Base        cv_bridge::cvtColorForDisplay(boost::shared_ptr<cv_bridge::CvImage const> const&, std::string const&, cv_bridge::CvtColorForDisplayOptions)
+0000000000011e40  w   DF .text	0000000000000012  Base        boost::re_detail::perl_matcher<char const*, std::allocator<boost::sub_match<char const*> >, boost::regex_traits<char, boost::cpp_regex_traits<char> > >::match_jump()
+0000000000014140  w   DF .text	0000000000000094  Base        boost::sub_match<char const*>::str() const
+0000000000013030  w   DF .text	0000000000000042  Base        boost::exception::~exception()
+00000000000157f0  w   DF .text	000000000000008d  Base        void boost::checked_delete<boost::match_results<char const*, std::allocator<boost::sub_match<char const*> > > >(boost::match_results<char const*, std::allocator<boost::sub_match<char const*> > >*)
+0000000000011c20  w   DF .text	0000000000000062  Base        boost::re_detail::perl_matcher<char const*, std::allocator<boost::sub_match<char const*> >, boost::regex_traits<char, boost::cpp_regex_traits<char> > >::match_wild()
+0000000000016970  w   DF .text	000000000000008a  Base        boost::re_detail::perl_matcher<char const*, std::allocator<boost::sub_match<char const*> >, boost::regex_traits<char, boost::cpp_regex_traits<char> > >::match_word_end()
+0000000000019050  w   DF .text	00000000000001be  Base        boost::re_detail::perl_matcher<char const*, std::allocator<boost::sub_match<char const*> >, boost::regex_traits<char, boost::cpp_regex_traits<char> > >::match_dot_repeat_slow()
+0000000000014060  w   DF .text	000000000000007c  Base        boost::match_results<char const*, std::allocator<boost::sub_match<char const*> > >::~match_results()
+00000000000173d0  w   DF .text	0000000000000101  Base        boost::re_detail::perl_matcher<char const*, std::allocator<boost::sub_match<char const*> >, boost::regex_traits<char, boost::cpp_regex_traits<char> > >::match_all_states()
+0000000000013f90  w   DF .text	00000000000000cb  Base        std::vector<cv::Mat, std::allocator<cv::Mat> >::~vector()
+00000000000135b0  w   DF .text	00000000000001e6  Base        boost::detail::sp_counted_impl_pd<cv_bridge::CvImage*, boost::detail::sp_ms_deleter<cv_bridge::CvImage> >::~sp_counted_impl_pd()
+0000000000012120  w   DF .text	000000000000002d  Base        boost::detail::sp_counted_impl_pd<sensor_msgs::Image_<std::allocator<void> >*, boost::detail::sp_ms_deleter<sensor_msgs::Image_<std::allocator<void> > > >::get_deleter(std::type_info const&)
+0000000000011e90  w   DF .text	0000000000000037  Base        boost::re_detail::perl_matcher<char const*, std::allocator<boost::sub_match<char const*> >, boost::regex_traits<char, boost::cpp_regex_traits<char> > >::match_backstep()
+0000000000011f50  w   DF .text	0000000000000013  Base        boost::exception_detail::clone_base::~clone_base()
+0000000000011b80  w   DF .text	0000000000000099  Base        boost::re_detail::perl_matcher<char const*, std::allocator<boost::sub_match<char const*> >, boost::regex_traits<char, boost::cpp_regex_traits<char> > >::match_start_line()
+0000000000013370  w   DF .text	0000000000000072  Base        cv::Mat::~Mat()
+000000000000bd70 g    DF .text	000000000000027b  Base        cv_bridge::getEncoding(std::string const&)
+000000000001c280  w   DO .rodata	0000000000000021  Base        typeinfo name for boost::detail::sp_counted_base
+000000000001c1a0  w   DO .rodata	000000000000003e  Base        typeinfo name for boost::detail::sp_ms_deleter<sensor_msgs::Image_<std::allocator<void> > >
+0000000000013120  w   DF .text	0000000000000095  Base        cv::Mat::Mat(cv::Size_<int>, int)
+0000000000220a40  w   DO .data.rel.ro	0000000000000028  Base        vtable for cv_bridge::Exception
+0000000000011830  w   DF .text	000000000000000f  Base        boost::exception_detail::clone_base::~clone_base()
+000000000000d440 g    DF .text	0000000000000ab2  Base        cv_bridge::getConversionCode(std::string, std::string)
+00000000000159f0  w   DF .text	00000000000001a8  Base        void boost::checked_delete<cv_bridge::CvImage>(cv_bridge::CvImage*)
+00000000000127d0  w   DF .text	0000000000000079  Base        boost::exception_detail::clone_impl<boost::exception_detail::error_info_injector<std::logic_error> >::~clone_impl()
+0000000000013270  w   DF .text	00000000000000fd  Base        cv::Mat::Mat(int, int, int, void*, unsigned long)
+0000000000014810  w   DF .text	000000000000011b  Base        std::vector<unsigned char, std::allocator<unsigned char> >::operator=(std::vector<unsigned char, std::allocator<unsigned char> > const&)
+0000000000220ba0  w   DO .data.rel.ro	0000000000000040  Base        vtable for boost::detail::sp_counted_impl_pd<cv_bridge::CvImage*, boost::detail::sp_ms_deleter<cv_bridge::CvImage> >
+0000000000019db0  w   DF .text	0000000000000521  Base        boost::re_detail::perl_matcher<char const*, std::allocator<boost::sub_match<char const*> >, boost::regex_traits<char, boost::cpp_regex_traits<char> > >::match_recursion()
+000000000000f8b0 g    DF .text	000000000000009f  Base        cv_bridge::toCvShare(boost::shared_ptr<sensor_msgs::Image_<std::allocator<void> > const> const&, std::string const&)
+000000000001c400  w   DO .rodata	000000000000005d  Base        typeinfo name for boost::detail::sp_counted_impl_pd<sensor_msgs::Image_<std::allocator<void> >*, boost::detail::sp_ms_deleter<sensor_msgs::Image_<std::allocator<void> > > >
+00000000000155c0  w   DF .text	0000000000000227  Base        std::vector<unsigned char, std::allocator<unsigned char> >::_M_fill_insert(__gnu_cxx::__normal_iterator<unsigned char*, std::vector<unsigned char, std::allocator<unsigned char> > >, unsigned long, unsigned char const&)
+0000000000220980  w   DO .data.rel.ro	0000000000000018  Base        typeinfo for boost::detail::sp_counted_impl_p<cv_bridge::CvImage>
+0000000000014be0  w   DF .text	0000000000000194  Base        std::vector<int, std::allocator<int> >::_M_insert_aux(__gnu_cxx::__normal_iterator<int*, std::vector<int, std::allocator<int> > >, int const&)
+0000000000015ce0  w   DF .text	00000000000000a9  Base        std::_Rb_tree<std::pair<cv_bridge::Encoding, cv_bridge::Encoding>, std::pair<std::pair<cv_bridge::Encoding, cv_bridge::Encoding> const, std::vector<int, std::allocator<int> > >, std::_Select1st<std::pair<std::pair<cv_bridge::Encoding, cv_bridge::Encoding> const, std::vector<int, std::allocator<int> > > >, std::less<std::pair<cv_bridge::Encoding, cv_bridge::Encoding> >, std::allocator<std::pair<std::pair<cv_bridge::Encoding, cv_bridge::Encoding> const, std::vector<int, std::allocator<int> > > > >::_M_get_insert_unique_pos(std::pair<cv_bridge::Encoding, cv_bridge::Encoding> const&)
+0000000000016b20  w   DF .text	0000000000000094  Base        boost::re_detail::perl_matcher<char const*, std::allocator<boost::sub_match<char const*> >, boost::regex_traits<char, boost::cpp_regex_traits<char> > >::match_word_boundary()
+0000000000011f30  w   DF .text	0000000000000005  Base        boost::detail::sp_counted_impl_pd<sensor_msgs::Image_<std::allocator<void> >*, boost::detail::sp_ms_deleter<sensor_msgs::Image_<std::allocator<void> > > >::get_untyped_deleter()
+0000000000220be0  w   DO .data.rel.ro	0000000000000040  Base        vtable for boost::detail::sp_counted_impl_pd<sensor_msgs::Image_<std::allocator<void> >*, boost::detail::sp_ms_deleter<sensor_msgs::Image_<std::allocator<void> > > >
+000000000000df00 g    DF .text	0000000000000532  Base        cv_bridge::getCvType(std::string const&)
+00000000000118a0  w   DF .text	0000000000000039  Base        boost::re_detail::perl_matcher<char const*, std::allocator<boost::sub_match<char const*> >, boost::regex_traits<char, boost::cpp_regex_traits<char> > >::unwind_assertion(bool)
+0000000000011f40  w   DF .text	0000000000000005  Base        boost::detail::sp_counted_impl_pd<cv_bridge::CvImage*, boost::detail::sp_ms_deleter<cv_bridge::CvImage> >::get_untyped_deleter()
+000000000000f5d0 g    DF .text	00000000000002d4  Base        cv_bridge::toCvShare(sensor_msgs::Image_<std::allocator<void> > const&, boost::shared_ptr<void const> const&, std::string const&)
+00000000000174e0  w   DF .text	0000000000000429  Base        boost::re_detail::perl_matcher<char const*, std::allocator<boost::sub_match<char const*> >, boost::regex_traits<char, boost::cpp_regex_traits<char> > >::match_imp()
+0000000000014930  w   DF .text	000000000000001f  Base        boost::exception_detail::refcount_ptr<boost::exception_detail::error_info_container>::release()
+0000000000016720  w   DF .text	0000000000000156  Base        void boost::re_detail::raise_error<boost::regex_traits_wrapper<boost::regex_traits<char, boost::cpp_regex_traits<char> > > >(boost::regex_traits_wrapper<boost::regex_traits<char, boost::cpp_regex_traits<char> > > const&, boost::regex_constants::error_type)
+0000000000220920  w   DO .data.rel.ro	0000000000000018  Base        typeinfo for boost::detail::sp_counted_impl_pd<cv_bridge::CvImage*, boost::detail::sp_ms_deleter<cv_bridge::CvImage> >
+00000000000137a0  w   DF .text	00000000000001a8  Base        boost::detail::sp_counted_impl_p<cv_bridge::CvImage>::dispose()
+0000000000221528 g    D  .data	0000000000000000  Base        _edata
+000000000000bb80 g    DF .text	00000000000001e3  Base        cv_bridge::getFormat(cv_bridge::Format)
+00000000002208a0  w   DO .data.rel.ro	0000000000000038  Base        typeinfo for boost::exception_detail::error_info_injector<std::logic_error>
+00000000000126d0  w   DF .text	0000000000000084  Base        boost::re_detail::perl_matcher<char const*, std::allocator<boost::sub_match<char const*> >, boost::regex_traits<char, boost::cpp_regex_traits<char> > >::match_combining()
+00000000002209a0  w   DO .data.rel.ro	0000000000000020  Base        vtable for boost::exception
+0000000000015c70  w   DF .text	0000000000000067  Base        boost::re_detail::perl_matcher<char const*, std::allocator<boost::sub_match<char const*> >, boost::regex_traits<char, boost::cpp_regex_traits<char> > >::unwind(bool)
+0000000000220870  w   DO .data.rel.ro	0000000000000018  Base        typeinfo for cv_bridge::Exception
+0000000000011f00  w   DF .text	0000000000000003  Base        boost::detail::sp_counted_impl_p<cv_bridge::CvImage>::get_deleter(std::type_info const&)
+0000000000015ba0  w   DF .text	00000000000000c3  Base        boost::shared_ptr<cv_bridge::CvImage>::shared_ptr<cv_bridge::CvImage>(cv_bridge::CvImage*)
+0000000000014280  w   DF .text	000000000000016d  Base        boost::detail::sp_if_not_array<cv_bridge::CvImage>::type boost::make_shared<cv_bridge::CvImage>()
+0000000000011fd0  w   DF .text	0000000000000020  Base        cv_bridge::Exception::~Exception()
+00000000000171d0  w   DF .text	0000000000000182  Base        boost::re_detail::perl_matcher<char const*, std::allocator<boost::sub_match<char const*> >, boost::regex_traits<char, boost::cpp_regex_traits<char> > >::unwind_long_set_repeat(bool)
+0000000000012520  w   DF .text	00000000000001a7  Base        boost::re_detail::perl_matcher<char const*, std::allocator<boost::sub_match<char const*> >, boost::regex_traits<char, boost::cpp_regex_traits<char> > >::unwind_short_set_repeat(bool)
+0000000000013dc0  w   DF .text	000000000000010d  Base        std::pair<__gnu_cxx::__normal_iterator<boost::re_detail::named_subexpressions::name const*, std::vector<boost::re_detail::named_subexpressions::name, std::allocator<boost::re_detail::named_subexpressions::name> > >, __gnu_cxx::__normal_iterator<boost::re_detail::named_subexpressions::name const*, std::vector<boost::re_detail::named_subexpressions::name, std::allocator<boost::re_detail::named_subexpressions::name> > > > std::equal_range<__gnu_cxx::__normal_iterator<boost::re_detail::named_subexpressions::name const*, std::vector<boost::re_detail::named_subexpressions::name, std::allocator<boost::re_detail::named_subexpressions::name> > >, boost::re_detail::named_subexpressions::name>(__gnu_cxx::__normal_iterator<boost::re_detail::named_subexpressions::name const*, std::vector<boost::re_detail::named_subexpressions::name, std::allocator<boost::re_detail::named_subexpressions::name> > >, __gnu_cxx::__normal_iterator<boost::re_detail::named_subexpressions::name const*, std::vector<boost::re_detail::named_subexpressions::name, std::allocator<boost::re_detail::named_subexpressions::name> > >, boost::re_detail::named_subexpressions::name const&)
+0000000000012030  w   DF .text	000000000000002d  Base        boost::detail::sp_counted_impl_pd<cv_bridge::CvImage*, boost::detail::sp_ms_deleter<cv_bridge::CvImage> >::get_deleter(std::type_info const&)
+0000000000012980  w   DF .text	00000000000000be  Base        boost::detail::sp_counted_impl_pd<sensor_msgs::Image_<std::allocator<void> >*, boost::detail::sp_ms_deleter<sensor_msgs::Image_<std::allocator<void> > > >::dispose()
+0000000000014b70  w   DF .text	000000000000000c  Base        virtual thunk to boost::exception_detail::clone_impl<boost::exception_detail::error_info_injector<std::logic_error> >::clone() const
+0000000000220540 u    DO .data.rel.ro	0000000000000120  Base        boost::re_detail::perl_matcher<char const*, std::allocator<boost::sub_match<char const*> >, boost::regex_traits<char, boost::cpp_regex_traits<char> > >::unwind(bool)::s_unwind_table
+0000000000015170  w   DF .text	00000000000001e7  Base        boost::re_detail::perl_matcher<char const*, std::allocator<boost::sub_match<char const*> >, boost::regex_traits<char, boost::cpp_regex_traits<char> > >::match_assert_backref()
+000000000000f5b0 g    DF .text	0000000000000011  Base        cv_bridge::toCvCopy(boost::shared_ptr<sensor_msgs::Image_<std::allocator<void> > const> const&, std::string const&)
+0000000000220c60  w   DO .data.rel.ro	0000000000000040  Base        vtable for boost::detail::sp_counted_impl_p<cv_bridge::CvImage>
+00000000000133f0  w   DF .text	00000000000001b8  Base        boost::detail::sp_counted_impl_pd<cv_bridge::CvImage*, boost::detail::sp_ms_deleter<cv_bridge::CvImage> >::dispose()
+00000000000197c0  w   DF .text	00000000000005e2  Base        std::vector<boost::re_detail::recursion_info<boost::match_results<char const*, std::allocator<boost::sub_match<char const*> > > >, std::allocator<boost::re_detail::recursion_info<boost::match_results<char const*, std::allocator<boost::sub_match<char const*> > > > > >::_M_insert_aux(__gnu_cxx::__normal_iterator<boost::re_detail::recursion_info<boost::match_results<char const*, std::allocator<boost::sub_match<char const*> > > >*, std::vector<boost::re_detail::recursion_info<boost::match_results<char const*, std::allocator<boost::sub_match<char const*> > > >, std::allocator<boost::re_detail::recursion_info<boost::match_results<char const*, std::allocator<boost::sub_match<char const*> > > > > > >, boost::re_detail::recursion_info<boost::match_results<char const*, std::allocator<boost::sub_match<char const*> > > > const&)
+0000000000011fb0  w   DF .text	0000000000000013  Base        cv_bridge::Exception::~Exception()
+0000000000011c90  w   DF .text	0000000000000149  Base        boost::re_detail::perl_matcher<char const*, std::allocator<boost::sub_match<char const*> >, boost::regex_traits<char, boost::cpp_regex_traits<char> > >::unwind_slow_dot_repeat(bool)
+00000000000130d0  w   DF .text	000000000000004a  Base        boost::detail::sp_counted_base::release()
+000000000001c340  w   DO .rodata	0000000000000054  Base        typeinfo name for boost::exception_detail::clone_impl<boost::exception_detail::error_info_injector<std::logic_error> >
+0000000000012240  w   DF .text	000000000000008a  Base        boost::re_detail::perl_matcher<char const*, std::allocator<boost::sub_match<char const*> >, boost::regex_traits<char, boost::cpp_regex_traits<char> > >::match_soft_buffer_end()
+0000000000012860  w   DF .text	0000000000000009  Base        non-virtual thunk to boost::exception_detail::clone_impl<boost::exception_detail::error_info_injector<std::logic_error> >::~clone_impl()
+0000000000012be0  w   DF .text	00000000000000d1  Base        boost::detail::sp_counted_impl_pd<sensor_msgs::Image_<std::allocator<void> >*, boost::detail::sp_ms_deleter<sensor_msgs::Image_<std::allocator<void> > > >::~sp_counted_impl_pd()
+0000000000015880  w   DF .text	0000000000000169  Base        boost::re_detail::perl_matcher<char const*, std::allocator<boost::sub_match<char const*> >, boost::regex_traits<char, boost::cpp_regex_traits<char> > >::~perl_matcher()
+0000000000014510  w   DF .text	00000000000000fd  Base        boost::detail::sp_if_not_array<sensor_msgs::CompressedImage_<std::allocator<void> > >::type boost::make_shared<sensor_msgs::CompressedImage_<std::allocator<void> > >()
+0000000000011ef0  w   DF .text	000000000000000f  Base        boost::detail::sp_counted_impl_p<cv_bridge::CvImage>::~sp_counted_impl_p()
+0000000000016380  w   DF .text	000000000000039b  Base        std::vector<boost::sub_match<char const*>, std::allocator<boost::sub_match<char const*> > >::_M_fill_insert(__gnu_cxx::__normal_iterator<boost::sub_match<char const*>*, std::vector<boost::sub_match<char const*>, std::allocator<boost::sub_match<char const*> > > >, unsigned long, boost::sub_match<char const*> const&)
+000000000000ef50 g    DF .text	0000000000000592  Base        cv_bridge::toCvCopyImpl(cv::Mat const&, std_msgs::Header_<std::allocator<void> > const&, std::string const&, std::string const&)
+0000000000016880  w   DF .text	00000000000000e2  Base        boost::cpp_regex_traits<char>::isctype(char, unsigned int) const
+0000000000012b00  w   DF .text	00000000000000d1  Base        boost::detail::sp_counted_impl_pd<sensor_msgs::CompressedImage_<std::allocator<void> >*, boost::detail::sp_ms_deleter<sensor_msgs::CompressedImage_<std::allocator<void> > > >::~sp_counted_impl_pd()
+0000000000017360  w   DF .text	000000000000006f  Base        boost::re_detail::perl_matcher<char const*, std::allocator<boost::sub_match<char const*> >, boost::regex_traits<char, boost::cpp_regex_traits<char> > >::extend_stack()
+0000000000011a20  w   DF .text	0000000000000112  Base        boost::re_detail::perl_matcher<char const*, std::allocator<boost::sub_match<char const*> >, boost::regex_traits<char, boost::cpp_regex_traits<char> > >::unwind_fast_dot_repeat(bool)
+0000000000016a90  w   DF .text	0000000000000090  Base        boost::re_detail::perl_matcher<char const*, std::allocator<boost::sub_match<char const*> >, boost::regex_traits<char, boost::cpp_regex_traits<char> > >::match_within_word()
+0000000000017e70  w   DF .text	0000000000000357  Base        boost::re_detail::perl_matcher<char const*, std::allocator<boost::sub_match<char const*> >, boost::regex_traits<char, boost::cpp_regex_traits<char> > >::match_match()
+000000000000cc90 g    DF .text	000000000000003f  Base        cv_bridge::CvImage::toImageMsg() const
+0000000000014bd0  w   DF .text	0000000000000009  Base        std::map<std::pair<cv_bridge::Encoding, cv_bridge::Encoding>, std::vector<int, std::allocator<int> >, std::less<std::pair<cv_bridge::Encoding, cv_bridge::Encoding> >, std::allocator<std::pair<std::pair<cv_bridge::Encoding, cv_bridge::Encoding> const, std::vector<int, std::allocator<int> > > > >::~map()
+0000000000011f70  w   DF .text	0000000000000013  Base        boost::detail::sp_counted_base::~sp_counted_base()
+00000000000127c0  w   DF .text	0000000000000009  Base        non-virtual thunk to boost::exception_detail::error_info_injector<std::logic_error>::~error_info_injector()
+0000000000012870  w   DF .text	0000000000000060  Base        boost::exception_detail::error_info_injector<std::logic_error>::~error_info_injector()
+0000000000013c00  w   DF .text	00000000000001b8  Base        cv::MatExpr::~MatExpr()
+00000000000162c0  w   DF .text	00000000000000b3  Base        boost::match_results<char const*, std::allocator<boost::sub_match<char const*> > >::operator=(boost::match_results<char const*, std::allocator<boost::sub_match<char const*> > > const&)
+0000000000220840  w   DO .data.rel.ro	0000000000000010  Base        typeinfo for boost::exception
+0000000000220960  w   DO .data.rel.ro	0000000000000018  Base        typeinfo for boost::detail::sp_counted_impl_pd<sensor_msgs::CompressedImage_<std::allocator<void> >*, boost::detail::sp_ms_deleter<sensor_msgs::CompressedImage_<std::allocator<void> > > >
+000000000000f4f0 g    DF .text	00000000000000bd  Base        cv_bridge::toCvCopy(sensor_msgs::Image_<std::allocator<void> > const&, std::string const&)
+0000000000013120  w   DF .text	0000000000000095  Base        cv::Mat::Mat(cv::Size_<int>, int)
+00000000000120f0  w   DF .text	000000000000002d  Base        boost::detail::sp_counted_impl_pd<sensor_msgs::CompressedImage_<std::allocator<void> >*, boost::detail::sp_ms_deleter<sensor_msgs::CompressedImage_<std::allocator<void> > > >::get_deleter(std::type_info const&)
+000000000000f970 g    DF .text	00000000000003e5  Base        cv_bridge::CvImage::toCompressedImageMsg(sensor_msgs::CompressedImage_<std::allocator<void> >&, cv_bridge::Format) const
+0000000000011750 g    DF .text	00000000000000bd  Base        cv_bridge::toCvCopy(sensor_msgs::CompressedImage_<std::allocator<void> > const&, std::string const&)
+000000000001c140  w   DO .rodata	0000000000000049  Base        typeinfo name for boost::detail::sp_ms_deleter<sensor_msgs::CompressedImage_<std::allocator<void> > >
+0000000000011e60  w   DF .text	0000000000000022  Base        boost::re_detail::perl_matcher<char const*, std::allocator<boost::sub_match<char const*> >, boost::regex_traits<char, boost::cpp_regex_traits<char> > >::match_restart_continue()
+0000000000012850  w   DF .text	000000000000000c  Base        virtual thunk to boost::exception_detail::clone_impl<boost::exception_detail::error_info_injector<std::logic_error> >::~clone_impl()
+0000000000011840  w   DF .text	000000000000000f  Base        boost::detail::sp_counted_base::~sp_counted_base()
+000000000001c240  w   DO .rodata	0000000000000027  Base        typeinfo name for boost::exception_detail::clone_base
+0000000000012760  w   DF .text	0000000000000058  Base        boost::exception_detail::error_info_injector<std::logic_error>::~error_info_injector()
+00000000000131c0  w   DF .text	00000000000000a4  Base        cv::Mat::Mat(cv::Mat const&)
+0000000000014dc0  w   DF .text	00000000000000ef  Base        std::vector<boost::re_detail::recursion_info<boost::match_results<char const*, std::allocator<boost::sub_match<char const*> > > >, std::allocator<boost::re_detail::recursion_info<boost::match_results<char const*, std::allocator<boost::sub_match<char const*> > > > > >::~vector()
+0000000000017b80  w   DF .text	00000000000002e5  Base        boost::re_detail::perl_matcher<char const*, std::allocator<boost::sub_match<char const*> >, boost::regex_traits<char, boost::cpp_regex_traits<char> > >::match_endmark()
+000000000001c4e0  w   DO .rodata	0000000000000039  Base        typeinfo name for boost::detail::sp_counted_impl_p<cv_bridge::CvImage>
+0000000000019430  w   DF .text	0000000000000005  Base        boost::re_detail::perl_matcher<char const*, std::allocator<boost::sub_match<char const*> >, boost::regex_traits<char, boost::cpp_regex_traits<char> > >::match_dot_repeat_dispatch()
+00000000002208e0  w   DO .data.rel.ro	0000000000000038  Base        typeinfo for boost::exception_detail::clone_impl<boost::exception_detail::error_info_injector<std::logic_error> >
+0000000000014b80  w   DF .text	000000000000004b  Base        std::_Rb_tree<std::pair<cv_bridge::Encoding, cv_bridge::Encoding>, std::pair<std::pair<cv_bridge::Encoding, cv_bridge::Encoding> const, std::vector<int, std::allocator<int> > >, std::_Select1st<std::pair<std::pair<cv_bridge::Encoding, cv_bridge::Encoding> const, std::vector<int, std::allocator<int> > > >, std::less<std::pair<cv_bridge::Encoding, cv_bridge::Encoding> >, std::allocator<std::pair<std::pair<cv_bridge::Encoding, cv_bridge::Encoding> const, std::vector<int, std::allocator<int> > > > >::_M_erase(std::_Rb_tree_node<std::pair<std::pair<cv_bridge::Encoding, cv_bridge::Encoding> const, std::vector<int, std::allocator<int> > > >*)
+0000000000220940  w   DO .data.rel.ro	0000000000000018  Base        typeinfo for boost::detail::sp_counted_impl_pd<sensor_msgs::Image_<std::allocator<void> >*, boost::detail::sp_ms_deleter<sensor_msgs::Image_<std::allocator<void> > > >
+0000000000011f20  w   DF .text	0000000000000005  Base        boost::detail::sp_counted_impl_pd<sensor_msgs::CompressedImage_<std::allocator<void> >*, boost::detail::sp_ms_deleter<sensor_msgs::CompressedImage_<std::allocator<void> > > >::get_untyped_deleter()
+0000000000016100  w   DF .text	00000000000001b8  Base        std::vector<boost::sub_match<char const*>, std::allocator<boost::sub_match<char const*> > >::operator=(std::vector<boost::sub_match<char const*>, std::allocator<boost::sub_match<char const*> > > const&)
+000000000000e440 g    DF .text	0000000000000b0b  Base        cv_bridge::matFromImage(sensor_msgs::Image_<std::allocator<void> > const&)
+0000000000013080  w   DF .text	0000000000000049  Base        boost::exception::~exception()
+0000000000220a00  w   DO .data.rel.ro	0000000000000040  Base        vtable for boost::detail::sp_counted_base
+0000000000014060  w   DF .text	000000000000007c  Base        boost::match_results<char const*, std::allocator<boost::sub_match<char const*> > >::~match_results()
+0000000000016bc0  w   DF .text	00000000000005ba  Base        char const* boost::re_detail::re_is_set_member<char const*, char, boost::regex_traits<char, boost::cpp_regex_traits<char> >, unsigned int>(char const*, char const*, boost::re_detail::re_set_long<unsigned int> const*, boost::re_detail::regex_data<char, boost::regex_traits<char, boost::cpp_regex_traits<char> > > const&, bool)
+00000000000135b0  w   DF .text	00000000000001e6  Base        boost::detail::sp_counted_impl_pd<cv_bridge::CvImage*, boost::detail::sp_ms_deleter<cv_bridge::CvImage> >::~sp_counted_impl_pd()
+0000000000012370  w   DF .text	00000000000001aa  Base        boost::re_detail::perl_matcher<char const*, std::allocator<boost::sub_match<char const*> >, boost::regex_traits<char, boost::cpp_regex_traits<char> > >::unwind_char_repeat(bool)
+0000000000016a00  w   DF .text	000000000000008d  Base        boost::re_detail::perl_matcher<char const*, std::allocator<boost::sub_match<char const*> >, boost::regex_traits<char, boost::cpp_regex_traits<char> > >::match_word_start()
+0000000000014a40  w   DF .text	0000000000000123  Base        boost::exception_detail::clone_impl<boost::exception_detail::error_info_injector<std::logic_error> >::clone() const
+0000000000221528 g    D  .bss	0000000000000000  Base        __bss_start
+0000000000011880  w   DF .text	0000000000000013  Base        boost::re_detail::perl_matcher<char const*, std::allocator<boost::sub_match<char const*> >, boost::regex_traits<char, boost::cpp_regex_traits<char> > >::unwind_recursion_stopper(bool)
+0000000000013370  w   DF .text	0000000000000072  Base        cv::Mat::~Mat()
+0000000000011e10  w   DF .text	0000000000000028  Base        boost::re_detail::perl_matcher<char const*, std::allocator<boost::sub_match<char const*> >, boost::regex_traits<char, boost::cpp_regex_traits<char> > >::match_buffer_end()
+0000000000013030  w   DF .text	0000000000000042  Base        boost::exception::~exception()
+000000000000f950 g    DF .text	000000000000001c  Base        cv_bridge::cvtColor(boost::shared_ptr<cv_bridge::CvImage const> const&, std::string const&)
+0000000000014d80  w   DF .text	0000000000000034  Base        std::vector<int, std::allocator<int> >::push_back(int const&)
+0000000000011b40  w   DF .text	0000000000000036  Base        boost::re_detail::perl_matcher<char const*, std::allocator<boost::sub_match<char const*> >, boost::regex_traits<char, boost::cpp_regex_traits<char> > >::unwind_non_greedy_repeat(bool)
+000000000000ccd0 g    DF .text	000000000000076b  Base        cv_bridge::getConversionCodes()
+0000000000221720 g    D  .bss	0000000000000000  Base        _end
+0000000000012060  w   DF .text	0000000000000082  Base        boost::re_detail::perl_matcher<char const*, std::allocator<boost::sub_match<char const*> >, boost::regex_traits<char, boost::cpp_regex_traits<char> > >::match_end_line()
+0000000000019210  w   DF .text	0000000000000220  Base        boost::re_detail::perl_matcher<char const*, std::allocator<boost::sub_match<char const*> >, boost::regex_traits<char, boost::cpp_regex_traits<char> > >::match_dot_repeat_fast()
+0000000000013f90  w   DF .text	00000000000000cb  Base        std::vector<cv::Mat, std::allocator<cv::Mat> >::~vector()
+00000000002209c0  w   DO .data.rel.ro	0000000000000030  Base        vtable for boost::exception_detail::clone_base
+0000000000011830  w   DF .text	000000000000000f  Base        boost::exception_detail::clone_base::~clone_base()
+00000000000128e0  w   DF .text	0000000000000080  Base        boost::exception_detail::clone_impl<boost::exception_detail::error_info_injector<std::logic_error> >::~clone_impl()
+000000000001c3a0  w   DO .rodata	0000000000000054  Base        typeinfo name for boost::detail::sp_counted_impl_pd<cv_bridge::CvImage*, boost::detail::sp_ms_deleter<cv_bridge::CvImage> >
+0000000000015080  w   DF .text	000000000000007b  Base        boost::match_results<char const*, std::allocator<boost::sub_match<char const*> > >::raise_logic_error()
+0000000000014950  w   DF .text	00000000000000e5  Base        boost::exception_detail::copy_boost_exception(boost::exception*, boost::exception const*)
+000000000000fd60 g    DF .text	0000000000000041  Base        cv_bridge::CvImage::toCompressedImageMsg(cv_bridge::Format) const
+0000000000011f10  w   DF .text	0000000000000003  Base        boost::detail::sp_counted_impl_p<cv_bridge::CvImage>::get_untyped_deleter()
+0000000000220a80  w   DO .data.rel.ro	0000000000000048  Base        vtable for boost::exception_detail::error_info_injector<std::logic_error>
+0000000000018c10  w   DF .text	0000000000000214  Base        boost::re_detail::perl_matcher<char const*, std::allocator<boost::sub_match<char const*> >, boost::regex_traits<char, boost::cpp_regex_traits<char> > >::match_char_repeat()
+00000000000121d0  w   DF .text	000000000000006a  Base        boost::re_detail::perl_matcher<char const*, std::allocator<boost::sub_match<char const*> >, boost::regex_traits<char, boost::cpp_regex_traits<char> > >::unwind_paren(bool)
+0000000000015ba0  w   DF .text	00000000000000c3  Base        boost::shared_ptr<cv_bridge::CvImage>::shared_ptr<cv_bridge::CvImage>(cv_bridge::CvImage*)
+0000000000018560  w   DF .text	00000000000000dd  Base        boost::re_detail::perl_matcher<char const*, std::allocator<boost::sub_match<char const*> >, boost::regex_traits<char, boost::cpp_regex_traits<char> > >::match_alt()
+0000000000013270  w   DF .text	00000000000000fd  Base        cv::Mat::Mat(int, int, int, void*, unsigned long)
+0000000000015ea0  w   DF .text	0000000000000179  Base        std::_Rb_tree<std::pair<cv_bridge::Encoding, cv_bridge::Encoding>, std::pair<std::pair<cv_bridge::Encoding, cv_bridge::Encoding> const, std::vector<int, std::allocator<int> > >, std::_Select1st<std::pair<std::pair<cv_bridge::Encoding, cv_bridge::Encoding> const, std::vector<int, std::allocator<int> > > >, std::less<std::pair<cv_bridge::Encoding, cv_bridge::Encoding> >, std::allocator<std::pair<std::pair<cv_bridge::Encoding, cv_bridge::Encoding> const, std::vector<int, std::allocator<int> > > > >::_M_insert_unique_(std::_Rb_tree_const_iterator<std::pair<std::pair<cv_bridge::Encoding, cv_bridge::Encoding> const, std::vector<int, std::allocator<int> > > >, std::pair<std::pair<cv_bridge::Encoding, cv_bridge::Encoding> const, std::vector<int, std::allocator<int> > > const&)
+0000000000220ad0  w   DO .data.rel.ro	0000000000000010  Base        VTT for boost::exception_detail::clone_impl<boost::exception_detail::error_info_injector<std::logic_error> >
+0000000000012a40  w   DF .text	00000000000000be  Base        boost::detail::sp_counted_impl_pd<sensor_msgs::CompressedImage_<std::allocator<void> >*, boost::detail::sp_ms_deleter<sensor_msgs::CompressedImage_<std::allocator<void> > > >::dispose()
+0000000000220c20  w   DO .data.rel.ro	0000000000000040  Base        vtable for boost::detail::sp_counted_impl_pd<sensor_msgs::CompressedImage_<std::allocator<void> >*, boost::detail::sp_ms_deleter<sensor_msgs::CompressedImage_<std::allocator<void> > > >
+0000000000013b00  w   DF .text	00000000000000fd  Base        cv::Mat::operator=(cv::Mat const&)
+0000000000019440  w   DF .text	0000000000000139  Base        boost::match_results<char const*, std::allocator<boost::sub_match<char const*> > >::match_results(boost::match_results<char const*, std::allocator<boost::sub_match<char const*> > > const&)
+000000000001ba88 g    DF .fini	0000000000000000  Base        _fini
+0000000000015100  w   DF .text	0000000000000061  Base        boost::match_results<char const*, std::allocator<boost::sub_match<char const*> > >::operator[](int) const
+0000000000013ed0  w   DF .text	000000000000002b  Base        __gnu_cxx::__enable_if<std::__is_char<char>::__value, bool>::__type std::operator==<char>(std::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)
+0000000000220660 u    DO .data.rel.ro	00000000000001e0  Base        boost::re_detail::perl_matcher<char const*, std::allocator<boost::sub_match<char const*> >, boost::regex_traits<char, boost::cpp_regex_traits<char> > >::match_all_states()::s_match_vtable
+
+

@@ -5,13 +5,13 @@ project(autonomos_ctrl)
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
-find_package(catkin REQUIRED COMPONENTS roscpp std_msgs geometry_msgs)
+find_package(catkin REQUIRED COMPONENTS roscpp std_msgs geometry_msgs image_transport sensor_msgs cv_bridge)
 find_package(cmake_modules REQUIRED)
 find_package(Eigen REQUIRED)
 find_package(gazebo_msgs)
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
-
+find_package(OpenCV 2 REQUIRED)
 
 ## Uncomment this if the package has a setup.py. This macro ensures
 ## modules and global scripts declared therein get installed
@@ -80,9 +80,10 @@ find_package(gazebo_msgs)
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
 #  INCLUDE_DIRS include
-#  LIBRARIES ekbot_ctrl
-#  CATKIN_DEPENDS other_catkin_pkg
-#  DEPENDS system_lib
+  LIBRARIES auto_displayImage cv_bridge image_transport
+  CATKIN_DEPENDS roscpp sensor_msgs  
+  DEPENDS system_lib OpenCV 
+
 )
 
 ###########
@@ -92,7 +93,8 @@ catkin_package(
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 # include_directories(include)
-include_directories(include ${catkin_INCLUDE_DIRS} ${Eigen_INCLUDE_DIRS})
+include_directories(include ${catkin_INCLUDE_DIRS} ${Eigen_INCLUDE_DIRS} 
+${OpenCV_INCLUDE_DIRS})
 
 ## Declare a cpp library
 # add_library(ekbot_ctrl
@@ -105,6 +107,9 @@ add_executable(autonomos_velocity_node auto_velocity_node.cpp)
 add_executable(autonomos_trajectory_node auto_trajectory_node.cpp)
 add_executable(autonomos_lidar_node auto_lidar_node.cpp)
 add_executable(laser_scan_publisher auto_lidar_node.cpp)
+
+add_executable(auto_displayImage DisplayImage.cpp)
+target_link_libraries(auto_displayImage ${OpenCV_LIBRARIES} ${catkin_LIBRARIES} )
 
 target_link_libraries(autonomos_velocity_node ${catkin_LIBRARIES})
 target_link_libraries(autonomos_trajectory_node ${catkin_LIBRARIES})
