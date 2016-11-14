@@ -8,9 +8,6 @@ Ahí se encuentran los tres archivos necesarios del paquete dentro del workspace
 El programa move_fwd.cpp es el que debe de ejecutarse desde consola junto con el turtlesim_node y el roscore para poder ver la funcionalidad del programa.
 
 
-
-<!---holi--->
-
 #Proyecto 2
 
 Clonar el repositorio que se encuentra en el branch que se subió copiando lo siguiente 
