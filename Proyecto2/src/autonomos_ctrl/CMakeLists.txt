@@ -103,18 +103,21 @@ ${OpenCV_INCLUDE_DIRS})
 
 ## Declare a cpp executable
 # add_executable(ekbot_ctrl_node src/ekbot_ctrl_node.cpp)
-add_executable(autonomos_velocity_node auto_velocity_node.cpp)
+add_executable(autonomos_ctrl_node auto_velocity_node.cpp)
 add_executable(autonomos_trajectory_node auto_trajectory_node.cpp)
 add_executable(autonomos_lidar_node auto_lidar_node.cpp)
-add_executable(laser_scan_publisher auto_lidar_node.cpp)
 
+<<<<<<< HEAD
 add_executable(auto_displayImage DisplayImage.cpp)
 target_link_libraries(auto_displayImage ${OpenCV_LIBRARIES} ${catkin_LIBRARIES} )
 
 target_link_libraries(autonomos_velocity_node ${catkin_LIBRARIES})
+=======
+target_link_libraries(autonomos_ctrl_node ${catkin_LIBRARIES})
+>>>>>>> 71b170b8eb084d2a6138f2f55ac25ac1908a243a
 target_link_libraries(autonomos_trajectory_node ${catkin_LIBRARIES})
 target_link_libraries(autonomos_lidar_node ${catkin_LIBRARIES})
-target_link_libraries(laser_scan_publisher ${catkin_LIBRARIES})
+
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
 # add_dependencies(ekbot_ctrl_node ekbot_ctrl_generate_messages_cpp)

@@ -14,76 +14,83 @@
 #include "gazebo_msgs/LinkStates.h"
 // #include <LinkStates.h>
 
+#include <gazebo_msgs/GetJointProperties.h>
+
 using namespace Eigen;
 
 //For geometry_msgs::Twist using:
 // 		dummy.linear.x
 // 		dummy.linear.y
 // 		dummy.angular.z
-geometry_msgs::Twist robot_position;
+geometry_msgs::Pose rposition;
+geometry_msgs::Pose rpositionOld;
 geometry_msgs::Twist target_position;
 
 //rate_hz assignment
-double rate_hz = 30;
+double rate_hz = 5;
 
 //Assign the position of the robot (from other topic) to robot_position.
 //Assuming the topic that generate the robot position uses geometry_msgs::Twist
 //and the information is in *.linear. This might need to be modifed
-void getRobotPose(const gazebo_msgs::LinkStates& msg) {
+geometry_msgs::Twist getVelocity(geometry_msgs::Twist p_start, geometry_msgs::Twist p_goal){
 
-	// msg.name[1]
-	robot_position.linear.x = msg.pose[1].position.x;
-	robot_position.linear.y = msg.pose[1].position.y;
-    robot_position.angular.z = 0;//msg.pose[1].angular.z; 
+    // Compute direction to goal
+    Vector3d p_start_vector(p_start.linear.x,p_start.linear.y,p_start.angular.z);
+    Vector3d p_goal_vector(p_goal.linear.x, p_goal.linear.y, p_goal.angular.z);
+    // Vector3d goal_direction_vector = p_goal_vector-p_start_vector;
+    Vector3d goal_direction_vector = p_start_vector - p_goal_vector;
+
+    // Compute speed in the direction to goal
+
+    geometry_msgs::Twist velocity;
+    velocity.linear.x = velocity_vector.x();
+    velocity.linear.y = velocity_vector.y();
+    velocity.angular.z = velocity_vector.z();
+
+    return velocity;
+}
+
+void getRobotPose(const gazebo_msgs::LinkStates& msg) {
+    // msg.name[1]
+    rposition.position.x = msg.pose[1].position.x;
+    rposition.position.y = msg.pose[1].position.y;
+    rposition.orientation.x = msg.pose[1].orientation.x; 
+    rposition.orientation.y = msg.pose[1].orientation.y; 
+    rposition.orientation.z = msg.pose[1].orientation.z; 
+    rposition.orientation.w = msg.pose[1].orientation.w; 
 }
 
 //Assign the position of the target (from other topic) to target_position.
 //Assuming the topic that generate the robot position uses geometry_msgs::Twist
 //and the information is in *.linear. This might need to be modifed
 void getTargetPose(const geometry_msgs::Twist& msg) {
-	target_position.linear.x = msg.linear.x;
-	target_position.linear.y = msg.linear.y;
+    target_position.linear.x = msg.linear.x;
+    target_position.linear.y = msg.linear.y;
     target_position.angular.z = msg.angular.z; 
-}
-
-//Function to determine if the goal is still far.
-//Variables epsilon_x and epsilon_y used to determined if the goal has been reach
-bool isGoalFar(geometry_msgs::Twist p_start, geometry_msgs::Twist p_goal) {
-	double epsilon_x, epsilon_y;
-	epsilon_x = .2; 
-	epsilon_y = .2;
-	double distance_x = abs(p_goal.linear.x - p_start.linear.x);
-	double distance_y = abs(p_goal.linear.y - p_start.linear.y);
-	if (distance_x > epsilon_x || distance_y > epsilon_y)
-		return true;
-	else
-		return false;
 }
 
 //Function to generate a Linear Constant Velocity from robot's position to the target's position
 geometry_msgs::Twist generateConstantVelocity(double constant_speed, geometry_msgs::Twist p_start, geometry_msgs::Twist p_goal){
 
     // Compute direction to goal
-	Vector3d p_start_vector(p_start.linear.x,p_start.linear.y,p_start.angular.z);
-	Vector3d p_goal_vector(p_goal.linear.x, p_goal.linear.y, p_goal.angular.z);
-	// Vector3d goal_direction_vector = p_goal_vector-p_start_vector;
-	Vector3d goal_direction_vector = p_start_vector - p_goal_vector;
+    Vector3d p_start_vector(p_start.linear.x,p_start.linear.y,p_start.angular.z);
+    Vector3d p_goal_vector(p_goal.linear.x, p_goal.linear.y, p_goal.angular.z);
+    // Vector3d goal_direction_vector = p_goal_vector-p_start_vector;
+    Vector3d goal_direction_vector = p_start_vector - p_goal_vector;
 
     // Compute speed in the direction to goal
-	Vector3d velocity_vector = constant_speed * (goal_direction_vector/ goal_direction_vector.norm());
+    Vector3d velocity_vector = constant_speed * (goal_direction_vector/ goal_direction_vector.norm());
 
-	geometry_msgs::Twist velocity;
+    geometry_msgs::Twist velocity;
+    velocity.linear.x = velocity_vector.x();
+    velocity.linear.y = velocity_vector.y();
+    velocity.angular.z = velocity_vector.z();
 
-	velocity.linear.x = velocity_vector.x();
-	velocity.linear.y = velocity_vector.y();
-	velocity.angular.z = velocity_vector.z();
-
-	return velocity;
+    return velocity;
 }
 
 // Function to keep velocity under the allowed robot limits
 geometry_msgs::Twist boundVelocity(geometry_msgs::Twist velocity) {
-
 	double max_linear_speed = 30;
 	double min_linear_speed = 0;
 	double max_angular_speed = M_PI*4;
@@ -115,7 +122,6 @@ geometry_msgs::Twist boundVelocity(geometry_msgs::Twist velocity) {
 		velocity.angular.z = min_angular_speed;
 	else if (velocity.angular.z < 0 && velocity.linear.z > - min_angular_speed )
 		velocity.angular.z = -min_angular_speed;
-
 }
 
 
@@ -130,10 +136,13 @@ int main(int argc, char **argv){
     //Publish to the turtle topic "/turtle1/cmd_vel at rate_hz"
 	ros::Publisher pub_vel_turtle = nh.advertise<geometry_msgs::Twist>("/target_vel_topic", rate_hz);
 
-	//Topics to acquire robot and target position (from the vision node) 
-	ros::Subscriber sub_robot_pos = nh.subscribe("/gazebo/model_states", 1, &getRobotPose); 
-	ros::Subscriber sub_ball_pos = nh.subscribe("/target_position_topic", 1, &getTargetPose);
+	//Topics to acquire robot position 
+	ros::Subscriber sub_robot_pos = nh.subscribe("/gazebo/model_states", 1, &getRobotPose);
+	//Topics to acquire target position (from the vision node) 
+	ros::Subscriber sub_ball_pos = nh.subscribe("/target_pose", 1, &getTargetPose);
 
+	
+	geometry_msgs::Twist estimated_velocity;
     //Twist variable to publish velocity (trajectories)
 	geometry_msgs::Twist desired_velocity;
 	double tiempo = 0;
@@ -147,20 +156,56 @@ int main(int argc, char **argv){
 	while (ros::ok())
 	{
         //ROS_INFO_STREAM use for debugging 
+	/*		
 		ROS_INFO_STREAM("Robot Position:"
-			<<" X="<<robot_position.linear.x
-			<<",Y="<<robot_position.linear.y
-			<<",W="<<robot_position.angular.z);
+			<<" X="<<rposition.position.x
+			<<",Y="<<rposition.position.y
+			<<"\n Orientation: "
+			<<",X="<<rposition.orientation.x
+			<<",Y="<<rposition.orientation.y
+			<<",Z="<<rposition.orientation.z
+			<<",W="<<rposition.orientation.w);
+	*/	
+	estimated_velocityV = getVelocity(rposition,rpositionOld);
+	double dblVel = sqrt(pow(estimated_velocityV.linear.x,2) + pow(estimated_velocityV.linear.y,2))/(1/rate_hz);
+	printf("Velcoity %d \n", dblVel);
+
+    rpositionOld.position.x    = rposition.position.x   ;
+    rpositionOld.position.y    = rposition.position.y   ;
+    rpositionOld.orientation.x = rposition.orientation.x;
+    rpositionOld.orientation.y = rposition.orientation.y;
+    rpositionOld.orientation.z = rposition.orientation.z;
+    rpositionOld.orientation.w = rposition.orientation.w;
+
 		ROS_INFO_STREAM("Target position:"
 			<<" X="<<target_position.linear.x
 			<<",Y="<<target_position.linear.y
 			<<",W="<<target_position.angular.z);
+		
+		double distancia = sqrt(pow(target_position.linear.x,2) + pow(target_position.linear.y,2));
+		if(distancia > 0){
+			double Kp = 0.2; // constante velocidad+
+			double Ka = 0.5; // constante angulo
+			double Kb = 0.5; // constante angulo
+			double alpha = atan2(target_position.linear.y, target_position.linear.x); // invertidos por modelo deberia ser (y,x)
+			double noventa = 1.57; // 90 grados
+			double volante=0.0;
+			if(alpha>noventa)
+				volante=alpha-noventa;
+			else
+				volante=-(noventa-alpha); // derecha es steer joint negativo
 
-		if (isGoalFar(robot_position, target_position)) {	
+			printf("\noriginal: %f, modificacion: %f, (%f, %f)", alpha, volante, target_position.linear.x, target_position.linear.y);
 
-			desired_velocity = generateConstantVelocity(cruise_speed, robot_position, target_position);
-			desired_velocity = boundVelocity(desired_velocity);
-		} else { 
+			if(volante > 0.5)
+				volante = 0.5;
+			if(volante < -0.5)
+				volante = -0.5;
+			
+			desired_velocity.linear.x = distancia;
+			desired_velocity.linear.y = 0; // dist
+			desired_velocity.angular.z = volante;
+		} else {
             // Goal has been reach ==> dont move
 			desired_velocity.linear.x = 0;
 			desired_velocity.linear.y = 0;
@@ -171,7 +216,6 @@ int main(int argc, char **argv){
 			<<"X:"<<desired_velocity.linear.x
 			<<",Y:"<<desired_velocity.linear.y
 			<<",W:"<<desired_velocity.angular.z);
-
 		//publish the new velocity
 		pub_vel_turtle.publish(desired_velocity);
 		
@@ -181,3 +225,4 @@ int main(int argc, char **argv){
     }
     return 0;
 }
+
