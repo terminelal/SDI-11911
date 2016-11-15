@@ -1,12 +1,5 @@
 #include <ros/ros.h>
 
-<<<<<<< HEAD
-int main(int argc, char** argv)
-{
-    ros::init(argc, argv, "my_filter");
-
-    //My_Filter filter;
-=======
 #include "std_msgs/String.h"
 #include <geometry_msgs/Twist.h>
 #include <stdlib.h>
@@ -38,8 +31,6 @@ int main(int argc, char **argv){
 	ROS_INFO_STREAM(ros::this_node::getName());
 	
 	ros::Subscriber scanSub;
->>>>>>> 71b170b8eb084d2a6138f2f55ac25ac1908a243a
-
 	scanSub=nh.subscribe<sensor_msgs::LaserScan>("/laser_scan",10,&processLaserScan);
 	while (ros::ok())
 	{
