@@ -1,4 +1,4 @@
-# Proyecto 2:  Control Cinematico de Robots Generacion de trayectorias en ROS
+# Proyecto 2:  Control Cinemático de Robots Generación de trayectorias en ROS
 
 INSTITUTO TECNOLÓGICO AUTÓNOMO DE MÉXICO
 
@@ -14,7 +14,7 @@ Presenta:
 * 132339 Job Magdiel González González
 * 133447 Sebastián Sánchez Alcalá
 
-Otono 2016
+Otoño 2016
 
 ```
 OBJETIVO
