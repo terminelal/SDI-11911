@@ -34,13 +34,13 @@ void poseMessageReceived(const turtlesim::Pose& msg) {
 	
 	double velocidad = velocidad_general;
 	// si se requiere linea recta, primero corrige posicion y luego avanza
-	// if (angle < 0.1){
+	 if (angle < 0.1){
 		// la velocidad se mantiene, solo se calcula una vez
 		if(!calcular_velocidad) {
 			velocidad_general = distance / tiempo;
 			calcular_velocidad = true;
 		}
-	// }
+	 }
 	double holgura = 0.5;
 	if(distance < holgura) {
 		ROS_INFO_STREAM("Llego a (x:"<<x_fin<<",y:"<<y_fin<<") ");

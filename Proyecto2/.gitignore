@@ -1,5 +1,9 @@
 src/CMakeLists.txt
+
 **/*.*~
 build/*
 devel/*
 install/*
+
+*.swo
+*.swp
