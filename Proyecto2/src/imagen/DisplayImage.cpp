@@ -12,6 +12,50 @@
 #include <string>
 #include <stdio.h>
 
+std::vector<cv::Point> old;
+
+void dibujarPoligonoCarro( cv::Mat img )
+{
+    int lineType = 8;
+    /* Create some points */
+    cv::Point rook_points[1][28];
+    rook_points[0][0] = cv::Point( 0, 480 );
+    rook_points[0][1] = cv::Point( 0, 468 );
+    rook_points[0][2] = cv::Point( 13, 455 );
+    rook_points[0][3] = cv::Point( 14, 450 );
+    rook_points[0][4] = cv::Point( 43, 420 );
+    rook_points[0][5] = cv::Point( 109, 390 );
+    rook_points[0][6] = cv::Point( 141, 381 );
+    rook_points[0][7] = cv::Point( 186, 375 );
+    rook_points[0][8] = cv::Point( 184, 360 );
+    rook_points[0][9] = cv::Point( 216, 360 );
+    rook_points[0][10] = cv::Point( 216, 343 );
+    rook_points[0][11] = cv::Point( 216, 343 );
+    rook_points[0][12] = cv::Point( 233, 343 );
+    rook_points[0][13] = cv::Point( 234, 357 );
+    rook_points[0][14] = cv::Point( 253, 357 );
+    rook_points[0][15] = cv::Point( 253, 357 );
+    rook_points[0][16] = cv::Point( 254, 369 );
+    rook_points[0][17] = cv::Point( 254, 369 );
+    rook_points[0][18] = cv::Point( 410, 370 );
+    rook_points[0][19] = cv::Point( 410, 370 );
+    rook_points[0][20] = cv::Point( 423, 350 );
+    rook_points[0][21] = cv::Point( 439, 359 );
+    rook_points[0][22] = cv::Point( 473, 357 );
+    rook_points[0][23 ] = cv::Point( 486, 376 );
+    rook_points[0][24 ] = cv::Point( 546, 383 );
+    rook_points[0][25 ] = cv::Point( 640, 423 );
+    rook_points[0][26 ] = cv::Point( 640, 480 );
+    const cv::Point* ppt[1] = { rook_points[0] };
+    int npt[] = { 27 };
+    cv::fillPoly( img,
+              ppt,
+              npt,
+                  1,
+              cv::Scalar( 0, 0, 0 ),
+              lineType );
+}
+
 template<typename T> 
 inline std::string toString( const T& ao_Obj )
 {
@@ -74,34 +118,104 @@ void imageCallback(const sensor_msgs::ImageConstPtr& msg)
 	  cv::Mat Result = cv_bridge::toCvShare(msg , "bgr8")->image;
 	  // crea un rectangulo en la parte superior
 	 cv::rectangle( Result, cv::Point( 0, 0 ),cv::Point( 640, 200),cv::Scalar(0, 0, 0 ),CV_FILLED,
-         CV_AA );	  
+         CV_AA );
+
+	dibujarPoligonoCarro(Result);
 	  
 	  // threshold para quedarse solo con lo blanco
-	  cv::Mat dstthreshold, erosion_dst;
+	  cv::Mat dstthreshold, dilate_dst, erosion_dst;
   	  cv::inRange(Result,cv::Scalar(160,160,160), cv::Scalar(255,255,255),dstthreshold);
 	  
 	  // erosion
-	  int erosion_size = 1;
+	  int erosion_size = 2; //20;
 	  // tipos de erosion: MORPH_RECT, MORPH_CROSS, MORPH_ELLIPSE
 	  int erosion_type = cv::MORPH_RECT;
 	  cv::Mat element = cv::getStructuringElement( erosion_type,
                        cv::Size( 2*erosion_size + 1, 2*erosion_size+1 ),
                        cv::Point( erosion_size, erosion_size ) );
   	  
-	cv::erode( dstthreshold, erosion_dst, element );
-	  cv::namedWindow("Erosion Demo" );
-  	  cv::imshow( "Erosion Demo", erosion_dst );
-	
-	cv::Mat histImage = histograma(Result);
-	  // mostrar imagenes
-	  cv::namedWindow("calcHist Demo" );
-	  cv::imshow("calcHist Demo", histImage );
-		
-	  cv::namedWindow("threshold Demo" );
-	  cv::imshow("threshold Demo", dstthreshold );
+	//	
 
+	cv::erode( dstthreshold, erosion_dst, element );
+
+	cv::dilate( erosion_dst, dilate_dst, element );
+	  // cv::Mat histImage = histograma(Result);
+	  // mostrar imagenes
+
+
+	  cv::Mat contours, cdst;
+	  cv::Canny(dilate_dst,contours,50,350);
+	  cv::Mat contoursInv;
+	  int houghVote;
+	  double PI = 3.1415;
+	  cv::vector<cv::Vec4i> lines;
+	
+	  cv::HoughLinesP(contours, lines, 1, CV_PI/180, 10, 5, 3 );
+	  cvtColor(contours, cdst, CV_GRAY2BGR);
+	  for( size_t i = 0; i < lines.size(); i++ )
+	  {
+	    cv::Vec4i l = lines[i];
+	    double m = ((double)l[3]-(double)l[1])/((double)l[2]-(double)l[0]); //  y2-y1/x2-x1
+	    // if(abs(m)>0.2)
+		//cv::line( cdst, cv::Point(l[0], l[1]), cv::Point(l[2], l[3]), cv::Scalar(0,0,255), 3, CV_AA);	     
+	  }
+	  
+	  
+	  std::vector<std::vector<cv::Point> > c_contours;
+	    std::vector<cv::Vec4i> hierarchy;
+	    cv::findContours(contours, c_contours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE);
+
+	  //cv2.boundingRect(cont)
+
+	double centrox = 320;
+	double centroy = 0;
+
+	double maxDX = 0.0;
+	double maxDY = 0.0;
+
+	double maxIX = 0.0;
+	double maxIY = 0.0;
+
+	int sized=0, sizei=0;
+
+	double xf = 0.0;
+	double yf = 0.0;
+	for( size_t i = 0; i < c_contours.size(); i++ )
+	  {
+ 		 std::vector<cv::Point> o = c_contours[i];
+		double x =0.0;
+		double y =0.0;
+		for( size_t j = 0; j < o.size(); j++ )
+	  	{
+			x+=o[j].x;
+			y+=o[j].y;
+		}
+		x=x/o.size();
+		y=y/o.size();
+		cv::line(cdst, cv::Point(x, y), cv::Point(x, y), cv::Scalar(0,i*30,255), 3, CV_AA);
+
+		if(x>centrox){
+			maxDX+=x;
+			maxDY+=y;
+sized++;
+		}
+		else{
+			maxIX+=x;
+maxIY+=y;
+sizei++;
+		}
+		xf+=x;
+		yf+=y;
+	  }
+	xf=((maxDX/sized)+(maxIX/sizei))/2;
+	yf=((maxDY/sized)+(maxIY/sizei))/2;;
+	cv::line(cdst, cv::Point(xf, yf), cv::Point(xf, yf), cv::Scalar(100,30,255), 10, CV_AA);
+	printf("\nPunto a moverse: (%f,%f)", xf,yf);
+	
+	  cv::namedWindow("Erosion Demo" );
+  	  cv::imshow( "Erosion Demo", cdst );
 	  cv::namedWindow("Mascara Demo" );
-	  cv::imshow("Mascara Demo", Result );
+	  cv::imshow("Mascara Demo", src );
 /*
    http://docs.opencv.org/trunk/d9/db0/tutorial_hough_lines.html
 	    Mat dst, cdst;
@@ -153,6 +267,7 @@ void imageCallback(const sensor_msgs::ImageConstPtr& msg)
 	}
 	*/
 }
+
 
 int main(int argc, char** argv )
 {
