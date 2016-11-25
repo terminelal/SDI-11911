@@ -180,8 +180,8 @@ namedWindow("Display Image1", WINDOW_AUTOSIZE );
     // These four pts are the sides of the rect box used as input 
     inputQuad[0] = Point2f( 0,200 );
     inputQuad[1] = Point2f( 640 ,200);
-    inputQuad[2] = Point2f( 640,348);
-    inputQuad[3] = Point2f( 75,348  );  
+    inputQuad[2] = Point2f( 640,400);
+    inputQuad[3] = Point2f( 0,400  );  
     // The 4 points where the mapping is to be done , from top-left in clockwise order
     outputQuad[0] = Point2f( 0,0 );
     outputQuad[1] = Point2f( input.cols-1,0);
