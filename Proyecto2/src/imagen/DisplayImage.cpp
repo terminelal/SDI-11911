@@ -1,7 +1,4 @@
 #include <ros/ros.h>
-#include <sensor_msgs/Image.h>
-#include <stdio.h>
-#include <opencv2/opencv.hpp>
 #include <image_transport/image_transport.h>
 #include <opencv2/highgui/highgui.hpp>
 #include <cv_bridge/cv_bridge.h>
@@ -25,11 +22,12 @@ int main(int argc, char** argv )
 	ros::init(argc, argv, "image_node");
   	ros::NodeHandle nh;
   	ros::Rate loop_rate(1);
+	image_transport::ImageTransport it(nh);
 
 	cv::namedWindow("view");
 	cv::startWindowThread();
 	
-	ros::Subscriber sub = nh.subscribe<sensor_msgs::Image>("/app/camera/rgb/image_raw", 1, imageCallback);
+	image_transport::Subscriber sub = it.subscribe("/app/camera/rgb/image_raw", 1, imageCallback);
 	ros::spin();
 	cv::destroyWindow("view");
 

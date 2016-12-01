@@ -3,3 +3,6 @@ src/CMakeLists.txt
 build/*
 devel/*
 install/*
+
+bags/*
+videos/*
