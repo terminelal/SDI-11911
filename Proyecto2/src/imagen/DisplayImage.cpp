@@ -1,5 +1,4 @@
 #include <ros/ros.h>
-#include <sensor_msgs/Image.h>
 #include <image_transport/image_transport.h>
 #include <cv_bridge/cv_bridge.h>
 
@@ -296,6 +295,7 @@ int main(int argc, char** argv )
 	ros::init(argc, argv, "image_node");
   	ros::NodeHandle nh;
   	ros::Rate loop_rate(1);
+	image_transport::ImageTransport it(nh);
 
 	cv::startWindowThread();
 	

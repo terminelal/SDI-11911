@@ -99,10 +99,10 @@ void processLaserScan(const sensor_msgs::LaserScan::ConstPtr& scan){
 	for(int j=0;j<v;j++)
      	{
 		if(nobj != perspectiva.object[j]) {
-			if(nobj > -1)
+			if(nobj > 0)
 			{
-				vertobjs[nobj][0] /= vxobj;
-				vertobjs[nobj][1] /= vxobj;
+				vertobjs[nobj-1][0] /= vxobj;
+				vertobjs[nobj-1][1] /= vxobj;
 			}
 			nobj = perspectiva.object[j];
 			// printf("\nObjeto %d", nobj);
@@ -132,9 +132,11 @@ void processLaserScan(const sensor_msgs::LaserScan::ConstPtr& scan){
 		y += vertobjs[j][1];
 	}
 	printf("\nObjetivo (%f,%f), objs:%d",x,y,obj+1);	
-
-	x=x/(obj+1);
-	y=y/(obj+1);
+	
+	if(x > 0 && y > 0) {
+		x=x/(obj+1);
+		y=y/(obj+1);
+	}
 
 	printf("\nObjetivo (%f,%f)",x,y);
 
