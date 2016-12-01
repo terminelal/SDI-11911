@@ -1,0 +1,6 @@
+Proyecto1/wsros/build/*
+Proyecto1/wsros/devel/*
+Proyecto1/wsros/install/*
+
+*.swo
+*.swp
