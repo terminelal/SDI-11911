@@ -8,11 +8,17 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 
+#include <geometry_msgs/Twist.h>
 #include <sstream>
 #include <string>
 #include <stdio.h>
+#include <math.h>
+
+#define PI 3.14159265
 
 std::vector<cv::Point> old;
+ros::Publisher pub_pose;
+double rate_hz = 5;
 
 void dibujarPoligonoCarro( cv::Mat img )
 {
@@ -147,7 +153,6 @@ void imageCallback(const sensor_msgs::ImageConstPtr& msg)
 	  cv::Canny(dilate_dst,contours,50,350);
 	  cv::Mat contoursInv;
 	  int houghVote;
-	  double PI = 3.1415;
 	  cv::vector<cv::Vec4i> lines;
 	
 	  cv::HoughLinesP(contours, lines, 1, CV_PI/180, 10, 5, 3 );
@@ -207,10 +212,27 @@ sizei++;
 		xf+=x;
 		yf+=y;
 	  }
-	xf=((maxDX/sized)+(maxIX/sizei))/2;
-	yf=((maxDY/sized)+(maxIY/sizei))/2;;
+	xf=(((maxDX/sized)+(maxIX/sizei))/2);
+	yf=(((maxDY/sized)+(maxIY/sizei))/2); //pixeles, falta distancia
+
+	// mostrar el punto en la imagen
 	cv::line(cdst, cv::Point(xf, yf), cv::Point(xf, yf), cv::Scalar(100,30,255), 10, CV_AA);
-	printf("\nPunto a moverse: (%f,%f)", xf,yf);
+	
+	double xreal = xf - 320;
+	double yreal = 480 - yf;
+	double angulo = atan(yreal/xreal) * 180/PI;
+
+	geometry_msgs::Twist desired_pose;
+	// aqui se tiene que enviar la posicion con respecto al robot del punto
+	desired_pose.linear.x = 0.5;
+	desired_pose.linear.y = 0;
+	desired_pose.angular.z = angulo;
+
+	pub_pose.publish(desired_pose);
+
+
+	printf("\nPunto a moverse (imagen): (%f,%f)", xf,yf);
+	printf("\nPunto a moverse (procesado): x: %f, angulo: %f", xreal, angulo);
 	
 	  cv::namedWindow("Erosion Demo" );
   	  cv::imshow( "Erosion Demo", cdst );
@@ -278,6 +300,9 @@ int main(int argc, char** argv )
 	cv::startWindowThread();
 	
 	ros::Subscriber sub = nh.subscribe<sensor_msgs::Image>("/app/camera/rgb/image_raw", 1, imageCallback);
+
+	pub_pose = nh.advertise<geometry_msgs::Twist>("/target_pose", rate_hz);
+
 	ros::spin();
 	cv::destroyWindow("view");
 
