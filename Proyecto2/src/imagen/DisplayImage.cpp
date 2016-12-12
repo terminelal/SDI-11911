@@ -106,70 +106,47 @@ cv::Mat histograma(cv::Mat src)
 	return histImage;
 }
 
-void imageCallback(const sensor_msgs::ImageConstPtr& msg)
-{
-	
-	//cv::imshow("view", cv_bridge::toCvShare(msg, "bgr8")->image);
-	// cv::Mat _img = cv_bridge::toCvShare(msg , "bgr8")->image;
-	// cv::waitKey(30);
-	
-	// cv_bridge::CvImagePtr cv_ptr;
-        try
-        {
-          // cv_ptr = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::BGR8);
-	  
-          // histograma de la imagen
-	  cv::Mat src = cv_bridge::toCvShare(msg , "bgr8")->image;
-	  cv::Mat Result = cv_bridge::toCvShare(msg , "bgr8")->image;
-	  // crea un rectangulo en la parte superior
-	 cv::rectangle( Result, cv::Point( 0, 0 ),cv::Point( 640, 200),cv::Scalar(0, 0, 0 ),CV_FILLED,
-         CV_AA );
 
-	dibujarPoligonoCarro(Result);
-	  
-	  // threshold para quedarse solo con lo blanco
-	  cv::Mat dstthreshold, dilate_dst, erosion_dst;
-  	  cv::inRange(Result,cv::Scalar(160,160,160), cv::Scalar(255,255,255),dstthreshold);
-	  
-	  // erosion
-	  int erosion_size = 2; //20;
-	  // tipos de erosion: MORPH_RECT, MORPH_CROSS, MORPH_ELLIPSE
-	  int erosion_type = cv::MORPH_RECT;
-	  cv::Mat element = cv::getStructuringElement( erosion_type,
+cv::Mat puntoAMoverse(cv::Mat& entrada){
+	// threshold para quedarse solo con lo blanco
+	 cv::Mat dstthreshold, dilate_dst, erosion_dst;
+  	 cv::inRange(entrada,cv::Scalar(160,160,160), cv::Scalar(255,255,255),dstthreshold);
+
+	 // erosion
+	 int erosion_size = 1; //20;
+	 // tipos de erosion: MORPH_RECT, MORPH_CROSS, MORPH_ELLIPSE
+	 int erosion_type = cv::MORPH_RECT;
+	 cv::Mat element = cv::getStructuringElement( erosion_type,
                        cv::Size( 2*erosion_size + 1, 2*erosion_size+1 ),
                        cv::Point( erosion_size, erosion_size ) );
   	  
-	//	
+	 // eliminar ruido (revisar)
+	 cv::erode( dstthreshold, erosion_dst, element );
+	 cv::dilate( erosion_dst, dilate_dst, element );
+	 
+	 // mostrar histograma
+	 // cv::Mat histImage = histograma(Result); // crear histograma de la imagen
+	 
+	 cv::Mat contours, cdst;
+	 cv::Canny(dilate_dst,contours,50,350);
+	 cv::Mat contoursInv;
+	 int houghVote;
+	 cv::vector<cv::Vec4i> lines;
 
-	cv::erode( dstthreshold, erosion_dst, element );
 
-	cv::dilate( erosion_dst, dilate_dst, element );
-	  // cv::Mat histImage = histograma(Result);
-	  // mostrar imagenes
-
-
-	  cv::Mat contours, cdst;
-	  cv::Canny(dilate_dst,contours,50,350);
-	  cv::Mat contoursInv;
-	  int houghVote;
-	  cv::vector<cv::Vec4i> lines;
-	
-	  cv::HoughLinesP(contours, lines, 1, CV_PI/180, 10, 5, 3 );
-	  cvtColor(contours, cdst, CV_GRAY2BGR);
-	  for( size_t i = 0; i < lines.size(); i++ )
-	  {
+	 cv::HoughLinesP(contours, lines, 1, CV_PI/180, 10, 5, 3 );
+	 cvtColor(contours, cdst, CV_GRAY2BGR);
+	 for( size_t i = 0; i < lines.size(); i++ )
+	 {
 	    cv::Vec4i l = lines[i];
 	    double m = ((double)l[3]-(double)l[1])/((double)l[2]-(double)l[0]); //  y2-y1/x2-x1
 	    // if(abs(m)>0.2)
-		//cv::line( cdst, cv::Point(l[0], l[1]), cv::Point(l[2], l[3]), cv::Scalar(0,0,255), 3, CV_AA);	     
-	  }
-	  
-	  
-	  std::vector<std::vector<cv::Point> > c_contours;
-	    std::vector<cv::Vec4i> hierarchy;
-	    cv::findContours(contours, c_contours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE);
-
-	  //cv2.boundingRect(cont)
+	    cv::line( cdst, cv::Point(l[0], l[1]), cv::Point(l[2], l[3]), cv::Scalar(0,255,50), 2, CV_AA);	     
+	 }
+	 
+	 std::vector<std::vector<cv::Point> > c_contours;
+	 std::vector<cv::Vec4i> hierarchy;
+	 cv::findContours(contours, c_contours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE);
 
 	double centrox = 320;
 	double centroy = 0;
@@ -221,53 +198,98 @@ sizei++;
 	double yreal = (480 - yf)/100;
 	double angulo = atan(yreal/xreal) * 180/PI;
 
-	geometry_msgs::Twist desired_pose;
-	// aqui se tiene que enviar la posicion con respecto al robot del punto
+	// aqui se tiene que enviar la posicion con respecto al robot del punto	
+	/*
+	geometry_msgs::Twist desired_pose;	
 	desired_pose.linear.x = xreal;
 	desired_pose.linear.y = yreal;
 	desired_pose.angular.z = angulo;
-	
 	pub_pose.publish(desired_pose);
+	*/
 	
 	printf("\nPunto a moverse (imagen): (%f,%f)", xf,yf);
 	printf("\nPunto a moverse (procesado): x: %f, angulo: %f", xreal, yreal);
+
+	return cdst;
+}
+
+
+void imageCallback(const sensor_msgs::ImageConstPtr& msg)
+{
 	
-	cv::namedWindow("Erosion Demo" );
-  	cv::imshow( "Erosion Demo", cdst );
-	cv::namedWindow("Mascara Demo" );
-	cv::imshow("Mascara Demo", src );
+	//cv::imshow("view", cv_bridge::toCvShare(msg, "bgr8")->image);
+	// cv::Mat _img = cv_bridge::toCvShare(msg , "bgr8")->image;
+	// cv::waitKey(30);
+	// cv_bridge::CvImagePtr cv_ptr;
+
+        try
+        {
+         // cv_ptr = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::BGR8);
+	  
+         // histograma de la imagen
+	 cv::Mat src = cv_bridge::toCvShare(msg , "bgr8")->image;
+	 cv::Mat Result = cv_bridge::toCvShare(msg , "bgr8")->image;
+	 
+	 // crea un rectangulo en la parte superior
+	 // cv::rectangle( Result, cv::Point( 0, 0 ),cv::Point( 640, 200),cv::Scalar(0, 0, 0 ),CV_FILLED,
+         // CV_AA );
+	 
+	 dibujarPoligonoCarro(Result);
+	 
+	 
+	 
+
+
+    cv::Point2f inputQuad[4]; 
+    // Output Quadilateral or World plane coordinates
+    cv::Point2f outputQuad[4];
+         
+    // Lambda Matrix
+    cv::Mat lambda( 2, 4, CV_32FC1 );
+    //Input and Output Image;
+    cv::Mat input, output;
+     
+    //Load the image
+    input = Result;//imread( argv[1], 1 );
+    // Set the lambda matrix the same type and size as input
+    lambda = cv::Mat::zeros( input.rows, input.cols, input.type() );
+ 
+    // The 4 points that select quadilateral on the input , from top-left in clockwise order
+    // These four pts are the sides of the rect box used as input 
+    inputQuad[0] = cv::Point2f( 0,200 );
+    inputQuad[1] = cv::Point2f( 640 ,200);
+    inputQuad[2] = cv::Point2f( 640,400);
+    inputQuad[3] = cv::Point2f( 0,400  );  
+    // The 4 points where the mapping is to be done , from top-left in clockwise order
+    outputQuad[0] = cv::Point2f( 0,0 );
+    outputQuad[1] = cv::Point2f( input.cols-1,0);
+    outputQuad[2] = cv::Point2f( input.cols-1,input.rows-1);
+    outputQuad[3] = cv::Point2f( 0,input.rows-1  );
+ 
+    // Get the Perspective Transform Matrix i.e. lambda 
+    lambda = cv::getPerspectiveTransform( inputQuad, outputQuad );
+    // Apply the Perspective Transform just found to the src image
+    cv::warpPerspective(input,output,lambda,output.size() );
+
+	printf("\nPunto Result: ");
+	cv::Mat cdst = puntoAMoverse(Result);
+	
+	printf("\nPunto output: ");
+	cv::Mat cdst2 = puntoAMoverse(output);
+
+	 
+	
+	cv::namedWindow("Result" );
+  	cv::imshow( "Result", cdst);
+
+	cv::namedWindow("Result 2" );
+  	cv::imshow( "Result 2", cdst2);
+
+	cv::namedWindow("Original" );
+	cv::imshow("Original", src );
 
 	/*
 	   http://docs.opencv.org/trunk/d9/db0/tutorial_hough_lines.html
-		    Mat dst, cdst;
-	    Canny(src, dst, 50, 200, 3);
-	    cvtColor(dst, cdst, COLOR_GRAY2BGR);
-	#if 0
-	    vector<Vec2f> lines;
-	    HoughLines(dst, lines, 1, CV_PI/180, 100, 0, 0 );
-	    for( size_t i = 0; i < lines.size(); i++ )
-	    {
-		float rho = lines[i][0], theta = lines[i][1];
-		Point pt1, pt2;
-		double a = cos(theta), b = sin(theta);
-		double x0 = a*rho, y0 = b*rho;
-		pt1.x = cvRound(x0 + 1000*(-b));
-		pt1.y = cvRound(y0 + 1000*(a));
-		pt2.x = cvRound(x0 - 1000*(-b));
-		pt2.y = cvRound(y0 - 1000*(a));
-		line( cdst, pt1, pt2, Scalar(0,0,255), 3, CV_AA);
-	    }
-	#else
-	    vector<Vec4i> lines;
-	    HoughLinesP(dst, lines, 1, CV_PI/180, 50, 50, 10 );
-	    for( size_t i = 0; i < lines.size(); i++ )
-	    {
-		Vec4i l = lines[i];
-		line( cdst, Point(l[0], l[1]), Point(l[2], l[3]), Scalar(0,0,255), 3, LINE_AA);
-	    }
-	#endif
-	    imshow("source", src);
-	    imshow("detected lines", cdst);
 	*/
 
 
@@ -290,6 +312,8 @@ sizei++;
 }
 
 
+
+
 int main(int argc, char** argv )
 {
 	ros::init(argc, argv, "image_node");
@@ -298,7 +322,7 @@ int main(int argc, char** argv )
 
 	cv::startWindowThread();
 	
-	ros::Subscriber sub = nh.subscribe<sensor_msgs::Image>("/app/camera/rgb/image_raw", 1, imageCallback);
+	ros::Subscriber sub = nh.subscribe<sensor_msgs::Image>("/app/camera/rgb/image_raw", 10, imageCallback);
 
 	pub_pose = nh.advertise<geometry_msgs::Twist>("/target_pose", rate_hz);
 
