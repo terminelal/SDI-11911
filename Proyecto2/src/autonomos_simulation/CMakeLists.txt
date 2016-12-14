@@ -138,29 +138,12 @@ link_directories(
 add_definitions(${PCL_DEFINITIONS})
 ## Declare a cpp executable
 # add_executable(AutoNOMOS_simulation_node src/AutoNOMOS_simulation_node.cpp)
-add_executable(tf2_broadcaster_node tf2_broadcaster_node.cpp)
-add_executable(perception_node perception_node.cpp)
-add_executable(vision_node vision_node.cpp)
-# add_executable(robot_trajectory_node robot_trajectory_node.cpp)
-
-add_executable(auto_velocity_node auto_velocity_node.cpp)
-add_executable(auto_trajectory_node auto_trajectory_node.cpp)
-
-add_executable(auto_velocity_node_follow auto_velocity_node_follow.cpp)
-add_executable(auto_trajectory_node_follow auto_trajectory_node_follow.cpp)
+add_executable(autonomus autonomus.cpp)
 
 # target_link_libraries(robot_velocity_node ${catkin_LIBRARIES})
 # target_link_libraries(robot_trajectory_node ${catkin_LIBRARIES})
 
-target_link_libraries(tf2_broadcaster_node ${catkin_LIBRARIES})
-target_link_libraries(perception_node ${catkin_LIBRARIES} ${PCL_LIBRARIES})
-target_link_libraries(vision_node ${catkin_LIBRARIES} ${PCL_LIBRARIES})
-
-target_link_libraries(auto_velocity_node ${catkin_LIBRARIES})
-target_link_libraries(auto_trajectory_node ${catkin_LIBRARIES})
-
-target_link_libraries(auto_velocity_node_follow ${catkin_LIBRARIES})
-target_link_libraries(auto_trajectory_node_follow ${catkin_LIBRARIES})
+target_link_libraries(autonomus ${catkin_LIBRARIES})
 # target_link_libraries(robot_trajectory_node ${catkin_LIBRARIES})
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes

@@ -105,8 +105,10 @@ include_directories(include ${catkin_INCLUDE_DIRS} ${Eigen_INCLUDE_DIRS} ${OpenC
 ## Declare a cpp executable
 # add_executable(ekbot_ctrl_node src/ekbot_ctrl_node.cpp)
 add_executable(imagenDisplay DisplayImage.cpp)
+add_executable(mostrar mostrar.cpp)
 
 target_link_libraries(imagenDisplay ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
+target_link_libraries(mostrar ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
 # add_dependencies(ekbot_ctrl_node ekbot_ctrl_generate_messages_cpp)

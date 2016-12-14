@@ -18,6 +18,13 @@
 std::vector<cv::Point> old;
 ros::Publisher pub_pose;
 double rate_hz = 5;
+sensor_msgs::ImagePtr imgmsg;
+ros::Publisher pub_image;
+
+struct datos{
+	double p;
+	int e;
+};
 
 void dibujarPoligonoCarro( cv::Mat img )
 {
@@ -46,7 +53,7 @@ void dibujarPoligonoCarro( cv::Mat img )
     rook_points[0][19] = cv::Point( 410, 370 );
     rook_points[0][20] = cv::Point( 423, 350 );
     rook_points[0][21] = cv::Point( 439, 359 );
-    rook_points[0][22] = cv::Point( 473, 357 );
+    rook_points[0][22] = cv::Point( 480, 357 );
     rook_points[0][23 ] = cv::Point( 486, 376 );
     rook_points[0][24 ] = cv::Point( 546, 383 );
     rook_points[0][25 ] = cv::Point( 640, 423 );
@@ -106,6 +113,134 @@ cv::Mat histograma(cv::Mat src)
 	return histImage;
 }
 
+// lado=0 izquierda lado=1 derecha de referencia
+int masCercano(std::vector<cv::Point> puntos, cv::Point referencia, int restriccionEnX, int cercanos[], int lenArray, int lado){	
+	int idxmasCercano = -1;
+	int distanciaMin = 500;
+
+	int mayorY = 0;
+	if(referencia.x==320 && referencia.y==480)
+	{
+		mayorY = 240;
+		if(lado == 1)
+			restriccionEnX = 500;
+	}
+
+	for(size_t i = 0; i < puntos.size(); i++ )
+	{
+		cv::Point p = puntos[i];
+		if(lado == 0){
+			
+			if(p.x < restriccionEnX && p.y > mayorY && p.y < referencia.y)
+			{			
+				double distancia = sqrt(pow(p.x-referencia.x,2)+pow(p.y-referencia.y,2));
+				bool yaExiste = false;	
+				for(int j=0;j<lenArray;j++) {
+					if(cercanos[j] == i)
+						yaExiste = true;
+				}
+				if(distancia > 60 && distancia < distanciaMin && !yaExiste)
+				{
+					distanciaMin = distancia;
+					idxmasCercano = i;
+				}
+			}
+		}
+		else {
+			if(p.x > restriccionEnX && p.y > mayorY && p.y < referencia.y)
+			{			
+				double distancia = sqrt(pow(p.x-referencia.x,2)+pow(p.y-referencia.y,2));
+				bool yaExiste = false;	
+				for(int j=0;j<lenArray;j++) {
+					if(cercanos[j] == i)
+						yaExiste = true;
+				}
+				if(distancia > 10 && distancia < distanciaMin && !yaExiste)
+				{
+					distanciaMin = distancia;
+					idxmasCercano = i;
+				}
+			}
+		}
+	}
+	printf("\nmas cercano de (%d,%d) es %d: (%d,%d)", referencia.x, referencia.y, idxmasCercano, puntos[idxmasCercano].x, puntos[idxmasCercano].y);
+	return idxmasCercano;
+}
+
+
+datos pendienteLado(cv::Mat imagen, std::vector<cv::Point> objetos, int lado, int centroX, int centroY, int noPuntos, int limite){
+
+	// encontrar punto mas cercano a la izquierda
+	int color = 100;
+	if(lado==1)
+		color = 255;
+	int idxCercanos[noPuntos];
+	int encontrados = 1;
+	idxCercanos[0]=masCercano(objetos,cv::Point(centroX,centroY),320, idxCercanos, noPuntos, lado);
+	for(int i=1;i<noPuntos;i++){
+		idxCercanos[i]=masCercano(objetos,objetos[idxCercanos[i-1]],640, idxCercanos, noPuntos, 0);
+		if(idxCercanos[i]>-1)
+			encontrados++;
+	}
+	// printf("\npunto cercanos OK");
+	
+	// obtener la pendiente de los puntos mas cercanos entre si
+	double noventa = 1.57; // 90 grados
+	double pendientes[noPuntos];
+	for(int i=1;i<noPuntos;i++){
+		if(idxCercanos[i] != -1 && idxCercanos[i-1] != -1)
+		{
+			double yreal1 = 480 - objetos[idxCercanos[i]].y;
+			double yreal2 = 480 - objetos[idxCercanos[i-1]].y;
+			
+			double y = (yreal1-yreal2);
+			double x = (objetos[idxCercanos[i]].x-objetos[idxCercanos[i-1]].x);	
+			printf("\n y,x: (%f,%f)", y,x);
+			// pendientes[i-1]=(yreal2-yreal1)/(objetos[idxCercanos[i-1]].x-objetos[idxCercanos[i]].x);
+			
+			if(x!=0) {
+				double rad = atan2(y,x) * 180 / PI; // grados, al parecer ya resta 90
+				pendientes[i-1] = rad;
+				// printf("\nRadianes: %f", rad);
+			}
+			else
+				pendientes[i-1] = noventa;
+			
+			// mostrar punto del que se obtuvo la pendiente		
+			cv::line(imagen, objetos[idxCercanos[i-1]], objetos[idxCercanos[i-1]], cv::Scalar(100,color,255), 8, CV_AA);
+		}
+	}
+	// mostrar punto del que se obtuvo la pendiente
+	if(idxCercanos[noPuntos-1] != -1 && idxCercanos[noPuntos] != -1)
+	{
+		cv::line(imagen, objetos[idxCercanos[noPuntos-1]], objetos[idxCercanos[noPuntos-1]], cv::Scalar(100,color,255), 8, CV_AA);
+	}
+
+	
+	// printf("\npendientes OK");
+
+	// promediar pendientes
+	double pendiente=0.0;
+	for(int i=0;i<noPuntos-1;i++){
+		pendiente += pendientes[i];
+		printf("\n Grados: %f", pendientes[i]);
+	}
+	pendiente/=noPuntos-1;
+	
+	/*
+	if(pendiente > 0)
+		pendiente = limite - pendiente;
+	else if(pendiente < 0)
+		pendiente = -limite - pendiente;
+	*/
+
+	// printf("encontrados: %d", encontrados);
+	datos res;
+	res.p=pendiente;
+	res.e=encontrados;
+	return res;
+}
+
 
 cv::Mat puntoAMoverse(cv::Mat& entrada){
 	// threshold para quedarse solo con lo blanco
@@ -148,68 +283,89 @@ cv::Mat puntoAMoverse(cv::Mat& entrada){
 	 std::vector<cv::Vec4i> hierarchy;
 	 cv::findContours(contours, c_contours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE);
 
-	double centrox = 320;
-	double centroy = 0;
-
+	double centroCarroX = 320;
+	double centroCarroY = 480;
+	
+	/*
 	double maxDX = 0.0;
 	double maxDY = 0.0;
-
 	double maxIX = 0.0;
 	double maxIY = 0.0;
+	*/
 
+	// obtener puntos centrales de cada objeto observado
 	int sized=0, sizei=0;
-
-	double xf = 0.0;
-	double yf = 0.0;
-	for( size_t i = 0; i < c_contours.size(); i++ )
-	  {
- 		 std::vector<cv::Point> o = c_contours[i];
+	std::vector<cv::Point> objetos;
+	for(size_t i = 0; i < c_contours.size(); i++ )
+	{
+ 		std::vector<cv::Point> o = c_contours[i];
 		double x =0.0;
 		double y =0.0;
 		for( size_t j = 0; j < o.size(); j++ )
 	  	{
 			x+=o[j].x;
 			y+=o[j].y;
+			// agrega todos los puntos
+			objetos.push_back(o[j]);
 		}
 		x=x/o.size();
 		y=y/o.size();
+		// dibujar el punto
 		cv::line(cdst, cv::Point(x, y), cv::Point(x, y), cv::Scalar(0,i*30,255), 3, CV_AA);
+		// anterior, agrega objetos
+		// objetos.push_back(cv::Point(x, y));
+		
+	}
+	printf("\nobj centrales OK");
+	
+	int limite = 7;
+	datos datosIzquierda;
+	datosIzquierda = pendienteLado(cdst, objetos, 0, centroCarroX, centroCarroY, 4,limite);
+	printf("\nIzquierda, pendiente: %f, encontrados: %d", datosIzquierda.p, datosIzquierda.e);
+	datos datosDerecha;
+	datosDerecha = pendienteLado(cdst, objetos, 1, centroCarroX, centroCarroY, 4, limite);
+	printf("\nDerecha, pendiente: %f, encontrados: %d", datosDerecha.p, datosDerecha.e);
 
-		if(x>centrox){
-			maxDX+=x;
-			maxDY+=y;
-sized++;
-		}
-		else{
-			maxIX+=x;
-maxIY+=y;
-sizei++;
-		}
-		xf+=x;
-		yf+=y;
-	  }
-	xf=(((maxDX/sized)+(maxIX/sizei))/2);
-	yf=(((maxDY/sized)+(maxIY/sizei))/2); //pixeles, falta distancia
+	double gprom = (datosIzquierda.p+datosDerecha.p)/2;
+	printf("\n Grados promedio: %f",  gprom);
+		
+	double pendiente = (datosIzquierda.p+datosDerecha.p)/2;
+	pendiente = pendiente*PI/180;
+
+	printf("\nPromedio pendientes OK: %f", pendiente);
+
+	// punto a moverse
+	double p2Y = 100;
+	double p2X = 0.0;
+	//if(pendiente> || pendiente<-10.0 || pendiente == 0.0)
+	p2X = p2Y/tan(pendiente);
+	
+	
+	// p2X -= 640;
+	// punto con respecto al carro
+	double xreal = p2X;
+	double yreal = p2Y;
+	// double angulo = atan(yreal/xreal) * 180/PI;
+	
+	// coordenadas de la imagen
+	p2Y = 400 - p2Y;
+	p2X += 320;
 
 	// mostrar el punto en la imagen
-	cv::line(cdst, cv::Point(xf, yf), cv::Point(xf, yf), cv::Scalar(100,30,255), 10, CV_AA);
-	
-	double xreal = (xf - 320)/100;
-	double yreal = (480 - yf)/100;
-	double angulo = atan(yreal/xreal) * 180/PI;
+	cv::line(cdst, cv::Point(centroCarroX, centroCarroY), cv::Point(p2X, p2Y), cv::Scalar(100,30,255), 10, CV_AA);
+
+	printf("\nSegundo punto: (%f, %f)", p2X, p2Y);
+	printf("\nSegundo punto (procesado): (%f, %f)", xreal, yreal);
 
 	// aqui se tiene que enviar la posicion con respecto al robot del punto	
-	/*
+	
 	geometry_msgs::Twist desired_pose;	
 	desired_pose.linear.x = xreal;
 	desired_pose.linear.y = yreal;
-	desired_pose.angular.z = angulo;
+	desired_pose.angular.z = gprom;
 	pub_pose.publish(desired_pose);
-	*/
 	
-	printf("\nPunto a moverse (imagen): (%f,%f)", xf,yf);
-	printf("\nPunto a moverse (procesado): x: %f, angulo: %f", xreal, yreal);
-
+	
 	return cdst;
 }
 
@@ -222,24 +378,21 @@ void imageCallback(const sensor_msgs::ImageConstPtr& msg)
 	// cv::waitKey(30);
 	// cv_bridge::CvImagePtr cv_ptr;
 
-        try
-        {
-         // cv_ptr = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::BGR8);
+	try
+	{
+	 // cv_ptr = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::BGR8);
 	  
-         // histograma de la imagen
+	 // histograma de la imagen
 	 cv::Mat src = cv_bridge::toCvShare(msg , "bgr8")->image;
 	 cv::Mat Result = cv_bridge::toCvShare(msg , "bgr8")->image;
 	 
 	 // crea un rectangulo en la parte superior
 	 // cv::rectangle( Result, cv::Point( 0, 0 ),cv::Point( 640, 200),cv::Scalar(0, 0, 0 ),CV_FILLED,
-         // CV_AA );
+	 // CV_AA );
 	 
 	 dibujarPoligonoCarro(Result);
 	 
 	 
-	 
-
-
     cv::Point2f inputQuad[4]; 
     // Output Quadilateral or World plane coordinates
     cv::Point2f outputQuad[4];
@@ -270,23 +423,20 @@ void imageCallback(const sensor_msgs::ImageConstPtr& msg)
     lambda = cv::getPerspectiveTransform( inputQuad, outputQuad );
     // Apply the Perspective Transform just found to the src image
     cv::warpPerspective(input,output,lambda,output.size() );
-
-	printf("\nPunto Result: ");
-	cv::Mat cdst = puntoAMoverse(Result);
+	
 	
 	printf("\nPunto output: ");
 	cv::Mat cdst2 = puntoAMoverse(output);
-
-	 
-	
-	cv::namedWindow("Result" );
-  	cv::imshow( "Result", cdst);
-
+	/*
 	cv::namedWindow("Result 2" );
   	cv::imshow( "Result 2", cdst2);
 
 	cv::namedWindow("Original" );
 	cv::imshow("Original", src );
+	*/
+
+	imgmsg = cv_bridge::CvImage(std_msgs::Header(), "bgr8", cdst2).toImageMsg();
+	pub_image.publish(imgmsg);
 
 	/*
 	   http://docs.opencv.org/trunk/d9/db0/tutorial_hough_lines.html
@@ -321,11 +471,12 @@ int main(int argc, char** argv )
   	ros::Rate loop_rate(1);
 
 	cv::startWindowThread();
-	
 	ros::Subscriber sub = nh.subscribe<sensor_msgs::Image>("/app/camera/rgb/image_raw", 10, imageCallback);
-
+	
 	pub_pose = nh.advertise<geometry_msgs::Twist>("/target_pose", rate_hz);
-
+	
+	pub_image = nh.advertise<sensor_msgs::Image>("/target_image", rate_hz);
+	
 	ros::spin();
 	cv::destroyWindow("view");
 
